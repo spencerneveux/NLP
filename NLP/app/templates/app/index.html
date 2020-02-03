@@ -1,0 +1,21 @@
+{% extends 'app/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+	<br>
+	<div class="card">
+		<div class="card-header">
+			<h1>Author Form</h1>
+		</div>
+		<div class="card-body">
+			{% for author in authors %}
+				<h2>{{author.author_name}}:{{author.number_articles}}</h2>
+				<a href="{% url 'app:upload' author.id %}">click</a>
+			{% endfor %}
+
+			
+		</div>
+	</div>
+	
+{% endblock  %}
