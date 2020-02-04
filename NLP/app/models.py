@@ -16,23 +16,33 @@ class Author(models.Model):
 class AuthorForm(ModelForm):
     class Meta:
         model = Author
-        fields = ['number_articles', 'author_name']
-
-    # def __init__(self, *args, **kwargs):
-    #     super.__init__(*args, **kwargs)
-    #     self.helper = FormHelper()
-    #     self.helper.form_method = 'post'
-    #     self.helper.add_input(Submit('submit', 'Search Author'))
+        fields = '__all__'
 
 
 class Publication(models.Model):
-    number_articles = models.IntegerField(default=0)
+    publisher_name = models.CharField(max_length=200, default="default")
     rss_feed = models.CharField(max_length=200, default="default")
     picture = models.CharField(max_length=200, default="default")
     abbreviation = models.CharField(max_length=200, default="default")
     website = models.CharField(max_length=200, default="default")
     funding = models.CharField(max_length=200, default="default")
-    sponsor = models.CharField(max_length=200, default="default")
     number_authors = models.IntegerField(default=0)
 
 
+class PublicationForm(ModelForm):
+    class Meta:
+        model = Publication
+        fields = '__all__'
+
+
+class Article(models.Model):
+    title = models.CharField(max_length=200, default="default")
+    content = models.TextField()
+    author = models.CharField(max_length=200, default="default")
+    publisher = models.CharField(max_length=200, default="default")
+
+
+class ArticleForm(ModelForm):
+    class Meta:
+        model = Article
+        fields = '__all__'
