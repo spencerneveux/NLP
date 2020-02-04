@@ -1,36 +1,100 @@
+from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect
-from django.views.generic import TemplateView
+from django.urls import reverse_lazy
+from django.views.generic.edit import FormView, CreateView, DeleteView, UpdateView
 
-from .models import Author, AuthorForm, Publication, PublicationForm
+from django.views.generic import ListView, DetailView
 
-
-class ResultsView(TemplateView):
-    template_name = "results.html"
-
-
-def index(request):
-    authors = Author.objects.order_by('author_name')
-    publications = Publication.objects.order_by('publisher_name')
-    context = {
-        'authors': authors,
-        'publications': publications,
-    }
-    return render(request, "app/index.html", context)
+from .forms import ArticleForm
+from .models import Author, Article, Publisher
 
 
-def upload(request, author_id):
-    if request.method == 'POST':
-        form = AuthorForm(request.POST)
-
-        if form.is_valid():
-            return render(request, "app/results.html")
-
-    else:
-        form = AuthorForm()
-
-    return render(request, "app/upload.html", {'form': form})
+# =========================
+# Authors
+# =========================
+class AuthorList(ListView):
+    model = Author
 
 
-def results(request):
-    return render(request, "app/results.html")
+class AuthorDetailView(DetailView):
+    queryset = Author.objects.all()
+
+    def get_object(self):
+        obj = super().get_object()
+        obj.last_accessed = timezone.now()
+        obj.save()
+        return obj
+
+
+class AuthorCreate(CreateView):
+    model = Author
+    fields = '__all__'
+
+
+class AuthorUpdate(UpdateView):
+    model = Author
+    fields = '__all__'
+
+
+class AuthorDelete(DeleteView):
+    model = Author
+    success_url = reverse_lazy('author-list')
+
+
+# =========================
+# Articles
+# =========================
+class ArticleList(ListView):
+    queryset = Article.objects.order_by("title")
+    context_object_name = 'article_list'
+
+
+class ArticleDetailView():
+    model = Article
+
+    def get_context_data(sefl, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['']
+
+
+class ArticleView(FormView):
+    template_name = 'app/article_form.html'
+    form_class = ArticleForm
+    success_url = '/article_list'
+
+    def form_valid(self, form):
+        return super().form_valid(form)
+
+
+class ArticleCreate(CreateView):
+    model = Article
+    fields = '__all__'
+
+
+class ArticleUpdate(UpdateView):
+    model = Article
+    fields = '__all__'
+
+
+class ArticleDelete(DeleteView):
+    model = Article
+    success_url = reverse_lazy('article-list')
+
+
+# =========================
+# Publishers
+# =========================
+class PublisherArticleList(ListView):
+    template_name = 'app/articles_by_publisher.html'
+
+    def get_queryset(self):
+        self.publisher = get_object_or_404(Publisher, name=self.kwargs['publisher'])
+        return Article.objects.filter(publisher=self.publisher)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['publisher'] = self.publisher
+        return context
+
+
+

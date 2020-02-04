@@ -1,0 +1,16 @@
+{% extends 'app/base.html' %}
+
+{% block content %}
+<br>
+<div class="card">
+	<div class="card-header">
+		<h1>Article Detail</h1>
+	</div>
+	<div class="card-body">
+		{% for article in object_list  %}
+			<h1>{{article.title}}</h1>
+		{% endfor %}
+	</div>
+</div>
+
+{% endblock  %}

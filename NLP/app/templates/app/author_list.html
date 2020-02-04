@@ -1,0 +1,17 @@
+{% extends 'app/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<br>
+<div class="card">
+	<div class="card-header">
+		<h1>Authors</h1>
+	</div>
+	<div class="card-body">
+		{% for author in author_list  %}
+			<li>{{author.name}}</li>
+		{% endfor %}
+	</div>
+</div>
+
+{% endblock  %}

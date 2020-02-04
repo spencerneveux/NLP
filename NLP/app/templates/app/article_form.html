@@ -1,0 +1,20 @@
+{% extends 'app/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<br>
+<div class="card">
+	<div class="card-header">
+		<h1>Article Form</h1>
+	</div>
+	<div class="card-body">
+		<form method="post">
+			{% csrf_token %}
+			{{form|crispy}}
+			<button class="btn btn-primary">Add Article</button>
+			<a href="{{ request.META.HTTP_REFERER }}" class="btn btn-secondary" class>Back</a>
+		</form>
+	</div>
+</div>
+
+{% endblock  %}

@@ -1,16 +1,30 @@
+from django.utils.timezone import now
 from django.db import models
 from django.forms import ModelForm
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit
+from django.urls import reverse
 
 
+# =========================
+# Authors
+# =========================
 class Author(models.Model):
+    name = models.CharField(max_length=200, default="")
     number_articles = models.IntegerField(default=0)
-    articles = models.CharField(max_length=200, default="default")
-    author_name = models.CharField(max_length=200, default="default")
-    work_history = models.CharField(max_length=200, default="default")
-    social_media = models.CharField(max_length=200, default="default")
-    nationality = models.CharField(max_length=200, default="default")
+    articles = models.CharField(max_length=200, default="")
+    work_history = models.CharField(max_length=200, default="")
+    social_media = models.CharField(max_length=200, default="")
+    nationality = models.CharField(max_length=200, default="")
+    last_accessed = models.DateTimeField(default=now)
+
+    class Meta:
+        ordering = ["-name"]
+
+    # Used by generic view to redirect
+    def get_absolute_url(self):
+        return reverse('author-detail', kwargs={'pk': self.pk})
+
+    def __str__(self):
+        return self.name
 
 
 class AuthorForm(ModelForm):
@@ -19,27 +33,45 @@ class AuthorForm(ModelForm):
         fields = '__all__'
 
 
-class Publication(models.Model):
-    publisher_name = models.CharField(max_length=200, default="default")
-    rss_feed = models.CharField(max_length=200, default="default")
-    picture = models.CharField(max_length=200, default="default")
-    abbreviation = models.CharField(max_length=200, default="default")
-    website = models.CharField(max_length=200, default="default")
-    funding = models.CharField(max_length=200, default="default")
+# =========================
+# Publisher
+# =========================
+class Publisher(models.Model):
+    name = models.CharField(max_length=200, default="")
+    rss_feed = models.CharField(max_length=200, default="")
+    picture = models.CharField(max_length=200, default="")
+    abbreviation = models.CharField(max_length=200, default="")
+    website = models.CharField(max_length=200, default="")
+    funding = models.CharField(max_length=200, default="")
     number_authors = models.IntegerField(default=0)
 
-
-class PublicationForm(ModelForm):
     class Meta:
-        model = Publication
+        ordering = ["-name"]
+
+    def __str__(self):
+        return self.name
+
+
+class PublisherForm(ModelForm):
+    class Meta:
+        model = Publisher
         fields = '__all__'
 
 
+# =========================
+# Articles
+# =========================
 class Article(models.Model):
-    title = models.CharField(max_length=200, default="default")
+    title = models.CharField(max_length=200, default="")
     content = models.TextField()
-    author = models.CharField(max_length=200, default="default")
-    publisher = models.CharField(max_length=200, default="default")
+    author = models.CharField(max_length=200, default="")
+    publisher = models.CharField(max_length=200, default="")
+
+    def get_absolute_url(self):
+        return reverse('article-detail', kwargs={'pk': self.pk})
+
+    def __str__(self):
+        return self.title
 
 
 class ArticleForm(ModelForm):

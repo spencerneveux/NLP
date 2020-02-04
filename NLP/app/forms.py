@@ -1,5 +1,6 @@
 from django import forms
 
 
-class AuthorForm(forms.Form):
-    author_name = forms.CharField(label="author name", max_length=100)
+class ArticleForm(forms.Form):
+    name = forms.CharField(max_length=100)
+    content = forms.CharField(widget=forms.Textarea)
