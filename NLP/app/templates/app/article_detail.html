@@ -7,9 +7,11 @@
 		<h1>Article Detail</h1>
 	</div>
 	<div class="card-body">
-		{% for article in object_list  %}
-			<h1>{{article.title}}</h1>
-		{% endfor %}
+		<h1>Title: {{article.title}}</h1>
+		<h2>Author: {{article.author}}</h2>
+		<h2>Publisher: {{article.publisher}}</h2>
+		<hr>
+		<p style="font-size: 25px;">{{article.content}}</p>
 	</div>
 </div>
 

@@ -21,7 +21,7 @@ class Author(models.Model):
 
     # Used by generic view to redirect
     def get_absolute_url(self):
-        return reverse('author-detail', kwargs={'pk': self.pk})
+        return reverse("author-detail", kwargs={"pk": self.pk})
 
     def __str__(self):
         return self.name
@@ -30,7 +30,7 @@ class Author(models.Model):
 class AuthorForm(ModelForm):
     class Meta:
         model = Author
-        fields = '__all__'
+        fields = "__all__"
 
 
 # =========================
@@ -48,6 +48,10 @@ class Publisher(models.Model):
     class Meta:
         ordering = ["-name"]
 
+    # Used by generic view to redirect
+    def get_absolute_url(self):
+        return reverse("publisher-detail", kwargs={"pk": self.pk})
+
     def __str__(self):
         return self.name
 
@@ -55,20 +59,20 @@ class Publisher(models.Model):
 class PublisherForm(ModelForm):
     class Meta:
         model = Publisher
-        fields = '__all__'
+        fields = "__all__"
 
 
 # =========================
 # Articles
 # =========================
 class Article(models.Model):
-    title = models.CharField(max_length=200, default="")
-    content = models.TextField()
     author = models.CharField(max_length=200, default="")
     publisher = models.CharField(max_length=200, default="")
+    title = models.CharField(max_length=200, default="")
+    content = models.TextField()
 
     def get_absolute_url(self):
-        return reverse('article-detail', kwargs={'pk': self.pk})
+        return reverse("article-detail", kwargs={"pk": self.pk})
 
     def __str__(self):
         return self.title
@@ -77,4 +81,15 @@ class Article(models.Model):
 class ArticleForm(ModelForm):
     class Meta:
         model = Article
-        fields = '__all__'
+        fields = "__all__"
+
+
+# =========================
+# Score
+# =========================
+class Score(models.Model):
+    article = models.OneToOneField(
+        Article, on_delete=models.CASCADE, primary_key=True
+    )
+    magnitude = models.IntegerField(default=0)
+    score = models.IntegerField(default=0)

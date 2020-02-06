@@ -1,0 +1,39 @@
+{% extends 'app/base.html' %}
+
+{% block content %}
+<br>
+<div class="card">
+	<div class="card-header">
+		<h1>Natural Language Processor</h1>
+	</div>
+	<div class="card-body">
+		<div class="row">
+			<div class="col">
+				<h2>Articles</h2>
+				<hr>
+				<table class="table table-striped">
+					<thead class="thead-dark">
+						<tr>
+							<th scope="col">Title</th>
+							<th scope="col">Content</th>
+							<th scope="col">Author</th>
+							<th scope="col">Publisher</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for article in article_list %}
+							<tr>
+								<td><a href="{% url 'article-detail' article.id %}">{{article.title}}</a></td>
+								<td>{{article.content}}</td>
+								<td>{{article.author}}</a></td>
+								<td>{{article.publisher}}</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+
+		</div>		
+	</div>
+</div>
+{% endblock  %}

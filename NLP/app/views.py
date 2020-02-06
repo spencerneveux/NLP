@@ -1,7 +1,12 @@
 from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic.edit import FormView, CreateView, DeleteView, UpdateView
+from django.views.generic.edit import (
+    FormView,
+    CreateView,
+    DeleteView,
+    UpdateView,
+)
 
 from django.views.generic import ListView, DetailView
 
@@ -28,17 +33,17 @@ class AuthorDetailView(DetailView):
 
 class AuthorCreate(CreateView):
     model = Author
-    fields = '__all__'
+    fields = "__all__"
 
 
 class AuthorUpdate(UpdateView):
     model = Author
-    fields = '__all__'
+    fields = "__all__"
 
 
 class AuthorDelete(DeleteView):
     model = Author
-    success_url = reverse_lazy('author-list')
+    success_url = reverse_lazy("author-list")
 
 
 # =========================
@@ -46,21 +51,22 @@ class AuthorDelete(DeleteView):
 # =========================
 class ArticleList(ListView):
     queryset = Article.objects.order_by("title")
-    context_object_name = 'article_list'
+    context_object_name = "article_list"
 
 
-class ArticleDetailView():
+class ArticleDetailView(DetailView):
     model = Article
 
-    def get_context_data(sefl, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['']
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context["article_list"] = Article.objects.order_by("title")
+    #     return context
 
 
 class ArticleView(FormView):
-    template_name = 'app/article_form.html'
+    template_name = "app/article_form.html"
     form_class = ArticleForm
-    success_url = '/article_list'
+    success_url = "/article_list"
 
     def form_valid(self, form):
         return super().form_valid(form)
@@ -68,33 +74,71 @@ class ArticleView(FormView):
 
 class ArticleCreate(CreateView):
     model = Article
-    fields = '__all__'
+    fields = "__all__"
 
 
 class ArticleUpdate(UpdateView):
     model = Article
-    fields = '__all__'
+    fields = "__all__"
 
 
 class ArticleDelete(DeleteView):
     model = Article
-    success_url = reverse_lazy('article-list')
+    success_url = reverse_lazy("article-list")
 
 
 # =========================
 # Publishers
 # =========================
 class PublisherArticleList(ListView):
-    template_name = 'app/articles_by_publisher.html'
+    template_name = "app/articles_by_publisher.html"
 
     def get_queryset(self):
-        self.publisher = get_object_or_404(Publisher, name=self.kwargs['publisher'])
+        self.publisher = get_object_or_404(
+            Publisher, name=self.kwargs["publisher"]
+        )
         return Article.objects.filter(publisher=self.publisher)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['publisher'] = self.publisher
+        context["publisher"] = self.publisher
         return context
 
 
+class PublisherDetailView(DetailView):
+    model = Publisher
 
+
+class PublisherList(ListView):
+    model = Publisher
+    context_object_name = "publisher_list"
+
+
+class PublisherCreate(CreateView):
+    model = Publisher
+    fields = "__all__"
+
+
+class PublisherUpdate(UpdateView):
+    model = Publisher
+    fields = "__all__"
+
+
+class PublisherDelete(DeleteView):
+    model = Publisher
+    success_url = reverse_lazy("publisher-list")
+
+
+# =========================
+# Misc
+# =========================
+class IndexView(ListView):
+    template_name = "app/index.html"
+    context_object_name = "author_list"
+    model = Author
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["article_list"] = Article.objects.order_by("title")
+        context["publisher_list"] = Publisher.objects.order_by("name")
+        return context
