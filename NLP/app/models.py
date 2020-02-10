@@ -5,6 +5,43 @@ from django.urls import reverse
 
 
 # =========================
+# Articles
+# =========================
+class ArticleManager(models.Manager):
+    def create_article(self, author, publisher, title, content):
+        article = self.create(
+            author=author, publisher=publisher, title=title, content=content
+        )
+        return article
+
+
+class Article(models.Model):
+    objects = ArticleManager()
+    author = models.CharField(max_length=200, default="")
+    publisher = models.CharField(max_length=200, default="")
+    title = models.CharField(max_length=200, default="")
+    content = models.TextField()
+
+    def get_entities(self):
+        return self.entity_set.all()
+
+    def get_categories(self):
+        return self.category_set.all()
+
+    def get_absolute_url(self):
+        return reverse("article-detail", kwargs={"pk": self.pk})
+
+    def __str__(self):
+        return f'Title: {self.title}'
+
+
+class ArticleForm(ModelForm):
+    class Meta:
+        model = Article
+        fields = "__all__"
+
+
+# =========================
 # Authors
 # =========================
 class AuthorManager(models.Manager):
@@ -16,7 +53,7 @@ class AuthorManager(models.Manager):
             last_accessed=autho.last_accessed,
         )
         return a
-
+        
 
 class Author(models.Model):
     name = models.CharField(max_length=200, default="")
@@ -77,43 +114,6 @@ class Publisher(models.Model):
 class PublisherForm(ModelForm):
     class Meta:
         model = Publisher
-        fields = "__all__"
-
-
-# =========================
-# Articles
-# =========================
-class ArticleManager(models.Manager):
-    def create_article(self, author, publisher, title, content):
-        article = self.create(
-            author=author, publisher=publisher, title=title, content=content
-        )
-        return article
-
-
-class Article(models.Model):
-    objects = ArticleManager()
-    author = models.CharField(max_length=200, default="")
-    publisher = models.CharField(max_length=200, default="")
-    title = models.CharField(max_length=200, default="")
-    content = models.TextField()
-
-    def get_entities(self):
-        return self.entity_set.all()
-
-    def get_categories(self):
-        return self.category_set.all()
-
-    def get_absolute_url(self):
-        return reverse("article-detail", kwargs={"pk": self.pk})
-
-    def __str__(self):
-        return f'Title: {self.title}'
-
-
-class ArticleForm(ModelForm):
-    class Meta:
-        model = Article
         fields = "__all__"
 
 

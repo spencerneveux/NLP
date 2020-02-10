@@ -3,30 +3,19 @@
 {% block content %}
 <br>
 
-<div class="container">
+<div class="container container-fluid">
+	<div class="jumbotron text-white bg-dark">
+	  	<h1 class="display-4">{{article.title}}</h1>
+		<h2>Author: {{article.author}}</h2>
+		<h2>Publisher: {{article.publisher}}</h2>
+	  	<hr class="my-4 bg-light">
+	  	<p style="font-size: 25px;">{{article.content}}</p>
+	  <p class="lead">
+	    <a href="{% url 'article-delete' article.id %}" class="btn btn-danger ">Delete Article</a>
+	  </p>
+	</div>
+
 	<div class="row">
-		<div class="col">
-			{# CARD #}
-			<div class="card">
-				<div class="card-header">
-					<div class="row">
-						<div class="col">
-							<h2>Article Detail</h2>
-						</div>
-						<div class="col">
-							<a href="{% url 'article-delete' article.id %}" class="btn btn-danger float-right">Delete Article</a>
-						</div>
-					</div>
-				</div>
-				<div class="card-body">
-					<h2>Title: {{article.title}}</h2>
-					<h2>Author: {{article.author}}</h2>
-					<h2>Publisher: {{article.publisher}}</h2>
-					<hr>
-					<p style="font-size: 25px;">{{article.content}}</p>
-				</div>
-			</div>
-		</div>
 		<div class="col">
 			{# CARD #}
 			<div class="card">
@@ -45,68 +34,73 @@
 				</div>
 			</div>
 		</div>
+
 	</div>
-</div>
+
 <br>
-<div class="row">
-	<div class="col">
-		<div class="card">
-			<div class="card-header">
-				<h2>Entities</h2>
-			</div>
-			<div class="card-body">
-				<table class="table">
-				  <thead class="thead-dark">
-				    <tr>
-				      <th scope="col">#</th>
-				      <th scope="col">Name</th>
-				      <th scope="col">Salience</th>
-				      <th scope="col">Wiki</th>
-				      <th scope="col">Mid</th>
-				    </tr>
-				  </thead>
-				  <tbody>
-			  		{% for entity in article.get_entities %}
-						<tr>
-					      <th scope="row">{{entity.id}}</th>
-					      <td>{{entity.name}}</td>
-					      <td>{{entity.salience}}</td>
-					      <td><a href="{{entity.wiki}}">{{entity.wiki}}</a></td>
-					      <td>{{entity.mid}}</td>
+
+	<div class="row">
+
+		<div class="col">
+			<div class="card">
+				<div class="card-header">
+					<h2>Entities</h2>
+				</div>
+				<div class="card-body">
+					<table class="table">
+					  <thead class="thead-dark">
+					    <tr>
+					      <th scope="col">#</th>
+					      <th scope="col">Name</th>
+					      <th scope="col">Salience</th>
+					      <th scope="col">Wiki</th>
+					      <th scope="col">Mid</th>
 					    </tr>
-					{% endfor %}
-				  </tbody>
-				</table>
+					  </thead>
+					  <tbody>
+				  		{% for entity in article.get_entities %}
+							<tr>
+						      <th scope="row">{{entity.id}}</th>
+						      <td>{{entity.name}}</td>
+						      <td>{{entity.salience}}</td>
+						      <td><a href="{{entity.wiki}}">{{entity.wiki}}</a></td>
+						      <td>{{entity.mid}}</td>
+						    </tr>
+						{% endfor %}
+					  </tbody>
+					</table>
+				</div>
 			</div>
 		</div>
-		
-	</div>
-	<div class="col">
-		<div class="card">
-			<div class="card-header">
-				<h2>Categories</h2>
-			</div>
-			<div class="card-body">
-				<table class="table">
-				  <thead class="thead-dark">
-				    <tr>
-				      <th scope="col">#</th>
-				      <th scope="col">Name</th>
-				      <th scope="col">Confidence</th>
-				    </tr>
-				  </thead>
-				  <tbody>
-			  		{% for category in article.get_categories %}
-						<tr>
-					      <th scope="row">{{category.id}}</th>
-					      <td>{{category.name}}</td>
-					      <td>{{category.confidence}}</td>
+
+		<div class="col">
+			<div class="card">
+				<div class="card-header">
+					<h2>Categories</h2>
+				</div>
+				<div class="card-body">
+					<table class="table">
+					  <thead class="thead-dark">
+					    <tr>
+					      <th scope="col">#</th>
+					      <th scope="col">Name</th>
+					      <th scope="col">Confidence</th>
 					    </tr>
-					{% endfor %}
-				  </tbody>
-				</table>
+					  </thead>
+					  <tbody>
+				  		{% for category in article.get_categories %}
+							<tr>
+						      <th scope="row">{{category.id}}</th>
+						      <td>{{category.name}}</td>
+						      <td>{{category.confidence}}</td>
+						    </tr>
+						{% endfor %}
+					  </tbody>
+					</table>
+				</div>
 			</div>
 		</div>
+
 	</div>
 </div>
 

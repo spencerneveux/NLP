@@ -133,7 +133,7 @@ class NLP:
             # Get scores
             self.sentiment_scores.append(sentence.sentiment.score)
 
-    def analyze_content(self, text):
+    def analyze_categories(self, text):
         client = language_v1.LanguageServiceClient()
         document = {
             "content": text,
@@ -210,7 +210,7 @@ def main():
     # Analyze
     nlp.analyze_entities(text)
     nlp.analyze_sentiment(text)
-    nlp.analyze_content(text)
+    nlp.analyze_categories(text)
     nlp.analyze_avg()
     nlp.calculate_avg()
 

@@ -1,6 +1,7 @@
 import os
 from django.utils import timezone
 from django.urls import reverse_lazy
+from django.forms import inlineformset_factory
 from django.shortcuts import render, redirect, get_object_or_404
 
 from django.views.generic.edit import (
@@ -17,15 +18,16 @@ from .forms import ArticleForm
 from .models import Author, Article, Publisher, Score, Entity, Category
 from .nlp import NLP
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/Users/spencerneveux/Desktop/FinalProject/NLP/NLP/app/api.json"
+os.environ[
+    "GOOGLE_APPLICATION_CREDENTIALS"
+] = "/Users/spencerneveux/Desktop/FinalProject/NLP/NLP/app/api.json"
 
 
 # =========================
 # Articles
 # =========================
 class ArticleList(ListView):
-    queryset = Article.objects.order_by("title")
-    context_object_name = "article_list"
+    model = Article
 
 
 class ArticleDetailView(DetailView):
@@ -53,15 +55,31 @@ class ArticleCreate(CreateView):
     fields = "__all__"
 
     def form_valid(self, form):
+        # Save article to obtain pk
+        article = form.save()
+
+        # Instantiate nlp object to pass form content to nlp
         nlp = NLP()
         nlp.analyze_entities(form.instance.content)
-        entities = nlp.get_entities()
-        print(form.cleaned_data)
-        # a = Article.objects.get(pk=form.instance.pk)
-        # for entity in entities.entities:
-        #     e = Entity.objects.create_entity(entity.name)
+        nlp.analyze_categories(form.instance.content)
 
-        # form.instance.title = "Post test"
+        # Retrieve results
+        entities = nlp.get_entities()
+        categories = nlp.get_categories()
+
+        # Create related DB models
+        for category in categories.categories:
+            Category.objects.create(
+                article_id=article.pk,
+                name=category.name,
+                confidence=category.confidence,
+            )
+
+        for entity in entities.entities:
+            Entity.objects.create(
+                article_id=article.pk, name=entity.name, salience=entity.salience
+            )
+
         return super(ArticleCreate, self).form_valid(form)
 
 
@@ -114,9 +132,7 @@ class PublisherArticleList(ListView):
     template_name = "app/articles_by_publisher.html"
 
     def get_queryset(self):
-        self.publisher = get_object_or_404(
-            Publisher, name=self.kwargs["publisher"]
-        )
+        self.publisher = get_object_or_404(Publisher, name=self.kwargs["publisher"])
         return Article.objects.filter(publisher=self.publisher)
 
     def get_context_data(self, **kwargs):
@@ -161,4 +177,3 @@ class IndexView(ListView):
         context = super().get_context_data(**kwargs)
         context["score_list"] = Score.objects.order_by("magnitude")
         return context
-
