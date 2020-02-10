@@ -1,6 +1,8 @@
+import os
 from django.utils import timezone
-from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
+from django.shortcuts import render, redirect, get_object_or_404
+
 from django.views.generic.edit import (
     FormView,
     CreateView,
@@ -9,9 +11,68 @@ from django.views.generic.edit import (
 )
 
 from django.views.generic import ListView, DetailView
+from chartjs.views.lines import BaseLineChartView
 
 from .forms import ArticleForm
-from .models import Author, Article, Publisher
+from .models import Author, Article, Publisher, Score, Entity, Category
+from .nlp import NLP
+
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/Users/spencerneveux/Desktop/FinalProject/NLP/NLP/app/api.json"
+
+
+# =========================
+# Articles
+# =========================
+class ArticleList(ListView):
+    queryset = Article.objects.order_by("title")
+    context_object_name = "article_list"
+
+
+class ArticleDetailView(DetailView):
+    model = Article
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["score_list"] = Score.objects.order_by("magnitude")
+        context["entity_list"] = Entity.objects.order_by("name")
+        context["category_list"] = Category.objects.order_by("name")
+        return context
+
+
+class ArticleView(FormView):
+    template_name = "app/article_form.html"
+    form_class = ArticleForm
+    success_url = "/article_list"
+
+    def form_valid(self, form):
+        return super().form_valid(form)
+
+
+class ArticleCreate(CreateView):
+    model = Article
+    fields = "__all__"
+
+    def form_valid(self, form):
+        nlp = NLP()
+        nlp.analyze_entities(form.instance.content)
+        entities = nlp.get_entities()
+        print(form.cleaned_data)
+        # a = Article.objects.get(pk=form.instance.pk)
+        # for entity in entities.entities:
+        #     e = Entity.objects.create_entity(entity.name)
+
+        # form.instance.title = "Post test"
+        return super(ArticleCreate, self).form_valid(form)
+
+
+class ArticleUpdate(UpdateView):
+    model = Article
+    fields = "__all__"
+
+
+class ArticleDelete(DeleteView):
+    model = Article
+    success_url = reverse_lazy("article-list")
 
 
 # =========================
@@ -22,7 +83,7 @@ class AuthorList(ListView):
 
 
 class AuthorDetailView(DetailView):
-    queryset = Author.objects.all()
+    model = Author
 
     def get_object(self):
         obj = super().get_object()
@@ -44,47 +105,6 @@ class AuthorUpdate(UpdateView):
 class AuthorDelete(DeleteView):
     model = Author
     success_url = reverse_lazy("author-list")
-
-
-# =========================
-# Articles
-# =========================
-class ArticleList(ListView):
-    queryset = Article.objects.order_by("title")
-    context_object_name = "article_list"
-
-
-class ArticleDetailView(DetailView):
-    model = Article
-
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context["article_list"] = Article.objects.order_by("title")
-    #     return context
-
-
-class ArticleView(FormView):
-    template_name = "app/article_form.html"
-    form_class = ArticleForm
-    success_url = "/article_list"
-
-    def form_valid(self, form):
-        return super().form_valid(form)
-
-
-class ArticleCreate(CreateView):
-    model = Article
-    fields = "__all__"
-
-
-class ArticleUpdate(UpdateView):
-    model = Article
-    fields = "__all__"
-
-
-class ArticleDelete(DeleteView):
-    model = Article
-    success_url = reverse_lazy("article-list")
 
 
 # =========================
@@ -134,11 +154,11 @@ class PublisherDelete(DeleteView):
 # =========================
 class IndexView(ListView):
     template_name = "app/index.html"
-    context_object_name = "author_list"
-    model = Author
+    context_object_name = "article_list"
+    model = Article
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["article_list"] = Article.objects.order_by("title")
-        context["publisher_list"] = Publisher.objects.order_by("name")
+        context["score_list"] = Score.objects.order_by("magnitude")
         return context
+

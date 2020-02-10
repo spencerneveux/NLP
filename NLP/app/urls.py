@@ -27,6 +27,8 @@ from app.views import (
 
 urlpatterns = [
     path("", IndexView.as_view(), name="index"),
+
+    # Authors
     path("authors/", AuthorList.as_view(), name="author-list"),
     path("author/<int:pk>", AuthorDetailView.as_view(), name="author-detail"),
     path("author/add/", AuthorCreate.as_view(), name="author-add"),
@@ -34,6 +36,8 @@ urlpatterns = [
     path(
         "author/<int:pk>/delete", AuthorDelete.as_view(), name="author-delete"
     ),
+
+    # Articles
     path("articles/", ArticleList.as_view(), name="article-list"),
     path(
         "article/<int:pk>", ArticleDetailView.as_view(), name="article-detail"
@@ -46,6 +50,8 @@ urlpatterns = [
         name="article-delete",
     ),
     path("articles/<publisher>/", PublisherArticleList.as_view()),
+
+    # Publishers
     path("publishers/", PublisherList.as_view(), name="publisher-list"),
     path(
         "publisher/<int:pk>",
@@ -63,4 +69,5 @@ urlpatterns = [
         PublisherDelete.as_view(),
         name="publisher-delete",
     ),
+
 ]

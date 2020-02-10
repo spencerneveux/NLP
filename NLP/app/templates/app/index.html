@@ -1,15 +1,23 @@
 {% extends 'app/base.html' %}
 
 {% block content %}
+
 <br>
-<div class="card">
+<div class="card ">
 	<div class="card-header">
-		<h1>Natural Language Processor</h1>
+		<div class="row">
+			<div class="col">
+				<h1>Articles</h1>
+			</div>
+			<div class="col">
+				<a href="{% url 'article-add' %}" class="btn btn-primary float-right">Add Article</a>
+			</div>
+		</div>
+
 	</div>
 	<div class="card-body">
 		<div class="row">
 			<div class="col">
-				<h2>Articles</h2>
 				<hr>
 				<table class="table table-striped">
 					<thead class="thead-dark">
@@ -32,8 +40,9 @@
 					</tbody>
 				</table>
 			</div>
-
 		</div>		
 	</div>
 </div>
+<br>
+<br>
 {% endblock  %}

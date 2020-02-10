@@ -1,9 +1,12 @@
+import numpy as np
+import matplotlib.pyplot as plt
 from google.cloud import language_v1
 from google.cloud.language_v1 import enums
 
 
 class NLP:
     def __init__(self):
+
         self.entity_dict = {}
         self.category_dict = {}
         self.sentiment_dict = {}
@@ -13,10 +16,10 @@ class NLP:
         self.avg_score = 0
         self.avg_magnitude = 0
 
-        self.names = []
         self.metadata = []
         self.magnitudes = []
         self.entity_types = []
+        self.entities_list = []
         self.salience_list = []
         self.sentiment_list = []
         self.categories_list = []
@@ -43,7 +46,7 @@ class NLP:
     def get_sentiment(self):
         return self.sentiment_dict
 
-    def get_category(self):
+    def get_categories(self):
         return self.category_dict
 
     def get_metadata(self):
@@ -52,7 +55,7 @@ class NLP:
     def get_names(self):
         return self.names
 
-    def get_types(self):
+    def get_entity_types(self):
         return self.entity_types
 
     def get_salience(self):
@@ -66,6 +69,9 @@ class NLP:
 
     def get_sentiment_list(self):
         return self.sentiment_list
+
+    def get_entities_list(self):
+        return self.entities_list
 
     def get_avg_magnitude(self):
         return self.avg_magnitude
@@ -93,7 +99,7 @@ class NLP:
         # Iterate over all entities
         for entity in self.entity_dict.entities:
             # Get all names
-            self.names.append(entity.name)
+            self.entities_list.append(entity.name)
 
             # Get all types
             self.entity_types.append(enums.Entity.Type(entity.type).name)
@@ -156,15 +162,42 @@ class NLP:
         self.avg_magnitude = m_total / num_elems
         self.avg_score = s_total / num_elems
 
-        print(f"Total Magnitude: {m_total} -- Avg Magnitude: {self.avg_magnitude}")
+        print(
+            f"Total Magnitude: {m_total} -- Avg Magnitude: {self.avg_magnitude}"
+        )
         print(f"Total Score: {s_total} -- Avg Score: {self.avg_score}")
 
     def analyze_avg(self):
         for score in self.score_dict.items():
 
-            if self.avg_magnitude >= score[1][0] and self.avg_score >= score[1][1]:
+            if (
+                self.avg_magnitude >= score[1][0]
+                and self.avg_score >= score[1][1]
+            ):
                 print(score[0])
                 # TODO: Finish function
+
+    def graph(self):
+        # TODO: Identiy a graph type fitting for the information
+
+        x = np.arange(len(self.sentiment_list))  # the label locations
+        width = 0.35  # the width of the bars
+
+        fig, ax = plt.subplots()
+        rects1 = ax.bar(
+            x - width / 2, self.sentiment_scores, width, label="Scores"
+        )
+        rects2 = ax.bar(
+            x + width / 2, self.sentiment_scores, width, label="Scores"
+        )
+
+        # Add some text for labels, title and custom x-axis tick labels, etc.
+        ax.set_ylabel("Scores")
+        ax.set_title("Scores by group and gender")
+        ax.set_xticks(x)
+        ax.set_xticklabels(self.sentiment_list)
+        ax.legend()
+        plt.show()
 
 
 # =========================
@@ -191,6 +224,9 @@ def main():
     # print(f"Scores: {nlp.get_scores()}")
     # print(nlp.get_sentiment_list())
     print(nlp.get_categories_list())
+
+    # Graph
+    nlp.graph()
 
 
 if __name__ == "__main__":

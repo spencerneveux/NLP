@@ -7,13 +7,21 @@ from django.urls import reverse
 # =========================
 # Authors
 # =========================
+class AuthorManager(models.Manager):
+    def create_author(self, author):
+        a = self.create(
+            name=author.name,
+            number_articles=author.number_articles,
+            social_media=author.social_media,
+            last_accessed=autho.last_accessed,
+        )
+        return a
+
+
 class Author(models.Model):
     name = models.CharField(max_length=200, default="")
     number_articles = models.IntegerField(default=0)
-    articles = models.CharField(max_length=200, default="")
-    work_history = models.CharField(max_length=200, default="")
     social_media = models.CharField(max_length=200, default="")
-    nationality = models.CharField(max_length=200, default="")
     last_accessed = models.DateTimeField(default=now)
 
     class Meta:
@@ -36,14 +44,24 @@ class AuthorForm(ModelForm):
 # =========================
 # Publisher
 # =========================
+class PublisherManager(models.Manager):
+    def create_publisher(self, publisher):
+        p = self.create(
+            name=publisher.name,
+            rss_feed=publisher.rss_feed,
+            picture=publisher.picture,
+            abbreviation=publisher.abbreviation,
+            website=publisher.website,
+        )
+        return p
+
+
 class Publisher(models.Model):
     name = models.CharField(max_length=200, default="")
     rss_feed = models.CharField(max_length=200, default="")
     picture = models.CharField(max_length=200, default="")
     abbreviation = models.CharField(max_length=200, default="")
     website = models.CharField(max_length=200, default="")
-    funding = models.CharField(max_length=200, default="")
-    number_authors = models.IntegerField(default=0)
 
     class Meta:
         ordering = ["-name"]
@@ -65,17 +83,32 @@ class PublisherForm(ModelForm):
 # =========================
 # Articles
 # =========================
+class ArticleManager(models.Manager):
+    def create_article(self, author, publisher, title, content):
+        article = self.create(
+            author=author, publisher=publisher, title=title, content=content
+        )
+        return article
+
+
 class Article(models.Model):
+    objects = ArticleManager()
     author = models.CharField(max_length=200, default="")
     publisher = models.CharField(max_length=200, default="")
     title = models.CharField(max_length=200, default="")
     content = models.TextField()
 
+    def get_entities(self):
+        return self.entity_set.all()
+
+    def get_categories(self):
+        return self.category_set.all()
+
     def get_absolute_url(self):
         return reverse("article-detail", kwargs={"pk": self.pk})
 
     def __str__(self):
-        return self.title
+        return f'Title: {self.title}'
 
 
 class ArticleForm(ModelForm):
@@ -87,9 +120,76 @@ class ArticleForm(ModelForm):
 # =========================
 # Score
 # =========================
+class ScoreManager(models.Model):
+    def create_score(self, magnitude, score):
+        score = self.create(magnitude=magnitude, score=score)
+        return score
+
+
 class Score(models.Model):
-    article = models.OneToOneField(
-        Article, on_delete=models.CASCADE, primary_key=True
-    )
-    magnitude = models.IntegerField(default=0)
-    score = models.IntegerField(default=0)
+    objects = ScoreManager()
+    article = models.OneToOneField(Article, on_delete=models.CASCADE, primary_key=True)
+    magnitude = models.FloatField(default=0)
+    score = models.FloatField(default=0)
+
+    def __str__(self):
+        return "Score to string"
+
+
+# =========================
+# Entity
+# =========================
+class EntityManager(models.Manager):
+    def create_entity(self, name):
+        e = self.create(name=name)
+        return e
+
+
+class Entity(models.Model):
+    objects = EntityManager()
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, null=True)
+    name = models.CharField(max_length=200, default="")
+    salience = models.FloatField(default=0, null=True)
+    wiki = models.URLField(max_length=200, default="", null=True)
+    mid = models.CharField(max_length=200, default="", null=True)
+
+    def __str__(self):
+        return self.name
+
+
+# =========================
+# Categories
+# =========================
+class CategoryManager(models.Manager):
+    def create_category(self, name, confidence):
+        category = self.create(name=name, confidence=confidence)
+        return category
+
+
+class Category(models.Model):
+    objects = CategoryManager()
+    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    name = models.CharField(max_length=200, default="")
+    confidence = models.FloatField(default=0)
+
+    def __str__(self):
+        return self.name
+
+
+# =========================
+# Meta Data
+# =========================
+class MetaDataManager(models.Manager):
+    def create_metadata(self, key, value):
+        meta_data = self.create(key=key, value=value)
+        return meta_data
+
+
+class MetaData(models.Model):
+    objects = MetaDataManager()
+    entity = models.OneToOneField(Entity, on_delete=models.CASCADE, primary_key=True)
+    key = models.CharField(max_length=200, default="")
+    value = models.FloatField(default=0)
+
+    def __str__(self):
+        return f"Key: {self.key} Value: {self.value}"

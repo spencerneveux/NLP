@@ -3,15 +3,42 @@
 
 {% block content %}
 <br>
-<div class="card">
+<div class="card ">
 	<div class="card-header">
-		<h1>Authors</h1>
+		<div class="row">
+			<div class="col">
+				<h1>Authors</h1>
+			</div>
+			<div class="col">
+				<a href="{% url 'author-add' %}" class="btn btn-primary float-right">Add Author</a>
+			</div>
+		</div>
 	</div>
 	<div class="card-body">
-		{% for author in author_list  %}
-			<li>{{author.name}}</li>
-		{% endfor %}
-	</div>
-</div>
+		<table class="table table-striped">
+					<thead class="thead-dark">
+						<tr>
+							<th scope="col">Name</th>
+							<th scope="col">Number Articles</th>
+							<th scope="col">articles</th>
+							<th scope="col">Work History</th>
+							<th scope="col">Social Media</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for author in author_list %}
+							<tr>
+								<td><a href="{% url 'author-detail' author.id %}">{{author.name}}</a></td>
+								<td>{{author.number_articles}}</td>
+								<td>{{author.articles}}</a></td>
+								<td>{{author.work_history}}</td>
+								<td>{{author.social_media}}</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+				<a href="{{ request.META.HTTP_REFERER }}" class="btn btn-secondary" class>Back</a>
+			</div>
+		</div>
 
 {% endblock  %}
