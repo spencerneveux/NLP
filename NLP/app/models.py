@@ -53,7 +53,7 @@ class AuthorManager(models.Manager):
             last_accessed=autho.last_accessed,
         )
         return a
-        
+
 
 class Author(models.Model):
     name = models.CharField(max_length=200, default="")
@@ -144,11 +144,15 @@ class EntityManager(models.Manager):
         e = self.create(name=name)
         return e
 
+    def get_metadata(self):
+        return self.metadata_set.all()
+
 
 class Entity(models.Model):
     objects = EntityManager()
     article = models.ForeignKey(Article, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=200, default="")
+    entity_type = models.CharField(max_length=200, default="")
     salience = models.FloatField(default=0, null=True)
     wiki = models.URLField(max_length=200, default="", null=True)
     mid = models.CharField(max_length=200, default="", null=True)
@@ -189,7 +193,7 @@ class MetaData(models.Model):
     objects = MetaDataManager()
     entity = models.OneToOneField(Entity, on_delete=models.CASCADE, primary_key=True)
     key = models.CharField(max_length=200, default="")
-    value = models.FloatField(default=0)
+    value = models.CharField(max_length=200, default="")
 
     def __str__(self):
         return f"Key: {self.key} Value: {self.value}"

@@ -2,6 +2,7 @@ import os
 from django.utils import timezone
 from django.urls import reverse_lazy
 from django.forms import inlineformset_factory
+from google.cloud.language_v1 import enums
 from django.shortcuts import render, redirect, get_object_or_404
 
 from django.views.generic.edit import (
@@ -15,7 +16,7 @@ from django.views.generic import ListView, DetailView
 from chartjs.views.lines import BaseLineChartView
 
 from .forms import ArticleForm
-from .models import Author, Article, Publisher, Score, Entity, Category
+from .models import Author, Article, Publisher, Score, Entity, Category, MetaData
 from .nlp import NLP
 
 os.environ[
@@ -35,7 +36,7 @@ class ArticleDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["score_list"] = Score.objects.order_by("magnitude")
+        context["score_list"] = Score.objects.order_by("score")
         context["entity_list"] = Entity.objects.order_by("name")
         context["category_list"] = Category.objects.order_by("name")
         return context
@@ -62,12 +63,19 @@ class ArticleCreate(CreateView):
         nlp = NLP()
         nlp.analyze_entities(form.instance.content)
         nlp.analyze_categories(form.instance.content)
+        nlp.analyze_sentiment(form.instance.content)
 
         # Retrieve results
         entities = nlp.get_entities()
         categories = nlp.get_categories()
+        metadata = nlp.get_metadata()
+        nlp.calculate_avg()
+        avg_score = nlp.get_avg_score()
+        avg_magnitude = nlp.get_avg_magnitude()
 
-        # Create related DB models
+        # nlp.check_clickbait(form.instance.title)
+
+        # Create Category Models
         for category in categories.categories:
             Category.objects.create(
                 article_id=article.pk,
@@ -75,10 +83,30 @@ class ArticleCreate(CreateView):
                 confidence=category.confidence,
             )
 
+        # Create Entity Models
         for entity in entities.entities:
-            Entity.objects.create(
-                article_id=article.pk, name=entity.name, salience=entity.salience
+            e = Entity.objects.create(
+                article_id=article.pk,
+                name=entity.name,
+                salience=round(entity.salience, 3),
+                entity_type=enums.Entity.Type(entity.type).name,
             )
+
+            if entity.metadata:
+                if entity.metadata.get("wikipedia_url") and entity.metadata.get("mid"):
+
+                    MetaData.objects.create(
+                        entity_id=e.id,
+                        key=entity.metadata.get("wikipedia_url"),
+                        value=entity.metadata.get("mid"),
+                    )
+                else:
+                    MetaData.objects.create(entity_id=e.id, key="", value="")
+
+        # Create Score Model
+        Score.objects.create(
+            article_id=article.pk, score=avg_score, magnitude=avg_magnitude
+        )
 
         return super(ArticleCreate, self).form_valid(form)
 

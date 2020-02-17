@@ -1,3 +1,4 @@
+import spacy
 import numpy as np
 import matplotlib.pyplot as plt
 from google.cloud import language_v1
@@ -32,8 +33,8 @@ class NLP:
         self.score_dict = {
             # Score Result : {'score', 'magnitude'}
             "clearly positive": [0.8, 3.0],
-            "clearly negative": [-0.6, 4.0],
             "neutral": [0.1, 0.0],
+            "clearly negative": [-0.6, 4.0],
             "mixed": [0.0, 4.0],
         }
 
@@ -167,37 +168,26 @@ class NLP:
         )
         print(f"Total Score: {s_total} -- Avg Score: {self.avg_score}")
 
-    def analyze_avg(self):
-        for score in self.score_dict.items():
+    def check_clickbait(self, title):
+        # This causes a massive performance hit
+        nlp = spacy.load('en_core_web_md')
+        tokens = nlp(title)
 
-            if (
-                self.avg_magnitude >= score[1][0]
-                and self.avg_score >= score[1][1]
-            ):
-                print(score[0])
-                # TODO: Finish function
+        max_salience = 0
+        max_entity = ""
+        for entity in self.entity_dict.entities:
+            if (entity.salience > max_salience):
+                max_salience = entity.salience
+                max_entity = entity.name
+                entity_token = nlp(max_entity)
 
-    def graph(self):
-        # TODO: Identiy a graph type fitting for the information
+        max_entity_dic = {max_entity, max_salience}
 
-        x = np.arange(len(self.sentiment_list))  # the label locations
-        width = 0.35  # the width of the bars
-
-        fig, ax = plt.subplots()
-        rects1 = ax.bar(
-            x - width / 2, self.sentiment_scores, width, label="Scores"
-        )
-        rects2 = ax.bar(
-            x + width / 2, self.sentiment_scores, width, label="Scores"
-        )
-
-        # Add some text for labels, title and custom x-axis tick labels, etc.
-        ax.set_ylabel("Scores")
-        ax.set_title("Scores by group and gender")
-        ax.set_xticks(x)
-        ax.set_xticklabels(self.sentiment_list)
-        ax.legend()
-        plt.show()
+        for token in tokens:
+            if (token.similarity(entity_token) > .3):
+                print("Not Clickbait")
+            else:
+                print("Clickbait")
 
 
 # =========================
