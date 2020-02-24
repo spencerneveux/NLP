@@ -1,4 +1,5 @@
 import os
+import requests
 from django.utils import timezone
 from django.urls import reverse_lazy
 from django.forms import inlineformset_factory
@@ -15,8 +16,7 @@ from django.views.generic.edit import (
 from django.views.generic import ListView, DetailView
 from chartjs.views.lines import BaseLineChartView
 
-from .forms import ArticleForm
-from .models import Author, Article, Publisher, Score, Entity, Category, MetaData
+from .models import Author, Article, Publisher, Score, Entity, Category, MetaData, Knowledge
 from .nlp import NLP
 
 os.environ[
@@ -40,15 +40,6 @@ class ArticleDetailView(DetailView):
         context["entity_list"] = Entity.objects.order_by("name")
         context["category_list"] = Category.objects.order_by("name")
         return context
-
-
-class ArticleView(FormView):
-    template_name = "app/article_form.html"
-    form_class = ArticleForm
-    success_url = "/article_list"
-
-    def form_valid(self, form):
-        return super().form_valid(form)
 
 
 class ArticleCreate(CreateView):
@@ -94,6 +85,10 @@ class ArticleCreate(CreateView):
 
             if entity.metadata:
                 if entity.metadata.get("wikipedia_url") and entity.metadata.get("mid"):
+                    knowledge_results = requests.get("https://kgsearch.googleapis.com/v1/entities:search?ids=" + entity.metadata.get("mid") + "&key=AIzaSyBVWNLOTmBPy63hgF2ZgSLuOsFqFVRWSoQ&limit=1&indent=True")
+                    json_result = knowledge_results.json()
+
+                    print(json_result.get('itemListElement'))
 
                     MetaData.objects.create(
                         entity_id=e.id,
@@ -191,6 +186,17 @@ class PublisherUpdate(UpdateView):
 class PublisherDelete(DeleteView):
     model = Publisher
     success_url = reverse_lazy("publisher-list")
+
+
+# =========================
+# Knowledge 
+# =========================
+class KnowledgeList(ListView):
+    model = Knowledge
+
+
+class KnowledgeDetailView(DetailView):
+    model = Knowledge
 
 
 # =========================

@@ -31,6 +31,9 @@ class Article(models.Model):
     def get_absolute_url(self):
         return reverse("article-detail", kwargs={"pk": self.pk})
 
+    def test_method(self):
+        return "Test"
+
     def __str__(self):
         return f'Title: {self.title}'
 
@@ -156,6 +159,26 @@ class Entity(models.Model):
     salience = models.FloatField(default=0, null=True)
     wiki = models.URLField(max_length=200, default="", null=True)
     mid = models.CharField(max_length=200, default="", null=True)
+
+    def __str__(self):
+        return self.name
+
+
+# =========================
+# Knowledge 
+# =========================
+class KnowledgeManager(models.Manager):
+    def create_knowledge(self, name, description, url, article_body):
+        knowledge = self.create(name=name, description=description, url=url, article_body=article_body)
+        return knowledge
+
+
+class Knowledge(models.Model):
+    entity = models.OneToOneField(Entity, on_delete=models.CASCADE, primary_key=True)
+    name = models.CharField(max_length=200, default="")
+    description = models.CharField(max_length=200, default="")
+    url = models.URLField(max_length=200, default="")
+    article_body = models.TextField()
 
     def __str__(self):
         return self.name

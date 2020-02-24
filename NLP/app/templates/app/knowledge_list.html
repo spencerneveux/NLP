@@ -1,0 +1,44 @@
+{% extends 'app/base.html' %}
+
+{% block content %}
+<br>
+<div class="card ">
+	<div class="card-header">
+		<div class="row">
+			<div class="col">
+				<h1>Knowledge List</h1>
+			</div>
+			<div class="col">
+
+				{# <a href="{% url 'author-delete' author.id %}" class="btn btn-danger float-right">Delete Knowledge</a> #}
+			</div>
+		</div>
+	</div>
+	<div class="card-body">
+		<table class="table table-striped" style="word-break: break-word;">
+			<thead class="thead-dark">
+				<tr>
+					<th scope="col">ID</th>
+					<th scope="col">Name</th>
+					<th scope="col">Description</th>
+					<th scope="col">URL</th>
+					<th scope="col">Article Body</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for k in knowledge_list %}
+					<tr>
+						<td>{{k.pk}}</td>
+						<td>{{k.name}}</td>
+						<td>{{k.description}}</td>
+						<td><a href="{{k.url}}">{{k.url}}</a></td>
+						<td>{{k.article_body}}</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		<a href="{{ request.META.HTTP_REFERER }}" class="btn btn-secondary" class>Back</a>
+	</div>
+</div>
+
+{% endblock  %}

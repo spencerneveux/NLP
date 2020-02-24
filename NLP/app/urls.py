@@ -24,10 +24,10 @@ from app.views import (
     PublisherUpdate,
     PublisherDelete,
 )
+from app.views import KnowledgeList, KnowledgeDetailView
 
 urlpatterns = [
     path("", IndexView.as_view(), name="index"),
-
     # Authors
     path("authors/", AuthorList.as_view(), name="author-list"),
     path("author/<int:pk>", AuthorDetailView.as_view(), name="author-detail"),
@@ -36,7 +36,6 @@ urlpatterns = [
     path(
         "author/<int:pk>/delete", AuthorDelete.as_view(), name="author-delete"
     ),
-
     # Articles
     path("articles/", ArticleList.as_view(), name="article-list"),
     path(
@@ -50,7 +49,6 @@ urlpatterns = [
         name="article-delete",
     ),
     path("articles/<publisher>/", PublisherArticleList.as_view()),
-
     # Publishers
     path("publishers/", PublisherList.as_view(), name="publisher-list"),
     path(
@@ -69,5 +67,11 @@ urlpatterns = [
         PublisherDelete.as_view(),
         name="publisher-delete",
     ),
-
+    # Knowledge
+    path("knowledge/", KnowledgeList.as_view(), name="knowledge-list",),
+    path(
+        "knowledge/<int:pk>",
+        KnowledgeDetailView.as_view(),
+        name="knowledge-detail",
+    ),
 ]

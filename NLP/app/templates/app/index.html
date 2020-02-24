@@ -1,48 +1,86 @@
-{% extends 'app/base.html' %}
+{% load static %}
 
-{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-<br>
-<div class="card ">
-	<div class="card-header">
-		<div class="row">
-			<div class="col">
-				<h1>Articles</h1>
-			</div>
-			<div class="col">
-				<a href="{% url 'article-add' %}" class="btn btn-primary float-right">Add Article</a>
-			</div>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+    <style type="text/css">
+		body {
+			background-image: url("https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=967&q=80); background-size: cover;");
+			background-repeat: no-repeat;
+			background-size: cover;
+		}
+	</style>
+
+    <title>NLP</title>
+
+  </head>
+  <body>
+  	<nav class="navbar navbar-expand-lg">
+  <!-- Button trigger modal -->
+		<button type="button" class="navbar-brand btn btn-dark" data-toggle="modal" data-target="#exampleModalCenter">
+		  <span class="fa fa-bars"></span>
+		</button>
+
+		<!-- Modal -->
+		<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+		  <div class="modal-dialog modal-dialog-centered" role="document">
+		    <div class="modal-content bg-dark">
+
+		      <div class="modal-body">
+		        <table align="center">
+		        	<tr>
+		        		<td><a style="font-size: 24px; color: white;" href="{% url 'index' %}">Home </a>
+		        		</td>
+		        	</tr>
+		        	<tr>
+		        		<td><a style="font-size: 24px; color:white;" href="{% url 'article-list' %}">Articles</a></td>
+		        	</tr>
+		        	<tr>
+		        		<td><a style="font-size: 24px; color:white;" href="{% url 'author-list' %}">Authors</a></td>
+		        	</tr>
+		        	<tr>
+		        		<td><a style="font-size: 24px; color:white;" href="{% url 'publisher-list' %}">Publishers</a>
+		        		</td>
+		        	</tr>
+		        </table>
+		      </div>
+
+		    </div>
+		  </div>
 		</div>
+		  
+	</nav>
 
-	</div>
-	<div class="card-body">
-		<div class="row">
-			<div class="col">
-				<hr>
-				<table class="table table-striped">
-					<thead class="thead-dark">
-						<tr>
-							<th scope="col">Title</th>
-							<th scope="col">Content</th>
-							<th scope="col">Author</th>
-							<th scope="col">Publisher</th>
-						</tr>
-					</thead>
-					<tbody>
-						{% for article in article_list %}
-							<tr>
-								<td><a href="{% url 'article-detail' article.id %}">{{article.title}}</a></td>
-								<td>{{article.content}}</td>
-								<td>{{article.author}}</a></td>
-								<td>{{article.publisher}}</td>
-							</tr>
-						{% endfor %}
-					</tbody>
-				</table>
-			</div>
-		</div>		
-	</div>
+<div class=" h-100 d-flex justify-content-center align-items-center" style="margin-top: 100px;">
+  <div>
+  	  <h1 class="display-1 text-white text-center">The Validator</h1>
+
+      <h1 class=" text-white text-center">
+      	<span class="letter1">Natural</span>
+      	<span class="letter1" id="letter2">Language</span>
+      	<span class="letter1" id="letter3">Processor</span>
+      	<br>
+      	<a href="{% url 'article-list' %}"><button class="letter1" id="btn-fade" style="margin-top: 20px;">Get Started</button></a>
+      </h1>
+  </div>
 </div>
-<br>
-<br>
-{% endblock  %}
+    
+      
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+       <link rel="stylesheet" type="text/css" href=" {% static '/app/main.css' %} ">
+    
+  </body>
+</html>

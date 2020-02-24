@@ -175,7 +175,7 @@
         if (score >= 0.8 && magnitude >= 3.0) {
         	document.getElementById("smile").style = "color:green";
         }
-        else if (score >= .1 && magnitude >= 0) {
+        else if ((score > -0.6 && magnitude >= 0) || (score >= .1 && magnitude >= 0)) {
         	document.getElementById("meh").style = "color:orange";
         }
         else if (score <= -0.6 && magnitude >= 4) {

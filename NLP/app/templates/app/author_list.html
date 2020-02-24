@@ -16,29 +16,29 @@
 	</div>
 	<div class="card-body">
 		<table class="table table-striped">
-					<thead class="thead-dark">
-						<tr>
-							<th scope="col">Name</th>
-							<th scope="col">Number Articles</th>
-							<th scope="col">articles</th>
-							<th scope="col">Work History</th>
-							<th scope="col">Social Media</th>
-						</tr>
-					</thead>
-					<tbody>
-						{% for author in author_list %}
-							<tr>
-								<td><a href="{% url 'author-detail' author.id %}">{{author.name}}</a></td>
-								<td>{{author.number_articles}}</td>
-								<td>{{author.articles}}</a></td>
-								<td>{{author.work_history}}</td>
-								<td>{{author.social_media}}</td>
-							</tr>
-						{% endfor %}
-					</tbody>
-				</table>
+			<thead class="thead-dark">
+				<tr>
+					<th scope="col">Name</th>
+					<th scope="col">Number Articles</th>
+					<th scope="col">articles</th>
+					<th scope="col">Work History</th>
+					<th scope="col">Social Media</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for author in author_list %}
+					<tr>
+						<td><a href="{% url 'author-detail' author.id %}">{{author.name}}</a></td>
+						<td>{{author.number_articles}}</td>
+						<td>{{author.articles}}</a></td>
+						<td>{{author.work_history}}</td>
+						<td>{{author.social_media}}</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
 				<a href="{{ request.META.HTTP_REFERER }}" class="btn btn-secondary" class>Back</a>
 			</div>
 		</div>
-
+		<br>
 {% endblock  %}

@@ -11,6 +11,10 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+    {# Extra CSS #}
+    {% block extra_css %}
+    {% endblock extra_css %}
+
     {# Extra Javascript #}
     {% block extra_js %}
     {% endblock extra_js %}
@@ -21,14 +25,14 @@
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="#">NLP</a>
+  <a class="navbar-brand" href="{% url 'index' %}">NLP</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse" id="navbarNavDropdown">
     <ul class="navbar-nav">
-      <li class="nav-item active">
-        <a class="nav-link" href="{% url 'index' %}">Home <span class="sr-only">(current)</span></a>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'article-list' %}">Articles</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="{% url 'author-list' %}">Authors</a>
@@ -39,12 +43,12 @@
     </ul>
   </div>
 </nav>
-  	<div class="jumbotron jumbotron-fluid" style="background-image: url(https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=967&q=80); background-size: cover;">
-      <div class="container">
-        <h1 class="display-4" style="color: white">Natural Language Processor (NLP)</h1>
-        <p class="lead" style="color: white">This is the testing grounds for our NLP</p>
-      </div>
-    </div>
+<div class="jumbotron jumbotron-fluid" style="background-image: url(https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=967&q=80); background-size: cover;">
+  <div class="container">
+    <h1 class="display-4" style="color: white">Natural Language Processor (NLP)</h1>
+    <p class="lead" style="color: white">This is the testing grounds for our NLP</p>
+  </div>
+</div>
 
   	<div class="container container-fluid">
   		{% block content %}

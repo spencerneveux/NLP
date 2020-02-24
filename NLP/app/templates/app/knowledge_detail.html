@@ -1,0 +1,26 @@
+{% extends 'app/base.html' %}
+
+{% block content %}
+<br>
+<div class="card ">
+	<div class="card-header">
+		<div class="row">
+			<div class="col">
+				<h1>Knowledge Detail</h1>
+			</div>
+			<div class="col">
+
+				{# <a href="{% url 'author-delete' author.id %}" class="btn btn-danger float-right">Delete Knowledge</a> #}
+			</div>
+		</div>
+	</div>
+	<div class="card-body">
+		<h1>Name: {{knowledge.name}}</h1>
+		<h3>Description: {{knowledge.description}}</h3>
+		<h3>URL: {{knowledge.url}}</h3>
+		<h3>Article Detail: {{knowledge.article_detail}}</h3>
+		<a href="{{ request.META.HTTP_REFERER }}" class="btn btn-secondary" class>Back</a>
+	</div>
+</div>
+
+{% endblock  %}
