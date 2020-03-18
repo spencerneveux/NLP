@@ -1,4 +1,5 @@
 {% load static %}
+{% load rss_list %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -7,6 +8,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <link rel="stylesheet" href="{% static "css/main.css" %}">
+
+
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -14,54 +18,130 @@
     {# Extra CSS #}
     {% block extra_css %}
     {% endblock extra_css %}
-
-    {# Extra Javascript #}
-    {% block extra_js %}
-    {% endblock extra_js %}
-
  
     <title>NLP</title>
 
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="{% url 'index' %}">NLP</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNavDropdown">
-    <ul class="navbar-nav">
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'article-list' %}">Articles</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'author-list' %}">Authors</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'publisher-list' %}">Publishers</a>
-      </li>
-    </ul>
-  </div>
-</nav>
-<div class="jumbotron jumbotron-fluid" style="background-image: url(https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=967&q=80); background-size: cover;">
-  <div class="container">
-    <h1 class="display-4" style="color: white">Natural Language Processor (NLP)</h1>
-    <p class="lead" style="color: white">This is the testing grounds for our NLP</p>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        
+          <ul>
+            <li>
+              <a href="{% url 'home' %}">Home</a>
+            </li>
+            <li>
+              <a href="{% url 'article-list' %}">Articles</a>
+            </li>
+            <li>
+              <a href="{% url 'author-list' %}">Authors</a>
+            </li>
+            <li>
+              <a href="{% url 'publisher-list' %}">Publishers</a>
+            </li>
+          </ul>
+
+          <ul class="">
+            {% if not user.is_authenticated %}
+              <li class=" ">
+                <a class="" href="{% url 'login' %}">Login</a>
+              </li>
+              <li class=" ">
+                <a class="" href="{% url 'user-add' %}">Sign up</a>
+              </li>
+            {% endif %}
+            
+            {% if user.is_authenticated %}
+              <li class=" ">
+                <a class="" href="{% url 'profile' pk=user.pk %}">Settings</a>
+              </li>
+              <li class=" ">
+                <a class="" href="{% url 'logout' %}">Logout</a>
+              </li>
+              
+            {% endif %}
+            
+          </ul>
+      </div>
+    </div>
   </div>
 </div>
 
-  	<div class="container container-fluid">
-  		{% block content %}
-      {% endblock %}
-  	</div>
+  <nav class="navbar fixed-top navbar-light bg-light">
+    <a class="navbar-brand" href="{% url 'index' %}">NLP</a>
+      <form id="navbar-search-form">
+        <input class="form-control" id="navbar-search" type="search" placeholder="Search" aria-label="Search" >
+      </form>
+    <button class="btn btn-dark ml-auto" id="dark-mode-button"><i class="fa fa-moon-o fa-lg"></i>
+    </button>
+    <button class="navbar-toggler" type="button" data-toggle="modal" data-target="#exampleModal" aria-expanded="false">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </nav>
+  <br>
+  <br>
+  <br>
+<div class="container-fluid">
+    <div class="row">
+
+
+        <div class="col-3 px-1 position-fixed" id="sticky-sidebar">
+
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item"><a href="{% url 'home' %}"><i class="fa fa-home mr-2" aria-hidden="true"></i>Home</li></a>
+            <li class="list-group-item"><a href="{% url 'rss-list' %}"><i class="fa fa-rss mr-2" aria-hidden="true"></i></i>Feeds</li></a>
+
+            {% if user.profile.is_online %}
+              <li class="list-group-item"><a href="{% url 'profile' user.id %}"><i class="fa fa-cog mr-2" aria-hidden="true"></i>Account</li></a>
+            {% endif %}
+            
+            <li class="list-group-item"><a href=""><i class="fa fa-question-circle mr-2" aria-hidden="true"></i>Support</li></a>
+          </ul>
+          <br>
+          <ul class="list-group list-group-flush">
+
+            {% if user.is_authenticated %}
+            {% endif %}
+            
+
+            
+          </ul>
+
+        </div>
+
+        <!-- Main Content -->
+        <div class="col offset-3" id="main">
+            <div class="container container-fluid">
+            {% block content %}
+            {% endblock %}
+          </div>
+        </div>
+    </div>
+</div>
+
     
       
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-       <link rel="stylesheet" type="text/css" href=" {% static '/app/main.css' %} ">
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+<link rel="stylesheet" type="text/css" href=" {% static '/app/main.css' %} ">
+<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+
+  {# Extra Javascript #}
+  {% block extra_js %}
+  {% endblock extra_js %}
     
   </body>
 </html>

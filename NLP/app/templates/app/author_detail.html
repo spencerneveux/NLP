@@ -15,6 +15,7 @@
 	</div>
 	<div class="card-body">
 		<h1>{{author.name}}</h1>
+		<a href=" {% url 'author-update' pk=author.pk %} " class="btn btn-primary">Edit</a>
 		<a href="{{ request.META.HTTP_REFERER }}" class="btn btn-secondary" class>Back</a>
 	</div>
 </div>

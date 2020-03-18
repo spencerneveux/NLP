@@ -1,0 +1,91 @@
+{% extends 'app/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block extra_js %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+
+	        $(".add").click(function(){
+	        	var rss_id = $(this).val()
+	        	console.log(rss_id);
+	        	
+	        	$.ajax({
+	        		url: "{% url 'add-rss' %}",
+	        		data: {
+	        			"rss-id": rss_id
+	        		},
+	        		dataType: "json",
+	        		success: function(data) {
+	        			if (data['Test'] == true){
+	        				
+
+	        			}
+
+	        			console.log(data['Test']);
+	        		}
+	        	});
+	
+	        });
+
+	        $(".remove").click(function(){
+	        	var rss_id = $(this).val()
+	        	console.log(rss_id);
+	        	
+	        	$.ajax({
+	        		url: "{% url 'remove-rss' %}",
+	        		data: {
+	        			"rss-id": rss_id
+	        		},
+	        		dataType: "json",
+	        		success: function(data) {
+	        			if (data['Test'] == true){
+	        				
+
+	        			}
+
+	        			console.log(data['Test']);
+	        		}
+	        	});
+	
+	        });
+	     });
+	</script>
+		
+{% endblock extra_js %}
+
+{% block content %}
+<br>
+<div class="card ">
+	<div class="card-header">
+		<div class="row">
+			<div class="col">
+				<h1>RSS Feeds</h1>
+			</div>
+		</div>
+	</div>
+	<div class="card-body">
+		<table class="table table-striped">
+			<thead class="thead-dark">
+				<tr>
+					<th scope="col">Name</th>
+					<th scope="col">Article</th>
+					<th scope="col">Follow</th>
+					<th scope="col">UnFollow</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for feed in rssfeed_list %}
+					<tr>
+						<td>{{feed.name}}</td>
+						<td><a href="{{feed.link}}">{{feed.link}}</a></td>
+						<td><button class="add" value="{{ feed.id }}"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></button></td><td><button class="remove" value="{{ feed.id }}"><i class="fa fa-minus-circle fa-2x" aria-hidden="true"></i></button></td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+				<a href="{{ request.META.HTTP_REFERER }}" class="btn btn-secondary" class>Back</a>
+			</div>
+		</div>
+		<br>
+{% endblock  %}

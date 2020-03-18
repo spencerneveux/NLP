@@ -1,0 +1,50 @@
+{% extends 'app/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<br>
+  <div class="card align-items-center">
+
+    <div class="card-body ">
+      <h1>Sign In</h1>
+
+      <form method="post">
+      {% csrf_token %}
+
+      {{form | crispy}}
+
+      <div class="form-row">
+        <div class="form-group col">
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="customControlInline">
+              <label class="custom-control-label" for="customControlInline">Remember me</label>
+            </div>
+            <button class="btn btn-primary btn-block">Submit</button>
+            <a href=" {% url 'password_reset' %} ">Forgot Password?</a>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col">
+          <a class="btn btn-block " style="background-color: #db3236; color:white;">
+            <span class="fa fa-google"></span> Login via Google
+          </a>        
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col">
+          <a class="btn btn-block" style="background-color: #3b5998; color:white;">
+            <span class="fa fa-facebook"></span> Login via Facebook
+          </a>        
+        </div>
+      </div>
+    </form>
+    <p>Don't have an account? <a href="{% url 'user-add' %}">Sign Up</a></p>
+
+    </div>
+  </div>
+<br>
+
+{% endblock  %}
+

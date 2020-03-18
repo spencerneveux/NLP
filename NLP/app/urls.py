@@ -1,7 +1,26 @@
-from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
+from django.conf.urls import url
+from django.urls import path, include
 from django.views.generic import TemplateView
+from django.contrib.auth import views as auth_views
 from . import views
-from app.views import IndexView
+from app.views import (
+    IndexView,
+    HomeView,
+    UserCreate,
+    RSSList
+)
+
+from app.views import (
+    KnowledgeList,
+    KnowledgeDetailView,
+)
+
+from app.views import (
+    ProfileUpdate
+)
+
 from app.views import (
     AuthorList,
     AuthorDetailView,
@@ -24,11 +43,38 @@ from app.views import (
     PublisherUpdate,
     PublisherDelete,
 )
-from app.views import KnowledgeList, KnowledgeDetailView
 
 urlpatterns = [
+
+    # ===================
+    # Base Views
+    # ===================
     path("", IndexView.as_view(), name="index"),
+    path("home/", HomeView.as_view(), name="home"),
+
+    # ===================
+    # Login
+    # ===================
+    path('accounts/', include('django.contrib.auth.urls')),
+
+    # ===================
+    # Registration
+    # ===================
+    path("signup", UserCreate.as_view(), name="user-add"),
+
+    # ===================
+    # Profile
+    # ===================
+    path("profile/<int:pk>", ProfileUpdate.as_view(), name="profile"),
+
+    # ===================
+    # RSS
+    # ===================
+    path("rss/", RSSList.as_view(), name="rss-list"),
+
+    # ===================
     # Authors
+    # ===================
     path("authors/", AuthorList.as_view(), name="author-list"),
     path("author/<int:pk>", AuthorDetailView.as_view(), name="author-detail"),
     path("author/add/", AuthorCreate.as_view(), name="author-add"),
@@ -36,7 +82,10 @@ urlpatterns = [
     path(
         "author/<int:pk>/delete", AuthorDelete.as_view(), name="author-delete"
     ),
+    
+    # ===================
     # Articles
+    # ===================
     path("articles/", ArticleList.as_view(), name="article-list"),
     path(
         "article/<int:pk>", ArticleDetailView.as_view(), name="article-detail"
@@ -49,7 +98,10 @@ urlpatterns = [
         name="article-delete",
     ),
     path("articles/<publisher>/", PublisherArticleList.as_view()),
+    
+    # ===================
     # Publishers
+    # ===================
     path("publishers/", PublisherList.as_view(), name="publisher-list"),
     path(
         "publisher/<int:pk>",
@@ -67,11 +119,25 @@ urlpatterns = [
         PublisherDelete.as_view(),
         name="publisher-delete",
     ),
+    
+    # ===================
     # Knowledge
+    # ===================
     path("knowledge/", KnowledgeList.as_view(), name="knowledge-list",),
     path(
         "knowledge/<int:pk>",
         KnowledgeDetailView.as_view(),
         name="knowledge-detail",
     ),
+
+    # ===================
+    # Utility
+    # ===================
+    url(r'^ajax/favorite/$', views.favorite, name='favorite'),
+    url(r'^ajax/add_rss/$', views.add_rss_feed, name='add-rss'),
+    url(r'^ajax/remove_rss/$', views.remove_rss_feed, name='remove-rss'),
+    url(r'^ajax/bookmark/$', views.bookmark, name='bookmark'),
+    url(r'^ajax/like/$', views.like, name='like'),
+    url(r'^ajax/dislike/$', views.dislike, name='dislike'),
+
 ]

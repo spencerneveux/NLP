@@ -1,10 +1,21 @@
 import os
 import requests
+from django.conf import settings
 from django.utils import timezone
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.forms import inlineformset_factory
 from google.cloud.language_v1 import enums
+from django.contrib.auth import *
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.forms import UserCreationForm
+from django.views.generic import ListView, DetailView, UpdateView, TemplateView
+from chartjs.views.lines import BaseLineChartView
+from django.http import JsonResponse
+from django.contrib.auth.signals import user_logged_in, user_logged_out
+from django.dispatch import receiver
+
+
+from app.static.python.nlp import NLP
 
 from django.views.generic.edit import (
     FormView,
@@ -12,16 +23,68 @@ from django.views.generic.edit import (
     DeleteView,
     UpdateView,
 )
+from .models import (
+    Author,
+    Article,
+    Publisher,
+    Score,
+    Entity,
+    Category,
+    MetaData,
+    Knowledge,
+    Profile,
+    User,
+    RSSFeed,
+    Like,
+    Dislike,
+    Favorite,
+    Bookmark,
+    RSS,
+    SignUpForm
+)
 
-from django.views.generic import ListView, DetailView
-from chartjs.views.lines import BaseLineChartView
-
-from .models import Author, Article, Publisher, Score, Entity, Category, MetaData, Knowledge
-from .nlp import NLP
 
 os.environ[
     "GOOGLE_APPLICATION_CREDENTIALS"
 ] = "/Users/spencerneveux/Desktop/FinalProject/NLP/NLP/app/api.json"
+
+
+# =========================
+# Base Views
+# =========================
+class IndexView(TemplateView):
+    template_name = "app/index.html"
+
+
+class HomeView(ListView):
+    model = Article
+    template_name = "app/home.html"
+
+
+# =========================
+# User
+# =========================
+class UserCreate(CreateView):
+    form_class = SignUpForm
+    template_name = "registration/signup.html"
+    success_url = reverse_lazy("login")
+
+
+# =========================
+# Profile
+# =========================
+class ProfileUpdate(UpdateView):
+    model = User
+    fields = "__all__"
+    success_url = reverse_lazy("article-list")
+    template_name = "app/profile_form.html"
+
+
+# =========================
+# RSS Feeds
+# =========================
+class RSSList(ListView):
+    model = RSSFeed
 
 
 # =========================
@@ -85,10 +148,36 @@ class ArticleCreate(CreateView):
 
             if entity.metadata:
                 if entity.metadata.get("wikipedia_url") and entity.metadata.get("mid"):
+                    
+                    # Knowledge base api call/handling
                     knowledge_results = requests.get("https://kgsearch.googleapis.com/v1/entities:search?ids=" + entity.metadata.get("mid") + "&key=AIzaSyBVWNLOTmBPy63hgF2ZgSLuOsFqFVRWSoQ&limit=1&indent=True")
-                    json_result = knowledge_results.json()
+                    json_results = knowledge_results.json().get('itemListElement')
+                    results = json_results[0]['result']
 
-                    print(json_result.get('itemListElement'))
+                    # Get values from request
+                    name = results.get('name')
+                    desc = results.get('description')
+                    image_details = results.get('image')
+                    desc_details = results.get('detailedDescription')
+                    url_details = results.get('url')
+
+                    if (image_details):
+                        image_content_url = image_details['contentUrl']
+                        image_url = image_details['url']
+
+                    # Get Detailed Description
+                    if (desc_details):
+                        article_body = desc_details['articleBody']
+                        article_url = desc_details['url']
+
+                    # Create Knowledge Model
+                    Knowledge.objects.create(
+                        entity_id=e.id,
+                        name=name,
+                        description=desc,
+                        url=article_url,
+                        article_body=article_body
+                    )
 
                     MetaData.objects.create(
                         entity_id=e.id,
@@ -200,14 +289,121 @@ class KnowledgeDetailView(DetailView):
 
 
 # =========================
-# Misc
+# Utility 
 # =========================
-class IndexView(ListView):
-    template_name = "app/index.html"
-    context_object_name = "article_list"
-    model = Article
+@receiver(user_logged_in)
+def got_online(sender, user, request, **kwargs):
+    user.profile.is_online = True
+    user.profile.save()
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["score_list"] = Score.objects.order_by("magnitude")
-        return context
+@receiver(user_logged_out)
+def got_offline(sender, user, request, **kwargs):  
+    user.profile.is_online = False
+    user.profile.save()
+
+
+def like(request):
+    article_id = request.GET.get('article-id')
+    new_like, created = Like.objects.get_or_create(user=request.user, article_id=article_id)
+
+    if created:
+        data = {
+            'Test': True
+        }
+    else:
+        data = {
+            'Test': False
+        }
+
+    return JsonResponse(data)
+
+
+def dislike(request):
+    article_id = request.GET.get('article-id')
+    new_dislike, created = Dislike.objects.get_or_create(user=request.user, article_id=article_id)
+
+    if created:
+        data = {
+            'Test': True
+        }
+    else:
+        data = {
+            'Test': False
+        }
+
+    return JsonResponse(data)
+
+
+def favorite(request):
+    article_id = request.GET.get('article-id')
+    new_dislike, added = Favorite.objects.get_or_create(user=request.user, article_id=article_id)
+
+    if added:
+        data = {
+            'Test': True
+        }
+    else:
+        data = {
+            'Test': False
+        }
+
+    return JsonResponse(data)
+
+
+def bookmark(request):
+    article_id = request.GET.get('article-id')
+    new_dislike, bookmarked = Bookmark.objects.get_or_create(user=request.user, article_id=article_id)
+
+    if bookmarked:
+        data = {
+            'Test': True
+        }
+    else:
+        data = {
+            'Test': False
+        }
+
+    return JsonResponse(data)
+
+
+def add_rss_feed(request):
+    rss_id = request.GET.get('rss-id')
+
+    rss, added = RSS.objects.get_or_create(user=request.user, rss_id=rss_id)
+    print(rss.feed_added)
+
+    # Add feed if not added
+    if not rss.feed_added:
+        rss.feed_added = True
+        rss.feed_removed = False
+        rss.save()
+        data = {
+            'Test': True
+        }
+    else:
+        data = {
+            'Test': False
+        }
+
+    return JsonResponse(data)
+
+
+def remove_rss_feed(request):
+    rss_id = request.GET.get('rss-id')
+
+    rss, removed = RSS.objects.get_or_create(user=request.user, rss_id=rss_id)
+
+    # Remove feed if it has been added
+    if not rss.feed_removed:
+        rss.feed_added = False
+        rss.feed_removed = True
+        rss.save()
+        data = {
+            'Test': True
+        }
+    else:
+        data = {
+            'Test': False
+        }
+
+    return JsonResponse(data)

@@ -1,0 +1,235 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+.topnav {
+  overflow: hidden;
+  position: absolute;
+  top: 0%;
+  width: 100%;
+}
+
+.topnav a {
+  float: left;
+  color: #a500ff;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 24px;
+}
+
+.nav-container {
+	float: right !important;
+	margin-right: 15%;
+}
+
+.nav-container a {
+	padding: 35px;
+	color: white;
+}
+
+.home {
+	margin-left: 3%;
+}
+
+.s1 ul {
+	position: absolute;
+	top: 0%;
+	left: 0%;
+	transform: translate(0%, 0%);
+	list-style-type: none;
+	overflow: hidden;
+}
+
+.s1 li a {
+	display: block;
+	color: black;
+	padding: 14px 16px;
+	text-decoration: none;
+}
+
+.computerguy {
+	height: 90%;
+	position: absolute;
+	top: 0%;
+	left: 98%;
+	transform: translate(-98%, -0%);
+	z-index: -1;
+}
+
+.title-container {
+	position: absolute;
+	top: 50%;
+	left: 20%;
+	transform: translate(-20%, -50%);
+}
+
+.title-container h1 {
+	font-size: 64px;
+	color: #a500ff;
+}
+
+.title-container h2 {
+	font-size: 64px;
+	color: #ffa500;
+}
+
+.title-container p {
+	margin-top: 10px;
+	width: 50%;
+}
+
+.title-container hr {
+	width: 50%;
+}
+
+.title-container button {
+	font-size: 24px; 
+	color: white;
+	background-color: #ffa500;
+	border-radius: 25px;
+	margin-top: 10px;
+	padding: 5px;
+}
+
+.about-container {
+	position: absolute;
+	top: 25%;
+	left: 80%;
+	transform: translate(-80%, -25%);
+}
+
+#contact {
+	height: 50%;
+	position: absolute;
+	top: 50%;
+	left: 100%;
+	transform: translate(-100%, -50%);
+}
+
+.contact-container {
+	position: absolute;
+	top: 50%;
+	left: 10%;
+	transform: translate(-10%, -50%);
+	width: 25%;
+}
+
+.about-container h1 {
+	font-size: 64px;
+	color: #a500ff;
+}
+
+.about-container button {
+	font-size: 24px; 
+	color: white;
+	background-color: #ffa500;
+	border-radius: 25px;
+	margin-top: 10px;
+	padding: 5px;
+}
+
+.contact-container h1 {
+	font-size: 64px;
+	color: #a500ff;
+}
+
+.contact-container button {
+	font-size: 24px; 
+	color: white;
+	background-color: #ffa500;
+	border-radius: 25px;
+	margin-top: 10px;
+	padding: 5px;
+}
+
+/*Key frames*/
+#robot {
+	height: 60%;
+	position: absolute;
+	top: 60%;
+	right: 15%;
+	transform: translate(-15%, -60%);
+}
+
+#sockets {
+	opacity: 0;
+	animation: code 4s ease;
+	animation-fill-mode: forwards;
+}
+
+#article {
+	opacity: 0;
+	animation: code 4s 2s ease;
+	animation-fill-mode: forwards;
+}
+
+#listen {
+	opacity: 0;
+	animation: code 4s 4s ease;
+	animation-fill-mode: forwards;
+}
+
+#process {
+	opacity: 0;
+	animation: code 4s 6s ease;
+	animation-fill-mode: forwards;
+}
+
+#wrench {
+	transform-origin: left;
+	animation: rotate-wrench 2s linear infinite;
+}
+
+#arm {
+	animation: rotate-arm 2s linear infinite;
+}
+
+#lefteyetop {
+	animation: flashing-eyes 4s linear infinite;
+}
+
+#righteyetop {
+	animation: flashing-eyes 4s 2s linear infinite;
+}
+
+
+@keyframes rotate-arm {
+	0% { transform: translateY(0px) ; }
+	25% { transform: translateY(5px); }
+	50% { transform: translateY(0px); }
+	75% { transform: translateY(-5px); }
+	100% { transform: translateY(0px); }
+}
+
+@keyframes rotate-wrench {
+	0% { transform:  rotateZ(0deg); }
+	25% { transform:  rotateZ(.30deg); }
+	50% { transform:  rotateZ(0deg); }
+	75% { transform:  rotateZ(-.30deg); }
+	100% { transform:  rotateZ(0deg); }
+}
+
+@keyframes code {
+	0% { opacity: 0; }
+	25% { opacity: .25; }
+	50% { opacity: 0.50; }
+	75% { opacity: 0.75; }
+	100% { opacity: 1; }
+}
+
+@keyframes flashing-eyes {
+	0% { fill: white; }
+	25% { fill: yellow; }
+	50% { fill: green; }
+	100% { fill: red; }
+}
+
+@media screen and (max-width: 800px) {
+  h1 {
+  	color: blue;
+    width: 100%; /* The width is 100%, when the viewport is 800px or smaller */
+  }
+}
+

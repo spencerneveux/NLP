@@ -1,0 +1,26 @@
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Password reset on localhost:8000
+From: webmaster@localhost
+To: spencerneveux@gmail.com
+Date: Sun, 08 Mar 2020 22:01:20 -0000
+Message-ID: 
+ <158370488008.17148.17103551320050703148@Spencers-MacBook-Air.local>
+
+
+You're receiving this email because you requested a password reset for your user account at localhost:8000.
+
+Please go to the following page and choose a new password:
+
+http://localhost:8000/app/accounts/reset/NA/5em-48935b85ba6cbaa54390/
+
+Your username, in case you’ve forgotten: admin
+
+Thanks for using our site!
+
+The localhost:8000 team
+
+
+
+-------------------------------------------------------------------------------
