@@ -1,9 +1,9 @@
 from django import template
-from app.models import RSSFeed
+from ..models import RSSFeed
 
 register = template.Library()
 
 @register.simple_tag
-def get_rss_list(user):
+def get_rss_list():
+    return {'rss_list': RSSFeed.objects.all()}
 
-    return user.get_rss_list()

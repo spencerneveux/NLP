@@ -1,5 +1,5 @@
 from django.test import TestCase
-from models import Article
+from .models import Article
 
 
 class ArticleTestCase(TestCase):

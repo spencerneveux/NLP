@@ -1,41 +1,38 @@
-from django.conf import settings
-from django.conf.urls.static import static
 from django.conf.urls import url
 from django.urls import path, include
-from django.views.generic import TemplateView
-from django.contrib.auth import views as auth_views
 from . import views
-from app.views import (
+from .views import (
     IndexView,
     HomeView,
     UserCreate,
     RSSList
 )
 
-from app.views import (
+from .views import (
     KnowledgeList,
     KnowledgeDetailView,
 )
 
-from app.views import (
+from .views import (
     ProfileUpdate
 )
 
-from app.views import (
+from .views import (
     AuthorList,
     AuthorDetailView,
     AuthorCreate,
     AuthorDelete,
     AuthorUpdate,
 )
-from app.views import (
+from .views import (
     ArticleList,
     ArticleDetailView,
+    ArticleScoreView,
     ArticleCreate,
     ArticleUpdate,
     ArticleDelete,
 )
-from app.views import (
+from .views import (
     PublisherArticleList,
     PublisherDetailView,
     PublisherList,
@@ -87,9 +84,8 @@ urlpatterns = [
     # Articles
     # ===================
     path("articles/", ArticleList.as_view(), name="article-list"),
-    path(
-        "article/<int:pk>", ArticleDetailView.as_view(), name="article-detail"
-    ),
+    path("article/<int:pk>", ArticleDetailView.as_view(), name="article-detail"),
+    path("article/score/<int:pk>", ArticleScoreView.as_view(), name="article-score"),
     path("article/add/", ArticleCreate.as_view(), name="article-add"),
     path("article/<int:pk>", ArticleUpdate.as_view(), name="article-update"),
     path(
@@ -139,5 +135,5 @@ urlpatterns = [
     url(r'^ajax/bookmark/$', views.bookmark, name='bookmark'),
     url(r'^ajax/like/$', views.like, name='like'),
     url(r'^ajax/dislike/$', views.dislike, name='dislike'),
-
+    url(r'^ajax/get_rss_articles/$', views.get_rss_articles, name='get-rss-articles'),
 ]

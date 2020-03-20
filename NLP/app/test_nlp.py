@@ -1,13 +1,13 @@
 import unittest
 import os
-# from .nlp import NLP 
+# from .nlp import theValidator
 from nlp import NLP
 
 test_content = "Ringel’s conjecture predicts that certain kinds of complicated graphs — think Tinkertoy designs with trillions of pieces or more — can be “tiled,” or covered completely, by any individual copy of certain smaller graphs. Conceptually, the statement is like looking at a kitchen and asking: Can I completely cover the floor with identical copies of any type of tile in the store? In real life, most tiles won’t work for your particular kitchen — you’ll have to combine different shapes to cover the whole floor. But in the world of graph theory, the conjecture predicts that the tiling always works."
 
 os.environ[
     "GOOGLE_APPLICATION_CREDENTIALS"
-] = "/Users/spencerneveux/Desktop/FinalProject/NLP/NLP/app/api.json"
+] = "/Users/spencerneveux/Desktop/FinalProject/theValidator/theValidator/app/api.json"
 
 
 class NLPTest(unittest.TestCase):

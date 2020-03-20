@@ -8,129 +8,221 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link rel="stylesheet" href="{% static "css/main.css" %}">
-
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-    {# Extra CSS #}
+    <style>
+
+      .article-count {
+        background-color: #FF8800; color: white;
+      }
+
+      .article-stats {
+        margin-left: 9%;
+        font-size: 14px;
+      }
+
+      #feed-filter {
+        margin-top:5px;
+        margin-bottom: 5px;
+        width: 250px;
+      }
+
+      #button-filter {
+        margin-top:5px;
+        margin-bottom: 5px;
+      }
+
+        .modal.left .modal-dialog {
+          position:fixed;
+          right: 0;
+          margin: auto;
+          width: 320px;
+          height: 100%;
+          -webkit-transform: translate3d(0%, 0, 0);
+          -ms-transform: translate3d(0%, 0, 0);
+          -o-transform: translate3d(0%, 0, 0);
+          transform: translate3d(0%, 0, 0);
+      }
+
+      .modal.left .modal-content {
+          height: 100%;
+          overflow-y: auto;
+      }
+
+      .modal.right .modal-body {
+          padding: 15px 15px 80px;
+      }
+
+      .modal.right.fade .modal-dialog {
+          left: -320px;
+          -webkit-transition: opacity 0.3s linear, left 0.3s ease-out;
+          -moz-transition: opacity 0.3s linear, left 0.3s ease-out;
+          -o-transition: opacity 0.3s linear, left 0.3s ease-out;
+          transition: opacity 0.3s linear, left 0.3s ease-out;
+      }
+
+      .modal.right.fade.show .modal-dialog {
+          right: 0;
+      }
+
+    </style>
     {% block extra_css %}
     {% endblock extra_css %}
  
-    <title>NLP</title>
+    <title>The Validator</title>
 
   </head>
   <body>
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal left fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <h5 class="modal-title" id="exampleModalLabel">The Validator</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        
-          <ul>
-            <li>
-              <a href="{% url 'home' %}">Home</a>
+
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <a href="{% url 'home' %}"><i class="fa fa-home mr-2" aria-hidden="true"></i>Home</a>
             </li>
-            <li>
-              <a href="{% url 'article-list' %}">Articles</a>
-            </li>
-            <li>
-              <a href="{% url 'author-list' %}">Authors</a>
-            </li>
-            <li>
-              <a href="{% url 'publisher-list' %}">Publishers</a>
-            </li>
+            {% if not user.profile.is_online %}
+              <li class="list-group-item">
+                <a class="" href="{% url 'login' %}"><i class="fa fa-user-plus mr-1" aria-hidden="true"></i>Login/Register</a>
+              </li>
+            {% endif %}
+            {% if user.profile.is_online %}
+              <li class="list-group-item">
+                <a href="{% url 'profile' user.id %}"><i class="fa fa-user mr-2" aria-hidden="true"></i></i>Account</a>
+              </li>
+              <li class="list-group-item">
+                <a class="" href="{% url 'profile' pk=user.pk %}"><i class="fa fa-cog mr-2" aria-hidden="true"></i>Settings</a>
+              </li>
+              <li class="list-group-item">
+                <a class="" href="{% url 'logout' %}"><i class="fa fa-sign-out mr-2" aria-hidden="true"></i>Logout</a>
+              </li>
+            {% endif %}
+<!--            <li class="list-group-item">-->
+<!--              <a href="{% url 'article-list' %}">Articles</a>-->
+<!--            </li>-->
+<!--            <li class="list-group-item">-->
+<!--              <a href="{% url 'author-list' %}">Authors</a>-->
+<!--            </li>-->
+<!--            <li class="list-group-item">-->
+<!--              <a href="{% url 'publisher-list' %}">Publishers</a>-->
+<!--            </li>-->
           </ul>
 
-          <ul class="">
-            {% if not user.is_authenticated %}
-              <li class=" ">
-                <a class="" href="{% url 'login' %}">Login</a>
-              </li>
-              <li class=" ">
-                <a class="" href="{% url 'user-add' %}">Sign up</a>
-              </li>
-            {% endif %}
-            
-            {% if user.is_authenticated %}
-              <li class=" ">
-                <a class="" href="{% url 'profile' pk=user.pk %}">Settings</a>
-              </li>
-              <li class=" ">
-                <a class="" href="{% url 'logout' %}">Logout</a>
-              </li>
-              
-            {% endif %}
-            
-          </ul>
       </div>
     </div>
   </div>
 </div>
+<div id="navbar-container">
+  <nav class="navbar fixed-top navbar-light bg-white border-bottom">
+    <a class="navbar-brand" href="{% url 'index' %}">The Validator</a>
 
-  <nav class="navbar fixed-top navbar-light bg-light">
-    <a class="navbar-brand" href="{% url 'index' %}">NLP</a>
-      <form id="navbar-search-form">
-        <input class="form-control" id="navbar-search" type="search" placeholder="Search" aria-label="Search" >
-      </form>
-    <button class="btn btn-dark ml-auto" id="dark-mode-button"><i class="fa fa-moon-o fa-lg"></i>
-    </button>
+    <div class="ml-auto mr-2">
+      <a href="{% url 'rss-list' %}"><button class="btn btn-white mr-1"><i class="fa fa-plus" aria-hidden="true"></i></button></a>
+      <a href="{% url 'home' %}"><button class="btn btn-white mr-1"><i class="fa fa-home mr-2" aria-hidden="true"></i></button></a>
+      {% if user.profile.is_online %}
+          <a href="{% url 'profile' user.id %}"><button class="btn btn-light mr-1">{{user.profile}}</button></a>
+      {% endif %}
+      {% if not user.profile.is_online %}
+        <a href="{% url 'login' %}"><button class="btn btn-light mr-1">Log In</button></a>
+        <a href="{% url 'user-add' %}"><button class="btn btn-success">Sign Up</button></a>
+      {% endif %}
+    </div>
     <button class="navbar-toggler" type="button" data-toggle="modal" data-target="#exampleModal" aria-expanded="false">
       <span class="navbar-toggler-icon"></span>
     </button>
   </nav>
-  <br>
-  <br>
-  <br>
-<div class="container-fluid">
-    <div class="row">
+</div>
+<br>
+<br>
 
 
-        <div class="col-3 px-1 position-fixed" id="sticky-sidebar">
 
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item"><a href="{% url 'home' %}"><i class="fa fa-home mr-2" aria-hidden="true"></i>Home</li></a>
-            <li class="list-group-item"><a href="{% url 'rss-list' %}"><i class="fa fa-rss mr-2" aria-hidden="true"></i></i>Feeds</li></a>
-
-            {% if user.profile.is_online %}
-              <li class="list-group-item"><a href="{% url 'profile' user.id %}"><i class="fa fa-cog mr-2" aria-hidden="true"></i>Account</li></a>
-            {% endif %}
-            
-            <li class="list-group-item"><a href=""><i class="fa fa-question-circle mr-2" aria-hidden="true"></i>Support</li></a>
-          </ul>
-          <br>
-          <ul class="list-group list-group-flush">
-
-            {% if user.is_authenticated %}
-            {% endif %}
-            
-
-            
-          </ul>
-
+<div class="container-fluid h-100 mt-2">
+    <div class="row justify-content-center bg-light">
+      <div class="col-2 border-right border-bottom ">
+          <form class="form-inline ">
+            <div class="form-group col">
+              <input class="form-control mr-sm-2" id="feed-filter" type="search" placeholder="Filter Feeds" aria-label="Search">
+            </div>
+          </form>
+      </div>
+      <div class="col-3 border-right border-bottom">
+        <div class="dropdown float-right" id="button-filter">
+		  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		    Popular
+		  </button>
+		  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+		    <a class="dropdown-item" href="#">Home</a>
+		    <a class="dropdown-item" href="#">Popular</a>
+		    <a class="dropdown-item" href="#">Latest</a>
+		    <a class="dropdown-item" href="#">Trending</a>
+		  </div>
+		</div>
+      </div>
+      <div class="col border-bottom mt-1">
+        <button class="btn btn-info text-dark bookmark mb-1" value="{{article.id}}"><i class="fa fa-bookmark" aria-hidden="true"></i></button>
+        <button class="btn btn-light float-right" type="button" id="share-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-share" aria-hidden="true"></i></button>
+        <div class="dropdown-menu" aria-labelledby="share-button">
+		    <a class="dropdown-item" href="#"><i class="fa fa-envelope-o mr-1" aria-hidden="true"></i>Send To Friend</a>
+		    <a class="dropdown-item" href="#"><i class="fa fa-twitter mr-1" aria-hidden="true"></i>Twitter</a>
         </div>
 
-        <!-- Main Content -->
-        <div class="col offset-3" id="main">
-            <div class="container container-fluid">
-            {% block content %}
-            {% endblock %}
-          </div>
-        </div>
+        <button class="btn btn-light float-right like" value="{{article.id}}"><i class="fa fa-thumbs-up" aria-hidden="true"></i></button>
+		<button class="btn btn-light float-right dislike" value="{{article.id}}"><i class="fa fa-thumbs-down" aria-hidden="true"></i></button>
+      </div>
     </div>
+  <div class="row justify-content-center h-100">
+    <div class="col-2 hidden-md-down border-right">
+      <ul class="list-group list-group-flush ">
+        {% for feed in rss_list %}
+          <li class="list-group-item">
+            <div class="feed-container">
+              <button class="btn btn-white feed" id="{{feed.id}}" value="{{feed.id}}">
+                <h4 class="d-inline" ><span class="badge article-count"><i class="fa fa-android" aria-hidden="true"></i></span></h4>
+                <p class="ml-2 d-inline article-title">{{feed.name}}</p>
+              </button>
+            </div>
+          </li>
+        {% endfor %}
+
+      </ul>
+    </div>
+    <div class="col-3 border-right">
+      <ul class="list-group list-group-flush article-list">
+        {% for article in default_article_list %}
+          <li class='list-group-item  '>
+              <div class='article-container'>
+                <h4 class='d-inline'><span class='badge article-count'>{{article.id}}</span></h4>
+                <p class='ml-2 d-inline article-title'><a href="{% url 'article-detail' article.id %}" >{{article.title}}</a></p>
+                <p class='article-stats'>4 likes | 12 comments | 5 hours ago by {{article.author}}</p>
+              </div>
+            </li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="col">
+      	<div class="alert alert-success alert-dismissable collapse">
+          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        </div>
+        {% block content %}
+        {% endblock %}
+    </div>
+  </div>
 </div>
 
-    
-      
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
@@ -138,10 +230,136 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 <link rel="stylesheet" type="text/css" href=" {% static '/app/main.css' %} ">
 <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
-  {# Extra Javascript #}
-  {% block extra_js %}
-  {% endblock extra_js %}
+
+<script>
+  $(document).ready(function(){
+    $('#share-button').hover(function(){
+
+    });
+
+    $(".feed").click(function(){
+      $(".article-list").empty();
+      var rss_id = $(this).val();
+
+      $.ajax({
+          url: "{% url 'get-rss-articles' %}",
+          data: {
+              "rss-id": rss_id
+          },
+          dataType: "json",
+          success: function(data) {
+              if (data['Test'] == true){
+                var article_list = data['article_list']
+                console.log(data)
+                for (article in article_list) {
+                  var id = article_list[article]['id'];
+                  var title = article_list[article]['title'];
+                  var author = article_list[article]['author'];
+                  var url = "/app/article/" + id;
+
+                  console.log(article_list[article]['title']);
+                  $(".article-list").append("" +
+                          "<li class='list-group-item'>" +
+                            "<div class='article-container'>" +
+                              "<h4 class='d-inline'><span class='badge article-count'>" + article + "</span></h4>" +
+                              "<p class='ml-2 d-inline article-title'><a href="+ url +" >" + title + "</a></p>" +
+                              "<p class='article-stats'>4 likes | 12 comments | 5 hours ago by " + author + "</p>" +
+                            "</div>" +
+                          "</li>"
+                  )
+                }
+              }
+          }
+      });
+    });
+
+     $(".like").click(function(){
+        var article_id = $(this).val()
+        if (article_id) {
+            $.ajax({
+                url: "{% url 'like' %}",
+                data: {
+                    "article-id": article_id
+                },
+                dataType: "json",
+                success: function(data) {
+                    if (data['Test'] == true){
+
+
+                    }
+
+                    console.log(data['Test']);
+                }
+            });
+        }
+     });
+
+    $(".dislike").click(function(){
+        var article_id = $(this).val()
+        if(article_id) {
+          $.ajax({
+            url: "{% url 'dislike' %}",
+            data: {
+                "article-id": article_id
+            },
+            dataType: "json",
+            success: function(data) {
+                console.log(data);
+            }
+          });
+        }
+    });
+
+    $(".add").click(function(){
+        var article_id = $(this).val()
+        if (article_id) {
+          $.ajax({
+            url: "{% url 'favorite' %}",
+            data: {
+                "article-id": article_id
+            },
+            dataType: "json",
+            success: function(data) {
+                if (data["Test"] == true) {
+                    $('.alert').removeClass("collapse");
+                    $('.alert').text("Success! Added to favorites");
+                    $('.alert').fadeOut(2000);
+                }
+                console.log(data);
+            }
+          });
+        }
+    });
+     $(".bookmark").click(function(){
+        var article_id = $(this).val()
+        if (article_id) {
+          $.ajax({
+            url: "{% url 'bookmark' %}",
+            data: {
+                "article-id": article_id
+            },
+            dataType: "json",
+            success: function(data) {
+                if (data["Test"] == true) {
+                    $('.alert').removeClass("collapse");
+                    $('.alert').text("Success! Bookmarked");
+                    $('.alert').fadeOut(2000);
+                }
+                console.log(data);
+            }
+          });
+        }
+    });
+
+    // TODO: Figure out how to load the first article everytime
+  });
+
+</script>
+
+{% block extra_js %}
+{% endblock extra_js %}
     
   </body>
 </html>

@@ -15,7 +15,6 @@
 {% endblock extra_css %}
 
 {% block extra_js %}
-	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
 
 	<script type="text/javascript">
 		$(document).ready(function(){
@@ -89,7 +88,7 @@
 				<div class="card-body" id="email-card">
 
 					<div id="email-show">
-						<p id="email-show">{{user.email}}</p>
+						<p>{{user.email}}</p>
 						<button class="btn btn-primary" id="email-change">Change</button>
 					</div>
 					
@@ -97,7 +96,8 @@
 						<form method="post">
 							{% csrf_token %}
 							{{form.email|as_crispy_field}}
-							<button class="btn btn-primary">Submit</button>
+							<button type="submit" class="btn btn-primary">Submit</button>
+							<a class="btn btn-secondary" href="{% url 'profile' user.id %}">Cancel</a>
 						</form>
 					</div>
 
@@ -145,12 +145,17 @@
 			<div class="card">
 				<div class="card-body">
 					<h1>Settings</h1>
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-					tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-					quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-					consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-					cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-					proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+					<h5>General Settings</h5>
+					<hr>
+					<div class="custom-control custom-checkbox">
+						<input type="checkbox" class="custom-control-input" id="defaultUnchecked">
+						<label class="custom-control-label" for="defaultUnchecked">Dark Mode</label>
+					</div>
+					<div class="custom-control custom-checkbox">
+					  <input type="checkbox" class="custom-control-input" id="defaultChecked2" checked>
+					  <label class="custom-control-label" for="defaultChecked2">Article Details</label>
+					</div>
+
 				</div>
 			</div>
 		</div>

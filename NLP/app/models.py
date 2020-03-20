@@ -3,7 +3,7 @@ from django import forms
 from django.db import models
 from django.forms import ModelForm
 from django.urls import reverse
-from django.contrib.auth.models import User, AbstractUser
+from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -27,7 +27,7 @@ class Profile(models.Model):
     signup_confirmation = models.BooleanField(default=False)
 
     def get_rss_list(self):
-        return self.rssfeed_set.all()
+        return self.user.rss_set.all()
 
     def __str__(self):
         return self.user.username
@@ -62,6 +62,9 @@ class SignUpForm(UserCreationForm):
 class RSSFeed(models.Model):
     name = models.CharField(max_length=200, default="")
     link = models.URLField(max_length=200, default="")
+
+    def get_article_list(self):
+        return self.article_set.all()
 
     def __str__(self):
         return self.name
@@ -118,7 +121,7 @@ class AuthorManager(models.Manager):
             name=author.name,
             number_articles=author.number_articles,
             social_media=author.social_media,
-            last_accessed=autho.last_accessed,
+            last_accessed=author.last_accessed,
         )
         return a
 
@@ -303,6 +306,17 @@ class RSS(models.Model):
     feed_added = models.BooleanField(default=False)
     feed_removed = models.BooleanField(default=True)
 
+    def get_rss_status(self):
+        if self.feed_added == True:
+            return True
+        else:
+            return False
+
+    def get_article_list(self):
+        return self.rss.get_article_list()
+
+    def __str__(self):
+        return self.rss.name
 
 # =========================
 # Status

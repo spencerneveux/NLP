@@ -1,115 +1,19 @@
 {% extends 'app/base.html' %}
+{% block extra_js %}
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
+
+
+{% endblock extra_js %}
 {% block content %}
-<br>
-
 <div class="container container-fluid">
-	<div class="jumbotron text-white bg-dark">
+	<div class="jumbotron bg-white">
 	  	<h1 class="display-4">{{article.title}}</h1>
 		<h2>Author: {{article.author}}</h2>
 		<h2>Publisher: {{article.publisher}}</h2>
+
 	  	<hr class="my-4 bg-light">
 	  	<p style="font-size: 25px;">{{article.content}}</p>
-	  <p class="lead">
-	    <a href="{% url 'article-delete' article.id %}" class="btn btn-danger ">Delete Article</a>
-	  </p>
-	</div>
-
-	<div class="row">
-		<div class="col">
-			{# CARD #}
-			<div class="card">
-				<div class="card-header">
-					<h1>Sentiment Analysis</h1>
-				</div>
-				<div class="card-body">
-					<div class="row">
-						<div class="col">
-							<p id="scoreChart"></p>
-						</div>
-						<div class="col">
-							<p id="magnitudeChart"></p>
-						</div>
-						<div class="col">
-							<img src="" onload="loadImage()">
-							<h1><i  class="fa fa-smile-o fa-2x" id="smile"></i></h1>
-							<h1><i class="fa fa-meh-o fa-2x" id="meh"></i></h1>
-							<h1><i class="fa fa-frown-o fa-2x" id="frown"></i></h1>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<br>
-
-	<div class="row">
-		<div class="col">
-			<div class="card">
-				<div class="card-header">
-					<h2>Categories</h2>
-				</div>
-				<div class="card-body">
-					<table class="table">
-					  <thead class="thead-dark">
-					    <tr>
-					      <th scope="col">#</th>
-					      <th scope="col">Name</th>
-					      <th scope="col">Confidence</th>
-					    </tr>
-					  </thead>
-					  <tbody>
-				  		{% for category in article.get_categories %}
-							<tr>
-						      <th scope="row">{{category.id}}</th>
-						      <td>{{category.name}}</td>
-						      <td>{{category.confidence}}</td>
-						    </tr>
-						{% endfor %}
-					  </tbody>
-					</table>
-				</div>
-			</div>
-		</div>
-
-	</div>
-
-<br>
-
-	<div class="row">
-
-		<div class="col">
-			<div class="card">
-				<div class="card-header">
-					<h2>Entities</h2>
-				</div>
-				<div class="card-body">
-					<table class="table table-striped">
-					  <thead class="thead-dark">
-					    <tr>
-					      <th scope="col">Name</th>
-					      <th scope="col">Type</th>
-					      <th scope="col">Salience</th>
-					      <th scope="col">Wiki</th>
-					      <th scope="col">Mid</th>
-					    </tr>
-					  </thead>
-					  <tbody>
-				  		{% for entity in article.get_entities %}
-							<tr>
-						      <td>{{entity.name}}</td>
-						      <td>{{entity.entity_type}}</td>
-						      <td>{{entity.salience}}</td>
-						      <td><a href="{{entity.metadata.key}}">{{entity.metadata.key}}</a></td>
-						      <td>{{entity.metadata.value}}</td>
-						    </tr>
-						{% endfor %}
-					  </tbody>
-					</table>
-				</div>
-			</div>
-		</div>
 
 	</div>
 </div>
@@ -119,72 +23,6 @@
 
 {% endblock  %}
 
-{% block extra_js %}
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
-<script type="text/javascript">
-      google.charts.load('current', {'packages':['gauge']});
-      google.charts.setOnLoadCallback(drawScoreChart);
-      google.charts.setOnLoadCallback(drawMagChart);
-
-      function drawScoreChart() {
-
-        var data = google.visualization.arrayToDataTable([
-          ['Label', 'Value'],
-          ['Score', {{article.score.score}}],
-        ]);
-
-        var options = {
-          width: 300, height: 240,
-          max: 1,
-          min: -1,
-          majorTicks: ['-1', '-.75', '-.5', '-.25', '0', '.25', '.50', '.75', '1'],
-          minorTicks: 5
-        };
-
-        var chart = new google.visualization.Gauge(document.getElementById('scoreChart'));
-
-        chart.draw(data, options);
-
-      }
-
-      function drawMagChart() {
-
-        var data = google.visualization.arrayToDataTable([
-          ['Label', 'Value'],
-          ['Mag', {{article.score.magnitude}}],
-        ]);
-
-        var options = {
-          width: 300, height: 240,
-          redFrom: 0, redTo: 3.33,
-          yellowFrom:3.33, yellowTo: 6.66,
-          greenFrom:6.66, greenTo:10,
-          max: 10,
-          majorTicks: ['0', '3', '5', '7', '10'],
-          minorTicks: 5
-        };
-
-        var chart = new google.visualization.Gauge(document.getElementById('magnitudeChart'));
-
-        chart.draw(data, options);
-
-        var score = {{article.score.score}};
-        var magnitude = {{article.score.magnitude}};
-
-        if (score >= 0.8 && magnitude >= 3.0) {
-        	document.getElementById("smile").style = "color:green";
-        }
-        else if ((score > -0.6 && magnitude >= 0) || (score >= .1 && magnitude >= 0)) {
-        	document.getElementById("meh").style = "color:orange";
-        }
-        else if (score <= -0.6 && magnitude >= 4) {
-        	document.getElementById("frown").style = "color:red";
-        }
-
-      }
-    </script>
-	
-{% endblock extra_js %}
 
 

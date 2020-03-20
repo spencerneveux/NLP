@@ -1,24 +1,17 @@
 import os
 import requests
-from django.conf import settings
 from django.utils import timezone
-from django.urls import reverse_lazy, reverse
-from django.forms import inlineformset_factory
+from django.urls import reverse_lazy
 from google.cloud.language_v1 import enums
-from django.contrib.auth import *
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.forms import UserCreationForm
-from django.views.generic import ListView, DetailView, UpdateView, TemplateView
-from chartjs.views.lines import BaseLineChartView
+from django.shortcuts import get_object_or_404
+from django.views.generic import ListView, DetailView, TemplateView
 from django.http import JsonResponse
 from django.contrib.auth.signals import user_logged_in, user_logged_out
 from django.dispatch import receiver
+from .static.python.nlp import NLP
 
-
-from app.static.python.nlp import NLP
 
 from django.views.generic.edit import (
-    FormView,
     CreateView,
     DeleteView,
     UpdateView,
@@ -32,7 +25,6 @@ from .models import (
     Category,
     MetaData,
     Knowledge,
-    Profile,
     User,
     RSSFeed,
     Like,
@@ -43,10 +35,9 @@ from .models import (
     SignUpForm
 )
 
-
 os.environ[
     "GOOGLE_APPLICATION_CREDENTIALS"
-] = "/Users/spencerneveux/Desktop/FinalProject/NLP/NLP/app/api.json"
+] = "/Users/spencerneveux/Desktop/FinalProject/theValidator/theValidator/app/api.json"
 
 
 # =========================
@@ -60,6 +51,10 @@ class HomeView(ListView):
     model = Article
     template_name = "app/home.html"
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['rssfeed_list'] = RSSFeed.objects.all()
+        return context
 
 # =========================
 # User
@@ -86,7 +81,6 @@ class ProfileUpdate(UpdateView):
 class RSSList(ListView):
     model = RSSFeed
 
-
 # =========================
 # Articles
 # =========================
@@ -96,6 +90,10 @@ class ArticleList(ListView):
 
 class ArticleDetailView(DetailView):
     model = Article
+
+class ArticleScoreView(DetailView):
+    model = Article
+    template_name = "app/article_score.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -400,6 +398,23 @@ def remove_rss_feed(request):
         rss.save()
         data = {
             'Test': True
+        }
+    else:
+        data = {
+            'Test': False
+        }
+
+    return JsonResponse(data)
+
+def get_rss_articles(request):
+    rss_id = request.GET.get('rss-id')
+    rss_feed = RSSFeed.objects.get(pk=rss_id)
+
+    if rss_feed:
+        article_list = rss_feed.get_article_list().values()
+        data = {
+            'Test': True,
+            'article_list': list(article_list)
         }
     else:
         data = {
