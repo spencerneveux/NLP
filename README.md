@@ -1,3 +1,2 @@
 # NLP
-fuck
 
