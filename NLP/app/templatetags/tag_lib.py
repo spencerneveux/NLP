@@ -7,3 +7,6 @@ register = template.Library()
 def get_rss_list():
     return {'rss_list': RSSFeed.objects.all()}
 
+@register.simple_tag
+def get_bookmarks(user):
+    return user.get_bookmarks()

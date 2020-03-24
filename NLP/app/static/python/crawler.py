@@ -41,7 +41,6 @@ rss_feeds = ['http://feeds.bbci.co.uk/news/world/rss.xml',
              'https://api.quantamagazine.org/feed/']
 
 
-
 class Crawler:
     def __init__(self):
         self.feed_list = [
@@ -80,3 +79,4 @@ class Crawler:
 
     def __str__(self):
         return self.entries
+

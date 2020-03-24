@@ -21,13 +21,21 @@ class ProfileManager(models.Manager):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    avatar = models.ImageField(upload_to="app/static/images", default="static/images/default.png")
+    avatar = models.ImageField(upload_to="app/static/images", default="app/static/images/default.png")
     description = models.CharField(max_length=200, default="", null=True)
     is_online = models.BooleanField(default=False)
     signup_confirmation = models.BooleanField(default=False)
 
+
     def get_rss_list(self):
         return self.user.rss_set.all()
+
+    def get_bookmarks(self):
+        return self.user.bookmark_set.all()
+
+    def get_bookmark_status(self):
+        bookmarks = self.user.bookmark_set.all()
+        return any(bookmark.is_bookmarked == True for bookmark in bookmarks)
 
     def __str__(self):
         return self.user.username
@@ -66,6 +74,12 @@ class RSSFeed(models.Model):
     def get_article_list(self):
         return self.article_set.all()
 
+    def get_popular_article_list(self):
+        return sorted(self.article_set.all(), key=lambda article:article.get_likes(), reverse=True)
+
+    def get_latest_article_list(self):
+        return sorted(self.article_set.all(), key=lambda article:article.date, reverse=True)
+
     def __str__(self):
         return self.name
 
@@ -89,12 +103,26 @@ class Article(models.Model):
     publisher = models.CharField(max_length=200, default="")
     author = models.CharField(max_length=200, default="")
     content = models.TextField()
+    date = models.DateTimeField(default=now)
 
     def get_entities(self):
         return self.entity_set.all()
 
     def get_categories(self):
         return self.category_set.all()
+
+    def get_likes(self):
+        count = 0
+        for like in self.like_set.all():
+            if like.is_liked == True:
+                count += 1
+        return count
+
+    def get_comments(self):
+        return self.comments.all()
+
+    def get_total_comments(self):
+        return len(self.comments.all())
 
     def get_absolute_url(self):
         return reverse("article-detail", kwargs={"pk": self.pk})
@@ -228,6 +256,9 @@ class Entity(models.Model):
     wiki = models.URLField(max_length=200, default="", null=True)
     mid = models.CharField(max_length=200, default="", null=True)
 
+    class Meta:
+        app_label = "app"
+
     def __str__(self):
         return self.name
 
@@ -278,13 +309,26 @@ class Like(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
+    is_liked = models.BooleanField(default=False)
 
 
-class Dislike(models.Model):
+class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    article = models.ForeignKey(Article, on_delete=models.CASCADE)
-    date = models.DateTimeField(auto_now=True)
+    article = models.ForeignKey(Article, related_name='comments', on_delete=models.CASCADE)
+    parent = models.ForeignKey('self', null=True, related_name='replies', on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now_add=True)
+    content = models.TextField(default="")
 
+    def get_absolute_url(self):
+        return reverse('article-detail', kwargs={'pk': self.article.pk})
+
+    def __str__(self):
+        return self.content
+
+class CommentForm(ModelForm):
+    class Meta:
+        model = Comment
+        fields = ('content',)
 
 class Favorite(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -297,6 +341,13 @@ class Bookmark(models.Model):
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now=True)
     description = models.CharField(max_length=200, default="")
+    is_bookmarked = models.BooleanField(default=False)
+
+    def get_is_bookmarked(self):
+        if self.is_bookmarked:
+            return True
+        else:
+            return False
 
 
 class RSS(models.Model):
@@ -312,8 +363,9 @@ class RSS(models.Model):
         else:
             return False
 
-    def get_article_list(self):
-        return self.rss.get_article_list()
+    def get_popular_article_list(self):
+        popular_articles = sorted(self.rss.get_article_list(), key=lambda article:article.get_total_comments())
+        return popular_articles
 
     def __str__(self):
         return self.rss.name

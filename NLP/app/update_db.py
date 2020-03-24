@@ -1,6 +1,7 @@
 import os
 import django
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'theValidator.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'NLP.settings')
+
 os.environ[
     "GOOGLE_APPLICATION_CREDENTIALS"
 ] = "C:/Users/spenc/PycharmProjects/NLP/NLP/app/api.json"
@@ -8,10 +9,12 @@ django.setup()
 
 from NLP.app.static.python.nlp import NLP
 from NLP.app.static.python.crawler import Crawler
-from NLP.app.static.python.entity import Entity
-from NLP.app.static.python.sentiment import Sentiment
-from NLP.app.static.python.category import Category
-from NLP.app.models import RSSFeed
+# from NLP.app.static.python.nlp import NLP
+# from NLP.app.static.python.crawler import Crawler
+# from NLP.app.static.python.entity import Entity
+# from NLP.app.static.python.sentiment import Sentiment
+# from NLP.app.static.python.category import Category
+
 
 if __name__ == '__main__':
     nlp = NLP()

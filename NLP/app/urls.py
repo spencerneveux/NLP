@@ -1,16 +1,13 @@
 from django.conf.urls import url
 from django.urls import path, include
+from django.conf.urls.static import static
+from django.conf import settings
 from . import views
 from .views import (
     IndexView,
     HomeView,
     UserCreate,
     RSSList
-)
-
-from .views import (
-    KnowledgeList,
-    KnowledgeDetailView,
 )
 
 from .views import (
@@ -41,6 +38,19 @@ from .views import (
     PublisherDelete,
 )
 
+from .views import (
+    KnowledgeList,
+    KnowledgeDetailView,
+)
+
+from .views import (
+    BookmarkListView
+)
+
+from .views import (
+    CommentCreateView,
+)
+
 urlpatterns = [
 
     # ===================
@@ -68,6 +78,11 @@ urlpatterns = [
     # RSS
     # ===================
     path("rss/", RSSList.as_view(), name="rss-list"),
+
+    # ===================
+    # Comment
+    # ===================
+    path("<int:article_id>/comment", CommentCreateView.as_view(), name="comment-add"),
 
     # ===================
     # Authors
@@ -119,12 +134,17 @@ urlpatterns = [
     # ===================
     # Knowledge
     # ===================
-    path("knowledge/", KnowledgeList.as_view(), name="knowledge-list",),
+    path("knowledge/", KnowledgeList.as_view(), name="knowledge-list"),
     path(
         "knowledge/<int:pk>",
         KnowledgeDetailView.as_view(),
         name="knowledge-detail",
     ),
+
+    # ===================
+    # Bookmark
+    # ===================
+    path("bookmark/", BookmarkListView.as_view(), name="bookmark-list"),
 
     # ===================
     # Utility
@@ -133,7 +153,9 @@ urlpatterns = [
     url(r'^ajax/add_rss/$', views.add_rss_feed, name='add-rss'),
     url(r'^ajax/remove_rss/$', views.remove_rss_feed, name='remove-rss'),
     url(r'^ajax/bookmark/$', views.bookmark, name='bookmark'),
+    url(r'^ajax/remove_bookmark/$', views.remove_bookmark, name='remove-bookmark'),
     url(r'^ajax/like/$', views.like, name='like'),
-    url(r'^ajax/dislike/$', views.dislike, name='dislike'),
-    url(r'^ajax/get_rss_articles/$', views.get_rss_articles, name='get-rss-articles'),
-]
+    url(r'^ajax/get_popular_rss_articles/$', views.get_popular_rss_articles, name='get-popular-rss-articles'),
+    url(r'^ajax/get_popular_rss_articles/$', views.get_popular_rss_articles, name='get-popular-rss-articles'),
+    url(r'^ajax/get_latest_rss_articles/$', views.get_latest_rss_articles, name='get-latest-rss-articles'),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

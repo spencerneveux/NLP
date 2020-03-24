@@ -28,7 +28,8 @@ from .models import (
     User,
     RSSFeed,
     Like,
-    Dislike,
+    Comment,
+    CommentForm,
     Favorite,
     Bookmark,
     RSS,
@@ -37,7 +38,7 @@ from .models import (
 
 os.environ[
     "GOOGLE_APPLICATION_CREDENTIALS"
-] = "/Users/spencerneveux/Desktop/FinalProject/theValidator/theValidator/app/api.json"
+] = "/Users/spencerneveux/Desktop/FinalProject/NLP/NLP/app/api.json"
 
 
 # =========================
@@ -82,14 +83,32 @@ class RSSList(ListView):
     model = RSSFeed
 
 # =========================
+# Comments
+# =========================
+class CommentCreateView(CreateView):
+    form_class = CommentForm
+    template_name = "app/comment_form.html"
+
+    def form_valid(self, form):
+        article = Article.objects.get(pk=self.kwargs['article_id'])
+        form.instance.user = self.request.user
+        form.instance.article = article
+        return super(CommentCreateView, self).form_valid(form)
+
+
+# =========================
 # Articles
 # =========================
 class ArticleList(ListView):
     model = Article
 
-
 class ArticleDetailView(DetailView):
     model = Article
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['comment_form'] = CommentForm
+        return context
 
 class ArticleScoreView(DetailView):
     model = Article
@@ -287,6 +306,12 @@ class KnowledgeDetailView(DetailView):
 
 
 # =========================
+# Bookmarks
+# =========================
+class BookmarkListView(ListView):
+    model = Bookmark
+
+# =========================
 # Utility 
 # =========================
 @receiver(user_logged_in)
@@ -302,31 +327,20 @@ def got_offline(sender, user, request, **kwargs):
 
 def like(request):
     article_id = request.GET.get('article-id')
-    new_like, created = Like.objects.get_or_create(user=request.user, article_id=article_id)
+    operation = request.GET.get('operation')
 
-    if created:
+    like, created = Like.objects.get_or_create(user=request.user, article_id=article_id)
+    if operation == "like":
+        like.is_liked = True
+        like.save()
         data = {
-            'Test': True
+            'Test': 'Like'
         }
-    else:
+    elif operation == "dislike":
+        like.is_liked = False
+        like.save()
         data = {
-            'Test': False
-        }
-
-    return JsonResponse(data)
-
-
-def dislike(request):
-    article_id = request.GET.get('article-id')
-    new_dislike, created = Dislike.objects.get_or_create(user=request.user, article_id=article_id)
-
-    if created:
-        data = {
-            'Test': True
-        }
-    else:
-        data = {
-            'Test': False
+            'Test': 'Dislike'
         }
 
     return JsonResponse(data)
@@ -350,9 +364,10 @@ def favorite(request):
 
 def bookmark(request):
     article_id = request.GET.get('article-id')
-    new_dislike, bookmarked = Bookmark.objects.get_or_create(user=request.user, article_id=article_id)
-
-    if bookmarked:
+    bookmark, bookmarked = Bookmark.objects.get_or_create(user=request.user, article_id=article_id)
+    if not bookmark.is_bookmarked:
+        bookmark.is_bookmarked = True
+        bookmark.save()
         data = {
             'Test': True
         }
@@ -363,6 +378,22 @@ def bookmark(request):
 
     return JsonResponse(data)
 
+def remove_bookmark(request):
+    article_id = request.GET.get('article-id')
+    bookmark = Bookmark.objects.get(user=request.user, article_id=article_id)
+    print(bookmark.is_bookmarked)
+    if bookmark.is_bookmarked:
+        bookmark.is_bookmarked = False
+        bookmark.save()
+        data = {
+            'Test': True
+        }
+    else:
+        data = {
+            'Test': False
+        }
+
+    return JsonResponse(data)
 
 def add_rss_feed(request):
     rss_id = request.GET.get('rss-id')
@@ -406,15 +437,64 @@ def remove_rss_feed(request):
 
     return JsonResponse(data)
 
-def get_rss_articles(request):
+
+def get_popular_rss_articles(request):
     rss_id = request.GET.get('rss-id')
     rss_feed = RSSFeed.objects.get(pk=rss_id)
 
     if rss_feed:
-        article_list = rss_feed.get_article_list().values()
+        article_list = rss_feed.get_popular_article_list()
+        article_data_list = []
+        article_stats = {}
+        for article in article_list:
+            article_data = {
+                'id': article.id,
+                'rss_feed_id': article.rss_feed_id,
+                'title': article.title,
+                'publisher': article.publisher,
+                'author': article.author,
+                'content': article.content,
+                'date': article.date
+            }
+            article_stats[article.id] = ('likes', article.get_likes(), 'comments', article.get_total_comments())
+            article_data_list.append(article_data)
         data = {
             'Test': True,
-            'article_list': list(article_list)
+            'article_list': article_data_list,
+            'article_stats': article_stats,
+        }
+    else:
+        data = {
+            'Test': False
+        }
+
+    return JsonResponse(data)
+
+
+def get_latest_rss_articles(request):
+    rss_id = request.GET.get('rss-id')
+    rss_feed = RSSFeed.objects.get(pk=rss_id)
+
+    if rss_feed:
+        article_list = rss_feed.get_latest_article_list()
+        article_data_list = []
+        article_stats = {}
+        for article in article_list:
+            article_data = {
+                'id': article.id,
+                'rss_feed_id': article.rss_feed_id,
+                'title': article.title,
+                'publisher': article.publisher,
+                'author': article.author,
+                'content': article.content,
+                'date': article.date
+            }
+            article_stats[article.id] = ('likes', article.get_likes(), 'comments', article.get_total_comments())
+            article_data_list.append(article_data)
+        data = {
+            'Test': True,
+            'article_list': article_data_list,
+            'article_stats': article_stats,
         }
     else:
         data = {

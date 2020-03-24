@@ -1,5 +1,5 @@
 {% load static %}
-{% load rss_list %}
+{% load tag_lib %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -15,6 +15,17 @@
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <style>
+      a {
+        color: #333333;
+        text-decoration: none;
+        }
+
+      a:hover
+      {
+           color:#333333;
+           text-decoration:none;
+           cursor:pointer;
+      }
 
       .article-count {
         background-color: #FF8800; color: white;
@@ -25,8 +36,13 @@
         font-size: 14px;
       }
 
+      #logo {
+        width: 30px;
+        height: 30px;
+      }
+
       #feed-filter {
-        margin-top:5px;
+        margin-top:10px;
         margin-bottom: 5px;
         width: 250px;
       }
@@ -83,7 +99,8 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">The Validator</h5>
+        <img src="{% static 'images/validatorlogo.png' %}" id="logo" alt="">
+        <h5 class="modal-title ml-1" id="exampleModalLabel">Validator</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -127,11 +144,15 @@
 </div>
 <div id="navbar-container">
   <nav class="navbar fixed-top navbar-light bg-white border-bottom">
-    <a class="navbar-brand" href="{% url 'index' %}">The Validator</a>
+    <a class="navbar-brand" href="{% url 'index' %}">
+      <img src="{% static 'images/validatorlogo.png' %}" id="logo" alt="">
+      Validator</a>
 
     <div class="ml-auto mr-2">
-      <a href="{% url 'rss-list' %}"><button class="btn btn-white mr-1"><i class="fa fa-plus" aria-hidden="true"></i></button></a>
-      <a href="{% url 'home' %}"><button class="btn btn-white mr-1"><i class="fa fa-home mr-2" aria-hidden="true"></i></button></a>
+      <a href="{% url 'rss-list' %}"><button class="btn btn-white" data-toggle="tooltip" data-placement="bottom" title="Feeds"><i class="fa fa-plus" aria-hidden="true"></i></button></a>
+      <a href="{% url 'home' %}"><button class="btn btn-white" data-toggle="tooltip" data-placement="bottom" title="Home"><i class="fa fa-home mr-2" aria-hidden="true"></i></button></a>
+      <a href="{% url 'bookmark-list' %}"><button class="btn btn-white" data-toggle="tooltip" data-placement="bottom" title="Bookmarks"><i class="fa fa-bookmark" aria-hidden="true"></i></button></a>
+
       {% if user.profile.is_online %}
           <a href="{% url 'profile' user.id %}"><button class="btn btn-light mr-1">{{user.profile}}</button></a>
       {% endif %}
@@ -155,38 +176,38 @@
       <div class="col-2 border-right border-bottom ">
           <form class="form-inline ">
             <div class="form-group col">
+              <!--TODO: Write ajax call to update on change-->
               <input class="form-control mr-sm-2" id="feed-filter" type="search" placeholder="Filter Feeds" aria-label="Search">
             </div>
           </form>
       </div>
       <div class="col-3 border-right border-bottom">
-        <div class="dropdown float-right" id="button-filter">
-		  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <button class="btn btn-small btn-primary float-right mt-2" id="article-filter" type="button" value="1">
+        <!--TODO: Write ajax call to sort accordingly-->
 		    Popular
 		  </button>
-		  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-		    <a class="dropdown-item" href="#">Home</a>
-		    <a class="dropdown-item" href="#">Popular</a>
-		    <a class="dropdown-item" href="#">Latest</a>
-		    <a class="dropdown-item" href="#">Trending</a>
-		  </div>
-		</div>
       </div>
       <div class="col border-bottom mt-1">
-        <button class="btn btn-info text-dark bookmark mb-1" value="{{article.id}}"><i class="fa fa-bookmark" aria-hidden="true"></i></button>
+        {% if article.id %}
+          <a href="{% url 'article-score' article.id %}"><button class="btn btn-white text-dark bookmark mb-1"><i class="fa fa-bar-chart" aria-hidden="true"></i></button></a>
+                <button class="btn btn-white text-dark bookmark mb-1" value="{{article.id}}"><i class="fa fa-bookmark" aria-hidden="true"></i></button>
         <button class="btn btn-light float-right" type="button" id="share-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-share" aria-hidden="true"></i></button>
         <div class="dropdown-menu" aria-labelledby="share-button">
 		    <a class="dropdown-item" href="#"><i class="fa fa-envelope-o mr-1" aria-hidden="true"></i>Send To Friend</a>
 		    <a class="dropdown-item" href="#"><i class="fa fa-twitter mr-1" aria-hidden="true"></i>Twitter</a>
         </div>
-
         <button class="btn btn-light float-right like" value="{{article.id}}"><i class="fa fa-thumbs-up" aria-hidden="true"></i></button>
 		<button class="btn btn-light float-right dislike" value="{{article.id}}"><i class="fa fa-thumbs-down" aria-hidden="true"></i></button>
+        <a href="{% url 'comment-add' article_id=article.id %}"><button class="btn btn-light float-right like" value="{{article.id}}"><i class="fa fa-comment" aria-hidden="true"></i></button></a>
+        {% endif %}
+
+
+
       </div>
     </div>
   <div class="row justify-content-center h-100">
     <div class="col-2 hidden-md-down border-right">
-      <ul class="list-group list-group-flush ">
+      <ul class="list-group list-group-flush " id="rss-list">
         {% for feed in rss_list %}
           <li class="list-group-item">
             <div class="feed-container">
@@ -207,12 +228,13 @@
               <div class='article-container'>
                 <h4 class='d-inline'><span class='badge article-count'>{{article.id}}</span></h4>
                 <p class='ml-2 d-inline article-title'><a href="{% url 'article-detail' article.id %}" >{{article.title}}</a></p>
-                <p class='article-stats'>4 likes | 12 comments | 5 hours ago by {{article.author}}</p>
+                <p class='article-stats'>{{article.get_likes}} likes | {{article.get_total_comments}} comments | {{article.date|date:"M d, Y"}} by {{article.author}}</p>
               </div>
             </li>
         {% endfor %}
       </ul>
     </div>
+    <br>
     <div class="col">
       	<div class="alert alert-success alert-dismissable collapse">
           <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -226,9 +248,8 @@
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-<link rel="stylesheet" type="text/css" href=" {% static '/app/main.css' %} ">
 <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
@@ -239,33 +260,50 @@
 
     });
 
+    $("#feed-filter").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#rss-list li").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+
     $(".feed").click(function(){
       $(".article-list").empty();
       var rss_id = $(this).val();
+      $("#article-filter").val(rss_id);
 
       $.ajax({
-          url: "{% url 'get-rss-articles' %}",
+          url: "{% url 'get-popular-rss-articles' %}",
           data: {
               "rss-id": rss_id
           },
           dataType: "json",
           success: function(data) {
               if (data['Test'] == true){
-                var article_list = data['article_list']
-                console.log(data)
+                var article_list = data['article_list'];
+                var stats = data['article_stats'];
+                console.log(data);
+
+                var count = 0;
                 for (article in article_list) {
+                  count += 1;
                   var id = article_list[article]['id'];
                   var title = article_list[article]['title'];
                   var author = article_list[article]['author'];
-                  var url = "/app/article/" + id;
+                  var date_obj = new Date(article_list[article]['date']);
+                  var date = date_obj.toDateString()
 
-                  console.log(article_list[article]['title']);
+                  console.log(date);
+                  var url = "/app/article/" + id;
+                  var likes = stats[id][1];
+                  var comment = stats[id][3];
+                  console.log(likes);
                   $(".article-list").append("" +
                           "<li class='list-group-item'>" +
                             "<div class='article-container'>" +
-                              "<h4 class='d-inline'><span class='badge article-count'>" + article + "</span></h4>" +
+                              "<h4 class='d-inline'><span class='badge article-count'>" + count + "</span></h4>" +
                               "<p class='ml-2 d-inline article-title'><a href="+ url +" >" + title + "</a></p>" +
-                              "<p class='article-stats'>4 likes | 12 comments | 5 hours ago by " + author + "</p>" +
+                              "<p class='article-stats'>" + likes + " likes | " + comment + " comments | " + date + " by " + author + "</p>" +
                             "</div>" +
                           "</li>"
                   )
@@ -281,7 +319,8 @@
             $.ajax({
                 url: "{% url 'like' %}",
                 data: {
-                    "article-id": article_id
+                    "article-id": article_id,
+                    "operation": "like",
                 },
                 dataType: "json",
                 success: function(data) {
@@ -300,9 +339,10 @@
         var article_id = $(this).val()
         if(article_id) {
           $.ajax({
-            url: "{% url 'dislike' %}",
+            url: "{% url 'like' %}",
             data: {
-                "article-id": article_id
+                "article-id": article_id,
+                "operation": "dislike",
             },
             dataType: "json",
             success: function(data) {
@@ -333,7 +373,7 @@
         }
     });
      $(".bookmark").click(function(){
-        var article_id = $(this).val()
+        var article_id = $(this).val();
         if (article_id) {
           $.ajax({
             url: "{% url 'bookmark' %}",
@@ -352,6 +392,99 @@
           });
         }
     });
+
+     $("#article-filter").click(function(){
+       $(".article-list").empty();
+       var text = $(this).text();
+       var rss_id = $(this).val();
+
+       if (text == "Latest") {
+         $(this).text("Popular");
+         $.ajax({
+            url: "{% url 'get-popular-rss-articles' %}",
+            data: {
+                "rss-id": rss_id
+            },
+            dataType: "json",
+            success: function(data) {
+                if (data["Test"] == true) {
+                  var article_list = data['article_list'];
+                  var stats = data['article_stats'];
+                  console.log(data);
+
+                  var count = 0;
+                  for (article in article_list) {
+                    count += 1;
+                    var id = article_list[article]['id'];
+                    var title = article_list[article]['title'];
+                    var author = article_list[article]['author'];
+                    var date_obj = new Date(article_list[article]['date']);
+                    var date = date_obj.toDateString()
+
+                    console.log(date);
+                    var url = "/app/article/" + id;
+                    var likes = stats[id][1];
+                    var comment = stats[id][3];
+                    console.log(likes);
+                    $(".article-list").append("" +
+                            "<li class='list-group-item'>" +
+                              "<div class='article-container'>" +
+                                "<h4 class='d-inline'><span class='badge article-count'>" + count + "</span></h4>" +
+                                "<p class='ml-2 d-inline article-title'><a href="+ url +" >" + title + "</a></p>" +
+                                "<p class='article-stats'>" + likes + " likes | " + comment + " comments | " + date + " by " + author + "</p>" +
+                              "</div>" +
+                            "</li>"
+                    )
+                  }
+                }
+                console.log(data);
+            }
+          });
+       }
+       else {
+         $(this).text("Latest");
+         $.ajax({
+            url: "{% url 'get-latest-rss-articles' %}",
+            data: {
+                "rss-id": rss_id
+            },
+            dataType: "json",
+            success: function(data) {
+                if (data["Test"] == true) {
+                  var article_list = data['article_list'];
+                  var stats = data['article_stats'];
+                  console.log(data);
+
+                  var count = 0;
+                  for (article in article_list) {
+                    count += 1;
+                    var id = article_list[article]['id'];
+                    var title = article_list[article]['title'];
+                    var author = article_list[article]['author'];
+                    var date_obj = new Date(article_list[article]['date']);
+                    var date = date_obj.toDateString()
+
+                    console.log(date);
+                    var url = "/app/article/" + id;
+                    var likes = stats[id][1];
+                    var comment = stats[id][3];
+                    console.log(likes);
+                    $(".article-list").append("" +
+                            "<li class='list-group-item'>" +
+                              "<div class='article-container'>" +
+                                "<h4 class='d-inline'><span class='badge article-count'>" + count + "</span></h4>" +
+                                "<p class='ml-2 d-inline article-title'><a href="+ url +" >" + title + "</a></p>" +
+                                "<p class='article-stats'>" + likes + " likes | " + comment + " comments | " + date + " by " + author + "</p>" +
+                              "</div>" +
+                            "</li>"
+                    )
+                  }
+                }
+                console.log(data);
+            }
+          });
+       }
+     });
 
     // TODO: Figure out how to load the first article everytime
   });

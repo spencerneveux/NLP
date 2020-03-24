@@ -1,8 +1,21 @@
 {% extends 'app/base.html' %}
+{% load crispy_forms_tags %}
+
 {% block extra_js %}
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
+	<script>
+	  $(document).ready(function(){
+	  	$(".reply").click(function(){
+	  		var id = "#reply" + $(this).val();
+	  		$(id).show();
+		});
 
+	  	$(".cancel-button").click(function(){
+	  		var id = "#reply" + $(this).val();
+	  		$(id).hide();
+		});
+	  });
+</script>
 
 {% endblock extra_js %}
 {% block content %}
@@ -14,7 +27,33 @@
 
 	  	<hr class="my-4 bg-light">
 	  	<p style="font-size: 25px;">{{article.content}}</p>
-
+		<hr>
+		<h3>{{article.get_total_comments}} Comments:</h3>
+		<br>
+		{% for comment in article.get_comments %}
+			<div class="comment">
+				<p class="d-inline">{{comment.user}}</p>
+				<p class="d-inline">{{comment.date}}</p>
+				<p>{{comment.content}}</p>
+				<button class="btn btn-primary reply" value="{{comment.id}}">Reply</button>
+				{% if comment.user == user %}
+					<!--TODO: Write delete logic-->
+					<button class="btn btn-danger">Delete</button>
+				{% endif %}
+			</div>
+			<br>
+			<div class="card reply-form" id="reply{{comment.id}}" style="display:none">
+				<div class="card-body">
+					<form action="POST" action="{% url 'comment-add' article_id=article.id%}">
+						{% csrf_token %}
+						{{comment_form|crispy}}
+						<button class="btn btn-primary">Submit Reply</button>
+						<button type="button" class="btn btn-secondary cancel-button" value="{{comment.id}}">Cancel</button>
+					</form>
+				</div>
+			</div>
+			<br>
+		{% endfor %}
 	</div>
 </div>
 

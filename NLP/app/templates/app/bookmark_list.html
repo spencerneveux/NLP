@@ -1,0 +1,103 @@
+{% extends 'app/base.html' %}
+{% load tag_lib %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    a {
+    color: #333333;
+    text-decoration: none;
+    }
+
+    a:hover
+    {
+         color:#333333;
+         text-decoration:none;
+         cursor:pointer;
+    }
+
+    #bookmark-image {
+        position: absolute;
+        left: 20%;
+        top: 50%;
+    }
+
+    #login {
+        position: absolute;
+        left: 5%;
+        top: 35%;
+        z-index: -1;
+    }
+
+</style>
+{% endblock extra_css %}
+
+{% block extra_js %}
+
+	<script type="text/javascript">
+		$(document).ready(function(){
+		    $(".remove-bookmark").click(function(){
+		        var parents = $(this).parents();
+		        var article_id = $(this).val();
+                console.log(parents[1]);
+                $.ajax({
+                    url: "{% url 'remove-bookmark' %}",
+                    data: {
+                        "article-id": article_id
+                    },
+                    dataType: "json",
+                    success: function(data) {
+                        if (data["Test"] == true) {
+                            $(parents[1]).remove();
+                        }
+                        console.log(data);
+                    }
+                  });
+            });
+	    });
+	</script>
+{% endblock extra_js %}
+
+{% block content %}
+
+<br>
+
+<div class="row">
+    {% if user.profile.is_online %}
+        {% if not user.profile.get_bookmark_status %}
+            <div class="container">
+                <h2 class="text-center mb-3">You have no bookmarks</h2>
+                <img id="bookmark-image" src="{% static "images/bookmark.png" %}" alt="">
+            </div>
+        {% endif %}
+    {% endif %}
+    {% if not user.profile.is_online %}
+        <div class="container">
+            <h2 class="text-center mb-3">You must sign in to use bookmarks</h2>
+            <img id="login" src="{% static "images/login.png" %}" alt="">
+        </div>
+    {% endif %}
+
+    {% for bookmark in user.profile.get_bookmarks %}
+        {% if bookmark.get_is_bookmarked %}
+            <div class="col-sm-3">
+                <div class="card" id="{{bookmark.article.id}}">
+                    <a href="{% url 'article-detail' bookmark.article.id %}">
+                        <img class="card-img-top" src="{% static "images/circuit.jpg" %}" alt="Card image cap">
+                        <div class="card-body">
+                            <h5>{{bookmark.article.title}}</h5>
+                        </div>
+                    </a>
+                    <div class="card-footer">
+                        <small class="text-muted">{{bookmark.article.publisher}}</small>
+                        <button class="btn btn-small btn-white remove-bookmark float-right" value="{{bookmark.article.id}}"><small class="text-muted float-right"><i class="fa fa-trash" aria-hidden="true"></i></small></button>
+                    </div>
+                </div>
+                <br>
+            </div>
+        {% endif %}
+    {% endfor %}
+</div>
+
+{% endblock  %}
+
