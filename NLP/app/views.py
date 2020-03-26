@@ -1,7 +1,7 @@
 import os
 import requests
 from django.utils import timezone
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from google.cloud.language_v1 import enums
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, DetailView, TemplateView
@@ -26,6 +26,7 @@ from .models import (
     MetaData,
     Knowledge,
     User,
+    Profile,
     RSSFeed,
     Like,
     Comment,
@@ -33,12 +34,9 @@ from .models import (
     Favorite,
     Bookmark,
     RSS,
-    SignUpForm
+    SignUpForm,
+    UpdateProfileForm,
 )
-
-os.environ[
-    "GOOGLE_APPLICATION_CREDENTIALS"
-] = "/Users/spencerneveux/Desktop/FinalProject/NLP/NLP/app/api.json"
 
 
 # =========================
@@ -67,13 +65,24 @@ class UserCreate(CreateView):
 
 
 # =========================
+# Account
+# =========================
+class AccountUpdate(UpdateView):
+    model = User
+    fields = ('email',)
+    success_url = reverse_lazy("account")
+    template_name = "app/account_form.html"
+
+    def get_success_url(self):
+        return reverse('account', kwargs={'pk': self.object.id})
+
+# =========================
 # Profile
 # =========================
-class ProfileUpdate(UpdateView):
-    model = User
+# TODO: fix all this nonsense
+class ProfileCreate(CreateView):
+    model = Profile
     fields = "__all__"
-    success_url = reverse_lazy("article-list")
-    template_name = "app/profile_form.html"
 
 
 # =========================

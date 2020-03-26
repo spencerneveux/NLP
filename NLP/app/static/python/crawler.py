@@ -1,6 +1,6 @@
 import feedparser
-from NLP.app.static.python.feed import Feed
-from NLP.app.static.python.article import Article
+from .feed import Feed
+from .article import Article
 
 rss_feeds = ['http://feeds.bbci.co.uk/news/world/rss.xml',
              'http://feeds.reuters.com/Reuters/worldNews',

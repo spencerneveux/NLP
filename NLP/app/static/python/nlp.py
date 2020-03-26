@@ -161,10 +161,6 @@ class NLP:
         self.avg_magnitude = m_total / num_elems
         self.avg_score = s_total / num_elems
 
-        print(
-            f"Total Magnitude: {m_total} -- Avg Magnitude: {self.avg_magnitude}"
-        )
-        print(f"Total Score: {s_total} -- Avg Score: {self.avg_score}")
 
     def check_clickbait(self, title):
         # This causes a massive performance hit

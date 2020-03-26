@@ -118,10 +118,10 @@
             {% endif %}
             {% if user.profile.is_online %}
               <li class="list-group-item">
-                <a href="{% url 'profile' user.id %}"><i class="fa fa-user mr-2" aria-hidden="true"></i></i>Account</a>
+                <a href="{% url 'account' user.id %}"><i class="fa fa-user mr-2" aria-hidden="true"></i></i>Account</a>
               </li>
               <li class="list-group-item">
-                <a class="" href="{% url 'profile' pk=user.pk %}"><i class="fa fa-cog mr-2" aria-hidden="true"></i>Settings</a>
+                <a class="" href="{% url 'account' pk=user.pk %}"><i class="fa fa-cog mr-2" aria-hidden="true"></i>Settings</a>
               </li>
               <li class="list-group-item">
                 <a class="" href="{% url 'logout' %}"><i class="fa fa-sign-out mr-2" aria-hidden="true"></i>Logout</a>
@@ -154,7 +154,7 @@
       <a href="{% url 'bookmark-list' %}"><button class="btn btn-white" data-toggle="tooltip" data-placement="bottom" title="Bookmarks"><i class="fa fa-bookmark" aria-hidden="true"></i></button></a>
 
       {% if user.profile.is_online %}
-          <a href="{% url 'profile' user.id %}"><button class="btn btn-light mr-1">{{user.profile}}</button></a>
+          <a href="{% url 'account' user.id %}"><button class="btn btn-light mr-1">{{user}}</button></a>
       {% endif %}
       {% if not user.profile.is_online %}
         <a href="{% url 'login' %}"><button class="btn btn-light mr-1">Log In</button></a>

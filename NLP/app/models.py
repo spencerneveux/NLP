@@ -21,6 +21,7 @@ class ProfileManager(models.Manager):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    # email = models.EmailField(max_length=200, default="")
     avatar = models.ImageField(upload_to="app/static/images", default="app/static/images/default.png")
     description = models.CharField(max_length=200, default="", null=True)
     is_online = models.BooleanField(default=False)
@@ -50,7 +51,8 @@ class Profile(models.Model):
 class SignUpForm(UserCreationForm):
     first_name = forms.CharField(max_length=200, help_text='First Name')
     last_name = forms.CharField(max_length=200, help_text='Last Name')
-    email = forms.EmailField(max_length=200, help_text='Email')
+    email = forms.EmailField(max_length=200, help_text='Email', required=True)
+    password1 = forms.PasswordInput()
 
     class Meta: 
         model = User
@@ -63,6 +65,12 @@ class SignUpForm(UserCreationForm):
             'password2'
         )
 
+class UpdateProfileForm(ModelForm):
+    avatar = forms.ImageField()
+
+    class Meta:
+        model = Profile
+        fields = "__all__"
 
 # =========================
 # RSS Feed

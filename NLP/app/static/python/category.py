@@ -15,3 +15,6 @@ class Category:
     def set_confidence(self, confidence:float):
         self.confidence = confidence
 
+    def __str__(self):
+        return f"{self.name} - {self.confidence}"
+

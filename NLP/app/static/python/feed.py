@@ -1,4 +1,4 @@
-from NLP.app.static.python.article import Article
+from .article import Article
 
 class Feed:
     def __init__(self):

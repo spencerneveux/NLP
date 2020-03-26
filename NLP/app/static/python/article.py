@@ -1,6 +1,7 @@
-from NLP.app.static.python.entity import Entity
-from NLP.app.static.python.category import Category
-from NLP.app.static.python.sentiment import Sentiment
+from .entity import Entity
+from .category import Category
+from .sentiment import Sentiment
+from .score import Score
 
 class Article:
     def __init__(self):
@@ -10,6 +11,7 @@ class Article:
         self.published: str = ""
         self.summary: str = ""
         self.content: str = ""
+        self.score: Score
         self.entities: [Entity] = []
         self.categories: [Category] = []
         self.sentiment: [Sentiment] = []
@@ -34,6 +36,9 @@ class Article:
 
     def get_summary(self):
         return self.summary
+
+    def get_score(self):
+        return self.score
 
     def get_entities(self):
         return self.entities
@@ -65,6 +70,9 @@ class Article:
     def set_summary(self, summary:str):
         self.summary = summary
 
+    def set_score(self, score:Score):
+        self.score = score
+
     def set_entities(self, entity:Entity):
         self.entities.append(entity)
 
@@ -75,4 +83,4 @@ class Article:
         self.categories.append(sentiment)
 
     def __str__(self):
-        return self.title + " - " + self.summary
+        return f"{self.title} - {self.entities} - {self.categories}"

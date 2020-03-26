@@ -11,7 +11,8 @@ from .views import (
 )
 
 from .views import (
-    ProfileUpdate
+    AccountUpdate,
+    ProfileCreate
 )
 
 from .views import (
@@ -70,9 +71,15 @@ urlpatterns = [
     path("signup", UserCreate.as_view(), name="user-add"),
 
     # ===================
+    # Account
+    # ===================
+    path("account/<int:pk>", AccountUpdate.as_view(), name="account"),
+
+    # ===================
     # Profile
     # ===================
-    path("profile/<int:pk>", ProfileUpdate.as_view(), name="profile"),
+    path("profile/add", ProfileCreate.as_view(), name="profile-add"),
+
 
     # ===================
     # RSS
