@@ -1,6 +1,10 @@
 import feedparser
+import datetime
 from .feed import Feed
 from .article import Article
+#
+# from NLP.app.static.python.feed import Feed
+# from NLP.app.static.python.article import Article
 
 rss_feeds = ['http://feeds.bbci.co.uk/news/world/rss.xml',
              'http://feeds.reuters.com/Reuters/worldNews',
@@ -44,7 +48,11 @@ rss_feeds = ['http://feeds.bbci.co.uk/news/world/rss.xml',
 class Crawler:
     def __init__(self):
         self.feed_list = [
-            'https://api.quantamagazine.org/feed/'
+            'https://api.quantamagazine.org/feed/',
+            'http://www.metacritic.com/rss/movies',
+            'https://www.techworld.com/news/rss',
+            'https://www.wired.com/feed',
+            'https://www.yahoo.com/news/rss/',
         ]
         self.entries = []
         self.feeds = []
@@ -55,23 +63,51 @@ class Crawler:
 
     def set_feeds(self):
         for entry in self.entries:
+            print(entry)
             f = Feed()
             f.set_title(entry.feed.title)
             f.set_link(entry.feed.link)
             f.set_description(entry.feed.description)
 
             for article in entry.entries:
+                print(article.keys())
+                print(article.values())
+
+                print()
+
                 a = Article()
-                a.set_title(article.title)
-                a.set_link(article.link)
-                a.set_published(article.published)
-                a.set_summary(article.summary)
+                article_keys = article.keys()
+
+                if "title" in article_keys:
+                    a.set_title(article.title)
+
+                if "author" in article_keys:
+                    a.set_author(article.author)
+
+                if "link" in article_keys:
+                    a.set_link(article.link)
+
+                if "links" in article_keys:
+                    print(f"Links: {article.links}")
+
+                if "summary" in article_keys:
+                    a.set_summary(article.summary)
+
+                if not "content" in article_keys:
+                    if "summary_detail" in article_keys:
+                        a.set_content(article.summary_detail['value'])
+
+                elif "content" in article_keys:
+                    a.set_content(article.content[0]['value'])
+
                 f.set_articles(a)
             self.feeds.append(f)
 
     def process_feeds(self):
         for feed in self.feed_list:
-            self.entries.append(feedparser.parse(feed))
+            f = feedparser.parse(feed)
+            if f.bozo == 0:
+                self.entries.append(f)
 
     def update(self):
         self.process_feeds()
@@ -80,3 +116,7 @@ class Crawler:
     def __str__(self):
         return self.entries
 
+def main():
+    c = Crawler()
+
+main()

@@ -142,11 +142,7 @@ urlpatterns = [
     # Knowledge
     # ===================
     path("knowledge/", KnowledgeList.as_view(), name="knowledge-list"),
-    path(
-        "knowledge/<int:pk>",
-        KnowledgeDetailView.as_view(),
-        name="knowledge-detail",
-    ),
+    path("knowledge/<int:pk>", KnowledgeDetailView.as_view(), name="knowledge-detail"),
 
     # ===================
     # Bookmark

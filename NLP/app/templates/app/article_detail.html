@@ -3,18 +3,18 @@
 
 {% block extra_js %}
 
-	<script>
-	  $(document).ready(function(){
-	  	$(".reply").click(function(){
-	  		var id = "#reply" + $(this).val();
-	  		$(id).show();
-		});
+<script>
+  $(document).ready(function(){
+	$(".reply").click(function(){
+		var id = "#reply" + $(this).val();
+		$(id).show();
+	});
 
-	  	$(".cancel-button").click(function(){
-	  		var id = "#reply" + $(this).val();
-	  		$(id).hide();
-		});
-	  });
+	$(".cancel-button").click(function(){
+		var id = "#reply" + $(this).val();
+		$(id).hide();
+	});
+  });
 </script>
 
 {% endblock extra_js %}
@@ -22,11 +22,14 @@
 <div class="container container-fluid">
 	<div class="jumbotron bg-white">
 	  	<h1 class="display-4">{{article.title}}</h1>
+		{% if article.author %}
 		<h2>Author: {{article.author}}</h2>
-		<h2>Publisher: {{article.publisher}}</h2>
+		{% endif %}
+
+		<a href="{{article.link}}">View Original Article</a>
 
 	  	<hr class="my-4 bg-light">
-	  	<p style="font-size: 25px;">{{article.content}}</p>
+	  	<p style="font-size: 25px;">{{article.content | safe}}</p>
 		<hr>
 		<h3>{{article.get_total_comments}} Comments:</h3>
 		<br>
@@ -47,6 +50,7 @@
 					<form action="POST" action="{% url 'comment-add' article_id=article.id%}">
 						{% csrf_token %}
 						{{comment_form|crispy}}
+						<input type="hidden" name="parent_id" value="{{comment.id}}">
 						<button class="btn btn-primary">Submit Reply</button>
 						<button type="button" class="btn btn-secondary cancel-button" value="{{comment.id}}">Cancel</button>
 					</form>

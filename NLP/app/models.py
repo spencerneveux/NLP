@@ -96,9 +96,9 @@ class RSSFeed(models.Model):
 # Articles
 # =========================
 class ArticleManager(models.Manager):
-    def create_article(self, author, publisher, title, content):
+    def create_article(self, author, publisher, title, content, link):
         article = self.create(
-            author=author, publisher=publisher, title=title, content=content
+            author=author, publisher=publisher, title=title, content=content, link=link
         )
         return article
 
@@ -111,6 +111,7 @@ class Article(models.Model):
     publisher = models.CharField(max_length=200, default="")
     author = models.CharField(max_length=200, default="")
     content = models.TextField()
+    link = models.URLField(default="")
     date = models.DateTimeField(default=now)
 
     def get_entities(self):
@@ -323,7 +324,7 @@ class Like(models.Model):
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     article = models.ForeignKey(Article, related_name='comments', on_delete=models.CASCADE)
-    parent = models.ForeignKey('self', null=True, related_name='replies', on_delete=models.CASCADE)
+    parent = models.ForeignKey('self', null=True, blank=True, related_name='replies', on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
     content = models.TextField(default="")
 

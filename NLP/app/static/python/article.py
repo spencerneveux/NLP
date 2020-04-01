@@ -7,6 +7,7 @@ class Article:
     def __init__(self):
         self.title: str = ""
         self.author: str = ""
+        self.publisher: str = ""
         self.link: str = ""
         self.published: str = ""
         self.summary: str = ""
@@ -24,6 +25,9 @@ class Article:
 
     def get_author(self):
         return self.author
+
+    def get_publisher(self):
+        return self.publisher
 
     def get_content(self):
         return self.content
@@ -57,6 +61,9 @@ class Article:
 
     def set_author(self, author:str):
         self.author = author
+
+    def set_publisher(self, publisher:str):
+        self.publisher = publisher
 
     def set_content(self, content:str):
         self.content = content

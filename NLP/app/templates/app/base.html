@@ -15,17 +15,17 @@
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <style>
-      a {
-        color: #333333;
-        text-decoration: none;
-        }
+      /*a {*/
+      /*  color: #333333;*/
+      /*  text-decoration: none;*/
+      /*  }*/
 
-      a:hover
-      {
-           color:#333333;
-           text-decoration:none;
-           cursor:pointer;
-      }
+      /*a:hover*/
+      /*{*/
+      /*     color:#333333;*/
+      /*     text-decoration:none;*/
+      /*     cursor:pointer;*/
+      /*}*/
 
       .article-count {
         background-color: #FF8800; color: white;
@@ -176,32 +176,28 @@
       <div class="col-2 border-right border-bottom ">
           <form class="form-inline ">
             <div class="form-group col">
-              <!--TODO: Write ajax call to update on change-->
               <input class="form-control mr-sm-2" id="feed-filter" type="search" placeholder="Filter Feeds" aria-label="Search">
             </div>
           </form>
       </div>
       <div class="col-3 border-right border-bottom">
-        <button class="btn btn-small btn-primary float-right mt-2" id="article-filter" type="button" value="1">
-        <!--TODO: Write ajax call to sort accordingly-->
+        <button class="btn btn-small btn-primary float-right mt-2" id="article-filter" type="button" value="4">
 		    Popular
 		  </button>
       </div>
       <div class="col border-bottom mt-1">
         {% if article.id %}
           <a href="{% url 'article-score' article.id %}"><button class="btn btn-white text-dark bookmark mb-1"><i class="fa fa-bar-chart" aria-hidden="true"></i></button></a>
-                <button class="btn btn-white text-dark bookmark mb-1" value="{{article.id}}"><i class="fa fa-bookmark" aria-hidden="true"></i></button>
-        <button class="btn btn-light float-right" type="button" id="share-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-share" aria-hidden="true"></i></button>
-        <div class="dropdown-menu" aria-labelledby="share-button">
-		    <a class="dropdown-item" href="#"><i class="fa fa-envelope-o mr-1" aria-hidden="true"></i>Send To Friend</a>
-		    <a class="dropdown-item" href="#"><i class="fa fa-twitter mr-1" aria-hidden="true"></i>Twitter</a>
-        </div>
-        <button class="btn btn-light float-right like" value="{{article.id}}"><i class="fa fa-thumbs-up" aria-hidden="true"></i></button>
-		<button class="btn btn-light float-right dislike" value="{{article.id}}"><i class="fa fa-thumbs-down" aria-hidden="true"></i></button>
-        <a href="{% url 'comment-add' article_id=article.id %}"><button class="btn btn-light float-right like" value="{{article.id}}"><i class="fa fa-comment" aria-hidden="true"></i></button></a>
+          <button class="btn btn-white text-dark bookmark mb-1" value="{{article.id}}"><i class="fa fa-bookmark" aria-hidden="true"></i></button>
+          <button class="btn btn-light float-right" type="button" id="share-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-share" aria-hidden="true"></i></button>
+          <div class="dropdown-menu" aria-labelledby="share-button">
+              <a class="dropdown-item" href="#"><i class="fa fa-envelope-o mr-1" aria-hidden="true"></i>Send To Friend</a>
+              <a class="dropdown-item" href="#"><i class="fa fa-twitter mr-1" aria-hidden="true"></i>Twitter</a>
+          </div>
+          <button class="btn btn-light float-right like" value="{{article.id}}"><i class="fa fa-thumbs-up" aria-hidden="true"></i></button>
+          <button class="btn btn-light float-right dislike" value="{{article.id}}"><i class="fa fa-thumbs-down" aria-hidden="true"></i></button>
+          <a href="{% url 'comment-add' article_id=article.id %}"><button class="btn btn-light float-right like" value="{{article.id}}"><i class="fa fa-comment" aria-hidden="true"></i></button></a>
         {% endif %}
-
-
 
       </div>
     </div>
@@ -226,11 +222,11 @@
         {% for article in default_article_list %}
           <li class='list-group-item  '>
               <div class='article-container'>
-                <h4 class='d-inline'><span class='badge article-count'>{{article.id}}</span></h4>
-                <p class='ml-2 d-inline article-title'><a href="{% url 'article-detail' article.id %}" >{{article.title}}</a></p>
+                <h4 class='d-inline'><span class='badge article-count'>{{forloop.counter}}</span></h4>
+                <p class='ml-2 d-inline article-title'><a href="{% url 'article-detail' article.id %}" style="text-decoration: none; color: #333333;" >{{article.title}}</a></p>
                 <p class='article-stats'>{{article.get_likes}} likes | {{article.get_total_comments}} comments | {{article.date|date:"M d, Y"}} by {{article.author}}</p>
               </div>
-            </li>
+          </li>
         {% endfor %}
       </ul>
     </div>

@@ -511,3 +511,4 @@ def get_latest_rss_articles(request):
         }
 
     return JsonResponse(data)
+

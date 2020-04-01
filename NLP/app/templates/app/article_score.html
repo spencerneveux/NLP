@@ -6,6 +6,8 @@
 <div class="container container-fluid">
 
 	<div class="row">
+		{% if article.score.score and article.score.magnitude %}
+
 		<div class="col">
 			<div class="card">
 				<div class="card-header">
@@ -29,6 +31,7 @@
 				</div>
 			</div>
 		</div>
+		{% endif %}
 	</div>
 
 	<br>
@@ -63,9 +66,7 @@
 		</div>
 
 	</div>
-
 <br>
-
 	<div class="row">
 
 		<div class="col">
@@ -91,7 +92,12 @@
 						      <td>{{entity.entity_type}}</td>
 						      <td>{{entity.salience}}</td>
 						      <td><a href="{{entity.metadata.key}}">{{entity.metadata.key}}</a></td>
-						      <td>{{entity.metadata.value}}</td>
+								{% if entity.knowledge.pk %}
+								<td><a href="{% url 'knowledge-detail' entity.pk %}">Details</a></td>
+								{% else %}
+								<td>No Details</td>
+								{% endif %}
+
 						    </tr>
 						{% endfor %}
 					  </tbody>
