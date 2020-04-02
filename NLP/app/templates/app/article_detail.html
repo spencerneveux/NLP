@@ -18,18 +18,20 @@
 </script>
 
 {% endblock extra_js %}
+
 {% block content %}
 <div class="container container-fluid">
 	<div class="jumbotron bg-white">
 	  	<h1 class="display-4">{{article.title}}</h1>
 		{% if article.author %}
-		<h2>Author: {{article.author}}</h2>
+		<p class="d-inline" id="article-author">by {{article.author}}</p>
+		<p class="d-inline float-right">{{article.date}}</p>
 		{% endif %}
 
 		<a href="{{article.link}}">View Original Article</a>
 
 	  	<hr class="my-4 bg-light">
-	  	<p style="font-size: 25px;">{{article.content | safe}}</p>
+	  	<p >{{article.content | safe}}</p>
 		<hr>
 		<h3>{{article.get_total_comments}} Comments:</h3>
 		<br>

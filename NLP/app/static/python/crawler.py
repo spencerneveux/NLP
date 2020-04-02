@@ -48,11 +48,14 @@ rss_feeds = ['http://feeds.bbci.co.uk/news/world/rss.xml',
 class Crawler:
     def __init__(self):
         self.feed_list = [
-            'https://api.quantamagazine.org/feed/',
-            'http://www.metacritic.com/rss/movies',
-            'https://www.techworld.com/news/rss',
-            'https://www.wired.com/feed',
-            'https://www.yahoo.com/news/rss/',
+            # 'https://api.quantamagazine.org/feed/',
+            # 'http://www.metacritic.com/rss/movies',
+            # 'https://www.techworld.com/news/rss',
+            # 'https://www.wired.com/feed',
+            # 'https://www.yahoo.com/news/rss/',
+            # "https://www.rogerebert.com/feed",
+            # "http://podcasts.joerogan.net/feed",
+            "https://www.reddit.com/.rss",
         ]
         self.entries = []
         self.feeds = []
@@ -65,15 +68,26 @@ class Crawler:
         for entry in self.entries:
             print(entry)
             f = Feed()
-            f.set_title(entry.feed.title)
-            f.set_link(entry.feed.link)
-            f.set_description(entry.feed.description)
+            feed_keys = entry.feed.keys()
+
+            # TODO: fix feed titles
+            if 'title' in feed_keys:
+                f.set_title(entry.feed.title)
+
+            if 'link' in feed_keys:
+                f.set_link(entry.feed.link)
+
+            if 'description' in feed_keys:
+                f.set_description(entry.feed.description)
+
+            print(f"Feed keys {feed_keys}")
+
 
             for article in entry.entries:
-                print(article.keys())
-                print(article.values())
-
-                print()
+                # print(article.keys())
+                # print(article.values())
+                #
+                # print()
 
                 a = Article()
                 article_keys = article.keys()
@@ -87,8 +101,8 @@ class Crawler:
                 if "link" in article_keys:
                     a.set_link(article.link)
 
-                if "links" in article_keys:
-                    print(f"Links: {article.links}")
+                # if "links" in article_keys:
+                #     print(f"Links: {article.links}")
 
                 if "summary" in article_keys:
                     a.set_summary(article.summary)

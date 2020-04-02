@@ -93,7 +93,7 @@
 					</div>
 					
 					<div id="email-form">
-						<form method="POST"  action="{% url 'account' user.id %}" >
+							<form method="POST"  action="{% url 'account' user.id %}" >
 							{% csrf_token %}
 							{{form.email|as_crispy_field}}
 							<button type="submit" class="btn btn-primary">Submit</button>
@@ -114,28 +114,16 @@
 				</div>
 			</div>
 			<br>
-			<div class="card">
-				<div class="card-header">
-					<h5>Connected Accounts</h5>
-				</div>
-				<div class="card-body">
-					<p>{{user}}</p>
-					<button class="btn btn-primary">Change</button>
-				</div>
-			</div>
 		</div>
 
 		<div id="profile">
 			<div class="card">
 				<div class="card-body">
-					<img src="{{user.profile.avatar}}" id="user-profile-pic">
-				
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-					tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-					quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-					consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-					cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-					proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+					<img src="{% static 'images/default.png' %}" id="user-profile-pic">
+					<hr>
+					<h5>Description</h5>
+					<p>{{user.profile.description}}</p>
+					<button class="btn btn-primary">Edit Description</button>
 					<button class="btn btn-danger">Deactivate Account</button>
 				</div>
 			</div>

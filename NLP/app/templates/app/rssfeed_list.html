@@ -51,37 +51,69 @@
 {% endblock extra_js %}
 {% block content %}
 <br>
-<div class="card ">
-	<div class="card-header">
-		<div class="row">
-			<div class="col">
-				<h1>RSS Feeds</h1>
+<div class="form-row mt-2 justify-content-center">
+	<div class="form-group col-xs-3">
+		<input class="form-control" type="text" placeholder="Type website name, topic, URL">
+		<div class="btn-toolbar mt-3 ">
+			<div class="btn-group mr-2">
+				<button class="btn btn-secondary">Business</button>
+			</div>
+			<div class="btn-group mr-2">
+				<button class="btn btn-secondary">Design</button>
+			</div>
+			<div class="btn-group mr-2">
+				<button class="btn btn-secondary">Development</button>
+			</div>
+			<div class="btn-group mr-2">
+				<button class="btn btn-secondary">Featured</button>
+			</div>
+			<div class="btn-group mr-2">
+				<button class="btn btn-secondary">News</button>
 			</div>
 		</div>
 	</div>
-	<div class="card-body">
-		<table class="table table-striped">
-			<thead class="thead-dark">
-				<tr>
-					<th scope="col">Name</th>
-					<th scope="col">Article</th>
-					<th scope="col">Follow</th>
-					<th scope="col">UnFollow</th>
-				</tr>
-			</thead>
-			<tbody>
-				{% for feed in rssfeed_list %}
-					<tr>
-						<td>{{feed.name}}</td>
-						<td><a href="{{feed.link}}">{{feed.link}}</a></td>
-						<td><button class="btn btn-primary add" id="addButton" value="{{ feed.id }}"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></button></td>
-						<td><button class="btn btn-danger remove" id="removeButton" value="{{ feed.id }}"><i class="fa fa-minus-circle fa-2x" aria-hidden="true"></i></button></td>
-					</tr>
-				{% endfor %}
-			</tbody>
-		</table>
-				<a href="{{ request.META.HTTP_REFERER }}" class="btn btn-secondary" class>Back</a>
+</div>
+<br>
+<div class="row">
+{% for feed in rss_list %}
+	<div class="col-sm-4">
+		<div class="card mb-2">
+			<div class="card-body">
+			  <h5 class="card-title">{{feed.name}}</h5>
+			  <p class="card-text">{{feed.description}}</p>
 			</div>
+			  <div class="card-footer">
+				  <a href="{{feed.link}}"><small class="text-muted">Visit Site</small></a>
+					<button class="btn btn-small btn-white remove-bookmark float-right" value="{{bookmark.article.id}}"><small class="text-muted float-right"><i class="fa fa-trash" aria-hidden="true"></i></small></button>
+			  </div>
 		</div>
+	</div>
+{% endfor %}
+</div>
+
+<!--	<div class="card-body">-->
+<!--		<table class="table table-striped">-->
+<!--			<thead class="thead-dark">-->
+<!--				<tr>-->
+<!--					<th scope="col">Name</th>-->
+<!--					<th scope="col">Article</th>-->
+<!--					<th scope="col">Follow</th>-->
+<!--					<th scope="col">UnFollow</th>-->
+<!--				</tr>-->
+<!--			</thead>-->
+<!--			<tbody>-->
+<!--				{% for feed in rssfeed_list %}-->
+<!--					<tr>-->
+<!--						<td>{{feed.name}}</td>-->
+<!--						<td><a href="{{feed.link}}">{{feed.link}}</a></td>-->
+<!--						<td><button class="btn btn-primary add" id="addButton" value="{{ feed.id }}"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></button></td>-->
+<!--						<td><button class="btn btn-danger remove" id="removeButton" value="{{ feed.id }}"><i class="fa fa-minus-circle fa-2x" aria-hidden="true"></i></button></td>-->
+<!--					</tr>-->
+<!--				{% endfor %}-->
+<!--			</tbody>-->
+<!--		</table>-->
+<!--				<a href="{{ request.META.HTTP_REFERER }}" class="btn btn-secondary" class>Back</a>-->
+<!--			</div>-->
+<!--		</div>-->
 		<br>
 {% endblock  %}

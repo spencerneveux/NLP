@@ -21,11 +21,14 @@ class ProfileManager(models.Manager):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    # email = models.EmailField(max_length=200, default="")
+    email = models.EmailField(max_length=200, default="")
     avatar = models.ImageField(upload_to="app/static/images", default="app/static/images/default.png")
     description = models.CharField(max_length=200, default="", null=True)
     is_online = models.BooleanField(default=False)
     signup_confirmation = models.BooleanField(default=False)
+
+    # TODO: Need settings fields (dark mode,etc)
+    # TODO: Need additional rss feeds specific to user
 
 
     def get_rss_list(self):
