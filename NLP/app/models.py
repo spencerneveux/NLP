@@ -30,9 +30,13 @@ class Profile(models.Model):
     # TODO: Need settings fields (dark mode,etc)
     # TODO: Need additional rss feeds specific to user
 
-
     def get_rss_list(self):
-        return self.user.rss_set.all()
+        feeds = self.user.rss_set.all()
+        results = []
+        for feed in feeds:
+            if feed.feed_added:
+                results.append(feed.rss)
+        return results
 
     def get_bookmarks(self):
         return self.user.bookmark_set.all()

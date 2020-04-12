@@ -1,5 +1,7 @@
 import feedparser
 import datetime
+from urllib.parse import urlparse
+
 from .feed import Feed
 from .article import Article
 #
@@ -47,16 +49,16 @@ rss_feeds = ['http://feeds.bbci.co.uk/news/world/rss.xml',
 
 class Crawler:
     def __init__(self):
-        self.feed_list = [
-            # 'https://api.quantamagazine.org/feed/',
-            # 'http://www.metacritic.com/rss/movies',
-            # 'https://www.techworld.com/news/rss',
-            # 'https://www.wired.com/feed',
-            # 'https://www.yahoo.com/news/rss/',
-            # "https://www.rogerebert.com/feed",
-            # "http://podcasts.joerogan.net/feed",
-            "https://www.reddit.com/.rss",
-        ]
+        self.feed_list = {
+            'Quanta Magazine': 'https://api.quantamagazine.org/feed/',
+            'Metacritic': 'http://www.metacritic.com/rss/movies',
+            'Techworld': 'https://www.techworld.com/news/rss',
+            'Wired': 'https://www.wired.com/feed',
+            'Yahoo': 'https://www.yahoo.com/news/rss/',
+            'RogerEbert': "https://www.rogerebert.com/feed",
+            'Joe Rogan Podcasts': "http://podcasts.joerogan.net/feed",
+            'Reddit':  "https://www.reddit.com/.rss",
+        }
         self.entries = []
         self.feeds = []
         self.update()
@@ -66,29 +68,28 @@ class Crawler:
 
     def set_feeds(self):
         for entry in self.entries:
-            print(entry)
             f = Feed()
-            feed_keys = entry.feed.keys()
+            feed_keys = entry[1].feed.keys()
 
-            # TODO: fix feed titles
             if 'title' in feed_keys:
-                f.set_title(entry.feed.title)
+                f.set_title(entry[0])
 
             if 'link' in feed_keys:
-                f.set_link(entry.feed.link)
+                link = entry[1].feed.link
+                o = urlparse(link)
+                netloc = o.netloc
+                f.set_link(netloc)
 
             if 'description' in feed_keys:
-                f.set_description(entry.feed.description)
+                f.set_description(entry[1].feed.description)
+
+            if 'image' in feed_keys:
+                print(f"Image - {entry[1].feed.image}")
 
             print(f"Feed keys {feed_keys}")
 
 
-            for article in entry.entries:
-                # print(article.keys())
-                # print(article.values())
-                #
-                # print()
-
+            for article in entry[1].entries:
                 a = Article()
                 article_keys = article.keys()
 
@@ -100,9 +101,6 @@ class Crawler:
 
                 if "link" in article_keys:
                     a.set_link(article.link)
-
-                # if "links" in article_keys:
-                #     print(f"Links: {article.links}")
 
                 if "summary" in article_keys:
                     a.set_summary(article.summary)
@@ -119,9 +117,10 @@ class Crawler:
 
     def process_feeds(self):
         for feed in self.feed_list:
-            f = feedparser.parse(feed)
+            f = feedparser.parse(self.feed_list[feed])
             if f.bozo == 0:
-                self.entries.append(f)
+                tup = (feed, f)
+                self.entries.append(tup)
 
     def update(self):
         self.process_feeds()

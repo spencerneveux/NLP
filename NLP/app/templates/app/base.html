@@ -36,6 +36,11 @@
         font-size: 14px;
       }
 
+      .article-title {
+        text-decoration: none;
+        color: #333333;
+      }
+
       #logo {
         width: 30px;
         height: 30px;
@@ -45,6 +50,12 @@
         margin-top:10px;
         margin-bottom: 5px;
         width: 250px;
+      }
+
+      .feed-avatar {
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
       }
 
       #button-filter {
@@ -181,9 +192,9 @@
           </form>
       </div>
       <div class="col-3 border-right border-bottom">
-        <button class="btn btn-small btn-primary float-right mt-2" id="article-filter" type="button" value="4">
+        <button class="btn btn-small btn-primary float-right mt-2" id="article-filter" type="button" value="{% with user_rss_list|first as first_id%}{{first_id.id}}{% endwith %}">
 		    Popular
-		  </button>
+        </button>
       </div>
       <div class="col border-bottom mt-1">
         {% if article.id %}
@@ -204,17 +215,26 @@
   <div class="row justify-content-center h-100">
     <div class="col-2 hidden-md-down border-right">
       <ul class="list-group list-group-flush " id="rss-list">
-        {% for feed in rss_list %}
+        {% for feed in user_rss_list %}
           <li class="list-group-item">
             <div class="feed-container">
               <button class="btn btn-white feed" id="{{feed.id}}" value="{{feed.id}}">
-                <h4 class="d-inline" ><span class="badge article-count"><i class="fa fa-android" aria-hidden="true"></i></span></h4>
+                <h4 class="d-inline" ><img class="feed-avatar" src="//logo.clearbit.com/{{feed.link}}"></h4>
                 <p class="ml-2 d-inline article-title">{{feed.name}}</p>
               </button>
             </div>
           </li>
         {% endfor %}
-
+        {% for feed in user_list %}
+           <li class="list-group-item">
+            <div class="feed-container">
+              <button class="btn btn-white feed" id="{{feed.id}}" value="{{feed.id}}">
+                <h4 class="d-inline" ><img class="feed-avatar" src="//logo.clearbit.com/{{feed.link}}"></h4>
+                <p class="ml-2 d-inline article-title">{{feed.name}}</p>
+              </button>
+            </div>
+          </li>
+        {% endfor %}
       </ul>
     </div>
     <div class="col-3 border-right">
@@ -223,7 +243,7 @@
           <li class='list-group-item  '>
               <div class='article-container'>
                 <h4 class='d-inline'><span class='badge article-count'>{{forloop.counter}}</span></h4>
-                <p class='ml-2 d-inline article-title'><a href="{% url 'article-detail' article.id %}" style="text-decoration: none; color: #333333;" >{{article.title}}</a></p>
+                <p class='ml-2 d-inline article-title'><a href="{% url 'article-detail' article.id %}" style="text-decoration: none; color: #333333; " >{{article.title}}</a></p>
                 <p class='article-stats'>{{article.get_likes}} likes | {{article.get_total_comments}} comments | {{article.date|date:"M d, Y"}} by {{article.author}}</p>
               </div>
           </li>
@@ -232,7 +252,7 @@
     </div>
     <br>
     <div class="col">
-      	<div class="alert alert-success alert-dismissable collapse">
+      	<div class="alert alert-success alert-dismissable collapse mt-2">
           <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
         </div>
         {% block content %}
@@ -252,6 +272,8 @@
 
 <script>
   $(document).ready(function(){
+
+
     $('#share-button').hover(function(){
 
     });
@@ -298,7 +320,7 @@
                           "<li class='list-group-item'>" +
                             "<div class='article-container'>" +
                               "<h4 class='d-inline'><span class='badge article-count'>" + count + "</span></h4>" +
-                              "<p class='ml-2 d-inline article-title'><a href="+ url +" >" + title + "</a></p>" +
+                              "<p class='ml-2 d-inline article-title'><a class='article-title' href="+ url +" >" + title + "</a></p>" +
                               "<p class='article-stats'>" + likes + " likes | " + comment + " comments | " + date + " by " + author + "</p>" +
                             "</div>" +
                           "</li>"
@@ -426,7 +448,7 @@
                             "<li class='list-group-item'>" +
                               "<div class='article-container'>" +
                                 "<h4 class='d-inline'><span class='badge article-count'>" + count + "</span></h4>" +
-                                "<p class='ml-2 d-inline article-title'><a href="+ url +" >" + title + "</a></p>" +
+                                "<p class='ml-2 d-inline article-title'><a class='article-title' href="+ url +" >" + title + "</a></p>" +
                                 "<p class='article-stats'>" + likes + " likes | " + comment + " comments | " + date + " by " + author + "</p>" +
                               "</div>" +
                             "</li>"
@@ -469,7 +491,7 @@
                             "<li class='list-group-item'>" +
                               "<div class='article-container'>" +
                                 "<h4 class='d-inline'><span class='badge article-count'>" + count + "</span></h4>" +
-                                "<p class='ml-2 d-inline article-title'><a href="+ url +" >" + title + "</a></p>" +
+                                "<p class='ml-2 d-inline article-title'><a class='article-title' href="+ url +" >" + title + "</a></p>" +
                                 "<p class='article-stats'>" + likes + " likes | " + comment + " comments | " + date + " by " + author + "</p>" +
                               "</div>" +
                             "</li>"

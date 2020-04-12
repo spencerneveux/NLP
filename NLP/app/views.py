@@ -1,7 +1,9 @@
 import os
 import requests
 from django.utils import timezone
+from django.http import HttpResponse
 from django.urls import reverse_lazy, reverse
+from django.core import serializers
 from google.cloud.language_v1 import enums
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, DetailView, TemplateView
@@ -88,7 +90,7 @@ class ProfileCreate(CreateView):
 # =========================
 # RSS Feeds
 # =========================
-class RSSList(ListView):
+class RSSFeedList(ListView):
     model = RSSFeed
 
 # =========================
@@ -512,3 +514,18 @@ def get_latest_rss_articles(request):
 
     return JsonResponse(data)
 
+def search_rss(request):
+    query = request.GET.get('search')
+    results = RSSFeed.objects.filter(name__contains=query)
+    print(results)
+
+    if results:
+        data = {
+            'Test': True,
+            'results': list(results.values()),
+        }
+    else:
+        data = {
+            'Test': False,
+        }
+    return JsonResponse(data)

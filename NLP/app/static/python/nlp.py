@@ -158,8 +158,12 @@ class NLP:
             s_total += score[1]
 
         # Get average score
-        self.avg_magnitude = m_total / num_elems
-        self.avg_score = s_total / num_elems
+        if num_elems > 0:
+            self.avg_magnitude = m_total / num_elems
+            self.avg_score = s_total / num_elems
+        else:
+            self.avg_magnitude = 0
+            self.avg_score = 0
 
 
     def check_clickbait(self, title):

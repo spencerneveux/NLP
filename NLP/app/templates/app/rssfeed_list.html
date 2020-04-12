@@ -1,5 +1,35 @@
 {% extends 'app/base.html' %}
 {% load crispy_forms_tags %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+	.zoom {
+	  transition: transform .2s;
+	}
+	.zoom:hover {
+	  transform: scale(1.03);
+	}
+
+	.feed-avatar {
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+	}
+
+	.hide-alert {
+		display: none;
+	}
+
+	#login {
+        position: absolute;
+        left: 5%;
+        top: 10%;
+        z-index: -1;
+    }
+
+</style>
+{% endblock extra_css %}
 
 {% block extra_js %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -7,10 +37,8 @@
 	<script type="text/javascript">
 		$(document).ready(function(){
 
-	        $(".add").click(function(){
+	        $(document).on('click', '.add-rss', function(){
 	        	var rss_id = $(this).val()
-	        	console.log(rss_id);
-	        	
 	        	$.ajax({
 	        		url: "{% url 'add-rss' %}",
 	        		data: {
@@ -19,14 +47,17 @@
 	        		dataType: "json",
 	        		success: function(data) {
 	        			if (data['Test'] == true){
+	        				$("#add-alert").removeClass('hide-alert');
+	        				$("#add-alert").show();
+	        				$("#add-alert").fadeOut(2000, function(){
+	        					$(this).hide();
+							});
 	        			}
-	        			console.log(data['Test']);
 	        		}
 	        	});
-	
 	        });
 
-	        $(".remove").click(function(){
+	        $(document).on('click', '.remove-rss', function(){
 	        	var rss_id = $(this).val()
 	        	console.log(rss_id);
 	        	
@@ -38,12 +69,61 @@
 	        		dataType: "json",
 	        		success: function(data) {
 	        			if (data['Test'] == true){
+	        				$("#remove-alert").removeClass('hide-alert');
+	        				$("#remove-alert").show();
+	        				$("#remove-alert").fadeOut(2000, function(){
+	        					$(this).hide();
+							});
 	        			}
-
-	        			console.log(data['Test']);
 	        		}
 	        	});
 	
+	        });
+
+	        $(".search-rss").on("keyup", function(){
+	        	var search = $(this).val()
+	        	if (search.length == 0) {
+	        		$(".card-container").children().show();
+	        		$(".temp-card-container").empty();
+				}
+				if (search.length > 0) {
+					$.ajax({
+	        		url: "{% url 'search-rss' %}",
+	        		data: {
+	        			"search": search
+	        		},
+	        		dataType: "json",
+	        		success: function(data) {
+	        			if (data['Test'] == true){
+	        				result_list = data['results'];
+	        				$(".temp-card-container").empty();
+	        				for (result in result_list) {
+	        					var id = result_list[result]['id'];
+	        					var name = result_list[result]['name'];
+	        					var link = result_list[result]['link'];
+	        					$(".card-container").children().hide();
+								$(".temp-card-container").append('<div class="col-sm-4">\n' +
+										'\t\t<div class="card mb-2 zoom">\n' +
+										'\t\t\t<div class="card-body">\n' +
+										'\t\t\t\t<img class="card-img-top feed-avatar d-inline" src="//logo.clearbit.com/'+ link +'" alt="...">\n' +
+										'\t\t\t  \t<h5 class="card-title d-inline">' + name + '</h5>\n' +
+										'<!--\t\t\t  \t<p class="card-text">{{feed.description}}</p>-->\n' +
+										'\t\t\t\t<p class="mt-2">{% lorem 15 w%}</p>\n' +
+										'\t\t\t</div>\n' +
+										'\t\t\t  <div class="card-footer">\n' +
+										'\t\t\t\t  <a href="http://' + link +'"><small class="text-muted">Visit Site</small></a>\n' +
+										'\t\t\t\t  <button class="btn btn-small btn-white remove-bookmark float-right remove-rss" value="' + id + '"><small class="text-muted float-right"><i class="fa fa-trash" aria-hidden="true"></i></small></button>\n' +
+										'\t\t\t\t  <button class="btn btn-small btn-white remove-bookmark float-right add-rss" value="' + id + '"><small class="text-muted float-right"><i class="fa fa-plus" aria-hidden="true"></i></small></button>\n' +
+										'\t\t\t  </div>\n' +
+										'\t\t</div>\n' +
+										'\t</div>'
+								);
+							}
+	        			}
+	        		}
+	        	});
+				}
+
 	        });
 	     });
 	</script>
@@ -51,11 +131,28 @@
 {% endblock extra_js %}
 {% block content %}
 <br>
+
+<div class="alert alert-success hide-alert" id="add-alert" role="alert">
+  Success! Added RSS Feed.
+</div>
+<div class="alert alert-success hide-alert" id="remove-alert" role="alert">
+  Success! Removed RSS Feed.
+</div>
+
+{% if not user.profile.is_online %}
+	<div class="container">
+		<h2 class="text-center mb-3">You must sign in to customize feed</h2>
+		<img id="login" src="{% static "images/login.png" %}" alt="">
+	</div>
+{% endif %}
+
+{% if user.profile.is_online %}
 <div class="form-row mt-2 justify-content-center">
 	<div class="form-group col-xs-3">
-		<input class="form-control" type="text" placeholder="Type website name, topic, URL">
+		<input class="form-control search-rss" type="text" placeholder="Type website name, topic, URL">
 		<div class="btn-toolbar mt-3 ">
 			<div class="btn-group mr-2">
+
 				<button class="btn btn-secondary">Business</button>
 			</div>
 			<div class="btn-group mr-2">
@@ -73,47 +170,30 @@
 		</div>
 	</div>
 </div>
+
 <br>
-<div class="row">
-{% for feed in rss_list %}
+<div class="row card-container">
+{% for feed in rssfeed_list %}
 	<div class="col-sm-4">
-		<div class="card mb-2">
+		<div class="card mb-2 zoom">
 			<div class="card-body">
-			  <h5 class="card-title">{{feed.name}}</h5>
-			  <p class="card-text">{{feed.description}}</p>
+				<img class="card-img-top feed-avatar d-inline" src="//logo.clearbit.com/{{feed.link}}"  alt="...">
+			  	<h5 class="card-title d-inline">{{feed.name}}</h5>
+<!--			  	<p class="card-text">{{feed.description}}</p>-->
+				<p class="mt-2">{% lorem 15 w%}</p>
 			</div>
 			  <div class="card-footer">
-				  <a href="{{feed.link}}"><small class="text-muted">Visit Site</small></a>
-					<button class="btn btn-small btn-white remove-bookmark float-right" value="{{bookmark.article.id}}"><small class="text-muted float-right"><i class="fa fa-trash" aria-hidden="true"></i></small></button>
+				  <a href="http://{{feed.link}}"><small class="text-muted">Visit Site</small></a>
+				  <button class="btn btn-small btn-white remove-bookmark float-right remove-rss" value="{{feed.id}}"><small class="text-muted float-right"><i class="fa fa-trash" aria-hidden="true"></i></small></button>
+				  <button class="btn btn-small btn-white remove-bookmark float-right add-rss" value="{{feed.id}}"><small class="text-muted float-right"><i class="fa fa-plus" aria-hidden="true"></i></small></button>
 			  </div>
 		</div>
 	</div>
 {% endfor %}
 </div>
+<div class="row temp-card-container">
 
-<!--	<div class="card-body">-->
-<!--		<table class="table table-striped">-->
-<!--			<thead class="thead-dark">-->
-<!--				<tr>-->
-<!--					<th scope="col">Name</th>-->
-<!--					<th scope="col">Article</th>-->
-<!--					<th scope="col">Follow</th>-->
-<!--					<th scope="col">UnFollow</th>-->
-<!--				</tr>-->
-<!--			</thead>-->
-<!--			<tbody>-->
-<!--				{% for feed in rssfeed_list %}-->
-<!--					<tr>-->
-<!--						<td>{{feed.name}}</td>-->
-<!--						<td><a href="{{feed.link}}">{{feed.link}}</a></td>-->
-<!--						<td><button class="btn btn-primary add" id="addButton" value="{{ feed.id }}"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></button></td>-->
-<!--						<td><button class="btn btn-danger remove" id="removeButton" value="{{ feed.id }}"><i class="fa fa-minus-circle fa-2x" aria-hidden="true"></i></button></td>-->
-<!--					</tr>-->
-<!--				{% endfor %}-->
-<!--			</tbody>-->
-<!--		</table>-->
-<!--				<a href="{{ request.META.HTTP_REFERER }}" class="btn btn-secondary" class>Back</a>-->
-<!--			</div>-->
-<!--		</div>-->
-		<br>
+</div>
+<br>
+{% endif %}
 {% endblock  %}

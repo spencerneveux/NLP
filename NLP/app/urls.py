@@ -7,7 +7,7 @@ from .views import (
     IndexView,
     HomeView,
     UserCreate,
-    RSSList
+    RSSFeedList
 )
 
 from .views import (
@@ -84,7 +84,7 @@ urlpatterns = [
     # ===================
     # RSS
     # ===================
-    path("rss/", RSSList.as_view(), name="rss-list"),
+    path("rss/", RSSFeedList.as_view(), name="rss-list"),
 
     # ===================
     # Comment
@@ -161,4 +161,5 @@ urlpatterns = [
     url(r'^ajax/get_popular_rss_articles/$', views.get_popular_rss_articles, name='get-popular-rss-articles'),
     url(r'^ajax/get_popular_rss_articles/$', views.get_popular_rss_articles, name='get-popular-rss-articles'),
     url(r'^ajax/get_latest_rss_articles/$', views.get_latest_rss_articles, name='get-latest-rss-articles'),
+    url(r'^ajax/search_rss/$', views.search_rss, name='search-rss'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
