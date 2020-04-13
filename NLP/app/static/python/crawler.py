@@ -8,6 +8,96 @@ from .article import Article
 # from NLP.app.static.python.feed import Feed
 # from NLP.app.static.python.article import Article
 
+news_feeds = {
+    "BBCI: News": 'http://feeds.bbci.co.uk/news/world/rss.xml',
+    "NY Times: News": 'https://www.nytimes.com/svc/collections/v1/publish/https://www.nytimes.com/section/world/rss.xml',
+    "Buzzfeed: News": 'https://www.buzzfeed.com/world.xml',
+    "Aljazeera": 'https://www.aljazeera.com/xml/rss/all.xml',
+    "Global Issues": 'https://www.globalissues.org/news/feed',
+    "The Cipher Breif": 'https://www.thecipherbrief.com/feed',
+    "Yahoo: News": 'https://www.yahoo.com/news/rss/world',
+    "CNN": 'http://rss.cnn.com/rss/edition_world.rss',
+    "The Guardian: World News": 'https://www.theguardian.com/world/rss',
+    "Washington Post": 'http://feeds.washingtonpost.com/rss/world',
+    "CNBC": 'https://www.cnbc.com/id/100727362/device/rss/rss.html',
+    "Reuters: World News": 'http://feeds.reuters.com/Reuters/worldNews',
+    "NPR": 'https://feeds.npr.org/1004/rss.xml',
+    "Sputnik News": 'https://sputniknews.com/export/rss2/world/index.xml',
+    "Vox": 'https://www.vox.com/rss/world/index.xml',
+    "Time": 'https://time.com/feed/',
+    "ABC: News": 'https://abcnews.go.com/abcnews/internationalheadlines',
+    "LA Times: World News": 'https://www.latimes.com/world/rss2.0.xml',
+}
+
+sport_feeds = {
+    "Sporting News": 'http://www.sportingnews.com/us/rss',
+    "Sky Sports": 'https://www.skysports.com/rss/12040',
+    "Sports Keeda":'https://www.sportskeeda.com/feed',
+    "Deadspin": 'https://deadspin.com/rss',
+    "Reddit: Sports": 'https://www.reddit.com/r/sports/.rss?format=xml',
+    "Inquirer: Sports": 'http://sports.inquirer.net/feed',
+    "Sports on Earth": 'http://www.sportsonearth.com/gen/hb/rss/writers.xml',
+    "Rivals": 'https://n.rivals.com/feed',
+    "Sports Net": 'https://www.sportsnet.ca/feed/',
+    "Essentially Sports": 'https://www.essentiallysports.com/feed/',
+    "Sports Crunch": 'https://www.sportscrunch.in/feed/'
+}
+
+tech_feeds = {
+    "Techmeme": 'https://www.techmeme.com/feed.xml?x=1',
+    "Technology Review": 'https://www.technologyreview.com/feed/',
+    "Arstechnica": 'http://feeds.arstechnica.com/arstechnica/technology-lab',
+    "Vox": 'https://www.vox.com/rss/recode/index.xml',
+    "Vergecast": 'https://feeds.megaphone.fm/vergecast',
+    "Wired": 'https://www.wired.com/feed/rss',
+    "Free Tech 4 Teachers": 'http://feeds.feedblitz.com/freetech4teachers',
+    "BBC: Tech": 'http://feeds.bbci.co.uk/news/technology/rss.xml',
+    "NY Times: Tech": 'https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml',
+    "Medium: Starship Tech": 'https://medium.com/feed/starshiptechnologies',
+    "CNET": 'https://www.cnet.com/rss/news/',
+    "Reuters: Tech News": 'http://feeds.reuters.com/reuters/technologyNews',
+    "The Verge": 'https://www.theverge.com/rss/frontpage',
+    "Huff Post: Tech": 'https://www.huffpost.com/section/technology/feed',
+    "ABC News: Tech": 'https://abcnews.go.com/abcnews/technologyheadlines',
+    "The Atlantic": 'https://www.theatlantic.com/feed/channel/technology/',
+    "Mirror": 'https://www.mirror.co.uk/tech/?service=rss'
+}
+
+business_feeds = {
+    "CNBC": 'http://www.cnbc.com/id/19746125/device/rss/rss.xml',
+    "Fortune": 'https://fortune.com/feed',
+    "Investing": 'https://www.investing.com/rss/news.rss',
+    "Seeking Alpha": 'https://seekingalpha.com/market_currents.xml',
+    "Economic Times: India": 'https://economictimes.indiatimes.com/rssfeedsdefault.cms',
+    "Reuters: Business": 'http://feeds.reuters.com/reuters/INtopNews',
+    "Yahoo: Finance": 'https://finance.yahoo.com/news/rssindex',
+    "Business Standar": 'https://www.business-standard.com/rss/home_page_top_stories.rss',
+}
+
+political_feeds = {
+    "Daily KOS": 'https://www.dailykos.com/blogs/main.rss',
+    "NY Times: Politics": 'https://rss.nytimes.com/services/xml/rss/nyt/Politics.xml',
+    "Reddit: Politics": 'https://www.reddit.com/r/politics/.rss',
+    "Politic USA": 'http://www.politicususa.com/feed',
+    "News Busters": 'https://www.newsbusters.org/blog/feed',
+    "The Gateway Pundit": 'https://www.thegatewaypundit.com/feed/',
+    "The Political Insider": 'https://thepoliticalinsider.com/feed/',
+    "The Guardian": 'https://www.theguardian.com/politics/blog/rss',
+    "Huff Post: Politics": 'https://www.huffpost.com/section/politics/feed',
+    "LA Times: Politics": 'https://www.latimes.com/politics/rss2.0.xml'
+}
+
+gaming_feeds = {
+    "IGN": 'http://feeds.ign.com/ign/games-all',
+    "Xbox": 'https://news.xbox.com/en-us/feed/',
+    "Nintendo": 'http://www.nintendolife.com/feeds/latest',
+    "Reddit: Gamers": 'https://www.reddit.com/r/gamers/.rss',
+    "Polygon": 'https://www.polygon.com/rss/index.xml',
+    "Euro Gamer": 'https://www.eurogamer.net/?format=rss',
+    "Playstation": 'https://blog.us.playstation.com/feed/',
+    "PC Gamer": 'https://www.pcgamer.com/rss/',
+}
+
 rss_feeds = ['http://feeds.bbci.co.uk/news/world/rss.xml',
              'http://feeds.reuters.com/Reuters/worldNews',
              'http://feeds.washingtonpost.com/rss/rss_blogpost',

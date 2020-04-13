@@ -6,6 +6,7 @@ class Feed:
         self.link: str = ""
         self.description: str = ""
         self.published_date: str = ""
+        self.category: str = ""
         self.articles = []
 
     # =========================

@@ -85,6 +85,8 @@ class UpdateProfileForm(ModelForm):
 class RSSFeed(models.Model):
     name = models.CharField(max_length=200, default="")
     link = models.URLField(max_length=200, default="")
+    category = models.CharField(max_length=200, default="")
+    description = models.CharField(max_length=200, default="")
 
     def get_article_list(self):
         return self.article_set.all()
