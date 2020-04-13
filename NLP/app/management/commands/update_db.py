@@ -42,7 +42,7 @@ class Command(BaseCommand):
 
                     # Iterate over all feeds
                     for feed in feeds:
-                        f_db, created = RSSFeed.objects.get_or_create(name=feed.get_title(), link=feed.get_link())
+                        f_db, created = RSSFeed.objects.get_or_create(name=feed.get_title(), link=feed.get_link(), category=feed.get_category(), description=feed.get_description())
 
                         if created:
                             print(f"Created RSS Feed {f_db.pk}")

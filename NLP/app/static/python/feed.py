@@ -18,6 +18,9 @@ class Feed:
     def get_link(self):
         return self.link
 
+    def get_category(self):
+        return self.category
+
     def get_description(self):
         return self.description
 
@@ -35,6 +38,9 @@ class Feed:
 
     def set_link(self, link:str):
         self.link = link
+
+    def set_category(self, category:str):
+        self.category = category
 
     def set_description(self, desc:str):
         self.description = desc

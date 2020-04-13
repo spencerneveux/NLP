@@ -532,6 +532,96 @@ def search_rss(request):
         }
     return JsonResponse(data)
 
+def news(request):
+    results = RSSFeed.objects.filter(category="News")
+
+    if results:
+        data = {
+            'Test': True,
+            'results': list(results.values()),
+        }
+    else:
+        data = {
+            'Test': False,
+        }
+
+    return JsonResponse(data)
+
+def tech(request):
+    results = RSSFeed.objects.filter(category="Tech")
+
+    if results:
+        data = {
+            'Test': True,
+            'results': list(results.values()),
+        }
+    else:
+        data = {
+            'Test': False,
+        }
+
+    return JsonResponse(data)
+
+def sports(request):
+    results = RSSFeed.objects.filter(category="Sports")
+
+    if results:
+        data = {
+            'Test': True,
+            'results': list(results.values()),
+        }
+    else:
+        data = {
+            'Test': False,
+        }
+
+    return JsonResponse(data)
+
+def business(request):
+    results = RSSFeed.objects.filter(category="Business")
+
+    if results:
+        data = {
+            'Test': True,
+            'results': list(results.values()),
+        }
+    else:
+        data = {
+            'Test': False,
+        }
+
+    return JsonResponse(data)
+
+def gaming(request):
+    results = RSSFeed.objects.filter(category="Gaming")
+
+    if results:
+        data = {
+            'Test': True,
+            'results': list(results.values()),
+        }
+    else:
+        data = {
+            'Test': False,
+        }
+
+    return JsonResponse(data)
+
+def politics(request):
+    results = RSSFeed.objects.filter(category="Politics")
+
+    if results:
+        data = {
+            'Test': True,
+            'results': list(results.values()),
+        }
+    else:
+        data = {
+            'Test': False,
+        }
+
+    return JsonResponse(data)
+
 
 def article_details(request):
     profile = Profile.objects.get(user=request.user)

@@ -4,7 +4,7 @@ from urllib.parse import urlparse
 
 from .feed import Feed
 from .article import Article
-#
+# #
 # from NLP.app.static.python.feed import Feed
 # from NLP.app.static.python.article import Article
 
@@ -149,6 +149,7 @@ class Crawler:
             'Joe Rogan Podcasts': "http://podcasts.joerogan.net/feed",
             'Reddit':  "https://www.reddit.com/.rss",
         }
+
         self.entries = []
         self.feeds = []
         self.update()
@@ -158,28 +159,32 @@ class Crawler:
 
     def set_feeds(self):
         for entry in self.entries:
+            print(entry)
             f = Feed()
-            feed_keys = entry[1].feed.keys()
+            feed_keys = entry[2].feed.keys()
+
+            f.set_category(entry[1])
 
             if 'title' in feed_keys:
                 f.set_title(entry[0])
 
             if 'link' in feed_keys:
-                link = entry[1].feed.link
+                link = entry[2].feed.link
                 o = urlparse(link)
                 netloc = o.netloc
                 f.set_link(netloc)
 
             if 'description' in feed_keys:
-                f.set_description(entry[1].feed.description)
-
-            if 'image' in feed_keys:
-                print(f"Image - {entry[1].feed.image}")
+                f.set_description(entry[2].feed.description)
+            elif 'subtitle' in feed_keys:
+                f.set_description(entry[2].feed.subtitle)
+            elif 'subtitle_detail' in feed_keys:
+                f.set_description(entry[2].feed.subtitle_detail['value'])
 
             print(f"Feed keys {feed_keys}")
 
 
-            for article in entry[1].entries:
+            for article in entry[2].entries:
                 a = Article()
                 article_keys = article.keys()
 
@@ -206,11 +211,41 @@ class Crawler:
             self.feeds.append(f)
 
     def process_feeds(self):
-        for feed in self.feed_list:
-            f = feedparser.parse(self.feed_list[feed])
+        for feed in gaming_feeds:
+            f = feedparser.parse(gaming_feeds[feed])
             if f.bozo == 0:
-                tup = (feed, f)
+                tup = (feed, "Gaming", f)
                 self.entries.append(tup)
+
+        for feed in news_feeds:
+            f = feedparser.parse(news_feeds[feed])
+            if f.bozo == 0:
+                tup = (feed, "News", f)
+                self.entries.append(tup)
+
+        for feed in tech_feeds:
+            f = feedparser.parse(tech_feeds[feed])
+            if f.bozo == 0:
+                tup = (feed, "Tech", f)
+                self.entries.append(tup)
+
+        # for feed in political_feeds:
+        #     f = feedparser.parse(political_feeds[feed])
+        #     if f.bozo == 0:
+        #         tup = (feed, "Politics", f)
+        #         self.entries.append(tup)
+        #
+        # for feed in business_feeds:
+        #     f = feedparser.parse(business_feeds[feed])
+        #     if f.bozo == 0:
+        #         tup = (feed, "Business", f)
+        #         self.entries.append(tup)
+        #
+        # for feed in sport_feeds:
+        #     f = feedparser.parse(sport_feeds[feed])
+        #     if f.bozo == 0:
+        #         tup = (feed, "Sports", f)
+        #         self.entries.append(tup)
 
     def update(self):
         self.process_feeds()

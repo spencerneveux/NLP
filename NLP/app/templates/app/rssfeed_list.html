@@ -80,6 +80,240 @@
 	
 	        });
 
+	        $("#news").click(function(){
+	        	$.ajax({
+	        		url: "{% url 'news' %}",
+	        		data: {
+	        			"operation": "click"
+	        		},
+	        		dataType: "json",
+	        		success: function(data) {
+	        			if (data['Test'] == true){
+	        				console.log(data);
+							result_list = data['results'];
+	        				$(".temp-card-container").empty();
+	        				for (result in result_list) {
+	        					var id = result_list[result]['id'];
+	        					var name = result_list[result]['name'];
+	        					var link = result_list[result]['link'];
+	        					var description = result_list[result]['description'];
+	        					$(".card-container").children().hide();
+								$(".temp-card-container").append('<div class="col-sm-4">\n' +
+										'\t\t<div class="card mb-2 zoom">\n' +
+										'\t\t\t<div class="card-body">\n' +
+										'\t\t\t\t<img class="card-img-top feed-avatar d-inline" src="//logo.clearbit.com/'+ link +'" alt="...">\n' +
+										'\t\t\t  \t<h5 class="card-title d-inline">' + name + '</h5>\n' +
+										'\t\t\t  \t<p class="card-text mt-2">' + description + '</p>\n' +
+										'\t\t\t</div>\n' +
+										'\t\t\t  <div class="card-footer">\n' +
+										'\t\t\t\t  <a href="http://' + link +'"><small class="text-muted">Visit Site</small></a>\n' +
+										'\t\t\t\t  <button class="btn btn-small btn-white remove-bookmark float-right remove-rss" value="' + id + '"><small class="text-muted float-right"><i class="fa fa-trash" aria-hidden="true"></i></small></button>\n' +
+										'\t\t\t\t  <button class="btn btn-small btn-white remove-bookmark float-right add-rss" value="' + id + '"><small class="text-muted float-right"><i class="fa fa-plus" aria-hidden="true"></i></small></button>\n' +
+										'\t\t\t  </div>\n' +
+										'\t\t</div>\n' +
+										'\t</div>'
+								);
+							}
+	        			}
+	        		}
+	        	});
+	        });
+
+	        $("#sports").click(function(){
+	        	$.ajax({
+	        		url: "{% url 'sports' %}",
+	        		data: {
+	        			"operation": "click"
+	        		},
+	        		dataType: "json",
+	        		success: function(data) {
+	        			if (data['Test'] == true){
+	        				console.log(data);
+							result_list = data['results'];
+	        				$(".temp-card-container").empty();
+	        				for (result in result_list) {
+	        					var id = result_list[result]['id'];
+	        					var name = result_list[result]['name'];
+	        					var link = result_list[result]['link'];
+	        					var description = result_list[result]['description'];
+	        					$(".card-container").children().hide();
+								$(".temp-card-container").append('<div class="col-sm-4">\n' +
+										'\t\t<div class="card mb-2 zoom">\n' +
+										'\t\t\t<div class="card-body">\n' +
+										'\t\t\t\t<img class="card-img-top feed-avatar d-inline" src="//logo.clearbit.com/'+ link +'" alt="...">\n' +
+										'\t\t\t  \t<h5 class="card-title d-inline">' + name + '</h5>\n' +
+										'\t\t\t  \t<p class="card-text mt-2">' + description + '</p>\n' +
+										'\t\t\t</div>\n' +
+										'\t\t\t  <div class="card-footer">\n' +
+										'\t\t\t\t  <a href="http://' + link +'"><small class="text-muted">Visit Site</small></a>\n' +
+										'\t\t\t\t  <button class="btn btn-small btn-white remove-bookmark float-right remove-rss" value="' + id + '"><small class="text-muted float-right"><i class="fa fa-trash" aria-hidden="true"></i></small></button>\n' +
+										'\t\t\t\t  <button class="btn btn-small btn-white remove-bookmark float-right add-rss" value="' + id + '"><small class="text-muted float-right"><i class="fa fa-plus" aria-hidden="true"></i></small></button>\n' +
+										'\t\t\t  </div>\n' +
+										'\t\t</div>\n' +
+										'\t</div>'
+								);
+							}
+	        			}
+	        		}
+	        	});
+	        });
+
+			$("#technology").click(function(){
+	        	$.ajax({
+	        		url: "{% url 'tech' %}",
+	        		data: {
+	        			"operation": "click"
+	        		},
+	        		dataType: "json",
+	        		success: function(data) {
+	        			if (data['Test'] == true){
+	        				console.log(data);
+							result_list = data['results'];
+	        				$(".temp-card-container").empty();
+	        				for (result in result_list) {
+	        					var id = result_list[result]['id'];
+	        					var name = result_list[result]['name'];
+	        					var link = result_list[result]['link'];
+	        					var description = result_list[result]['description'];
+	        					$(".card-container").children().hide();
+								$(".temp-card-container").append('<div class="col-sm-4">\n' +
+										'\t\t<div class="card mb-2 zoom">\n' +
+										'\t\t\t<div class="card-body">\n' +
+										'\t\t\t\t<img class="card-img-top feed-avatar d-inline" src="//logo.clearbit.com/'+ link +'" alt="...">\n' +
+										'\t\t\t  \t<h5 class="card-title d-inline">' + name + '</h5>\n' +
+										'\t\t\t  \t<p class="card-text mt-2">' + description + '</p>\n' +
+										'\t\t\t</div>\n' +
+										'\t\t\t  <div class="card-footer">\n' +
+										'\t\t\t\t  <a href="http://' + link +'"><small class="text-muted">Visit Site</small></a>\n' +
+										'\t\t\t\t  <button class="btn btn-small btn-white remove-bookmark float-right remove-rss" value="' + id + '"><small class="text-muted float-right"><i class="fa fa-trash" aria-hidden="true"></i></small></button>\n' +
+										'\t\t\t\t  <button class="btn btn-small btn-white remove-bookmark float-right add-rss" value="' + id + '"><small class="text-muted float-right"><i class="fa fa-plus" aria-hidden="true"></i></small></button>\n' +
+										'\t\t\t  </div>\n' +
+										'\t\t</div>\n' +
+										'\t</div>'
+								);
+							}
+	        			}
+	        		}
+	        	});
+	        });
+
+			$("#business").click(function(){
+	        	$.ajax({
+	        		url: "{% url 'business' %}",
+	        		data: {
+	        			"operation": "click"
+	        		},
+	        		dataType: "json",
+	        		success: function(data) {
+	        			if (data['Test'] == true){
+	        				console.log(data);
+							result_list = data['results'];
+	        				$(".temp-card-container").empty();
+	        				for (result in result_list) {
+	        					var id = result_list[result]['id'];
+	        					var name = result_list[result]['name'];
+	        					var link = result_list[result]['link'];
+	        					var description = result_list[result]['description'];
+	        					$(".card-container").children().hide();
+								$(".temp-card-container").append('<div class="col-sm-4">\n' +
+										'\t\t<div class="card mb-2 zoom">\n' +
+										'\t\t\t<div class="card-body">\n' +
+										'\t\t\t\t<img class="card-img-top feed-avatar d-inline" src="//logo.clearbit.com/'+ link +'" alt="...">\n' +
+										'\t\t\t  \t<h5 class="card-title d-inline">' + name + '</h5>\n' +
+										'\t\t\t  \t<p class="card-text mt-2">' + description + '</p>\n' +
+										'\t\t\t</div>\n' +
+										'\t\t\t  <div class="card-footer">\n' +
+										'\t\t\t\t  <a href="http://' + link +'"><small class="text-muted">Visit Site</small></a>\n' +
+										'\t\t\t\t  <button class="btn btn-small btn-white remove-bookmark float-right remove-rss" value="' + id + '"><small class="text-muted float-right"><i class="fa fa-trash" aria-hidden="true"></i></small></button>\n' +
+										'\t\t\t\t  <button class="btn btn-small btn-white remove-bookmark float-right add-rss" value="' + id + '"><small class="text-muted float-right"><i class="fa fa-plus" aria-hidden="true"></i></small></button>\n' +
+										'\t\t\t  </div>\n' +
+										'\t\t</div>\n' +
+										'\t</div>'
+								);
+							}
+	        			}
+	        		}
+	        	});
+	        });
+
+			$("#politics").click(function(){
+	        	$.ajax({
+	        		url: "{% url 'politics' %}",
+	        		data: {
+	        			"operation": "click"
+	        		},
+	        		dataType: "json",
+	        		success: function(data) {
+	        			if (data['Test'] == true){
+	        				console.log(data);
+							result_list = data['results'];
+	        				$(".temp-card-container").empty();
+	        				for (result in result_list) {
+	        					var id = result_list[result]['id'];
+	        					var name = result_list[result]['name'];
+	        					var link = result_list[result]['link'];
+	        					var description = result_list[result]['description'];
+	        					$(".card-container").children().hide();
+								$(".temp-card-container").append('<div class="col-sm-4">\n' +
+										'\t\t<div class="card mb-2 zoom">\n' +
+										'\t\t\t<div class="card-body">\n' +
+										'\t\t\t\t<img class="card-img-top feed-avatar d-inline" src="//logo.clearbit.com/'+ link +'" alt="...">\n' +
+										'\t\t\t  \t<h5 class="card-title d-inline">' + name + '</h5>\n' +
+										'\t\t\t  \t<p class="card-text mt-2">' + description + '</p>\n' +
+										'\t\t\t</div>\n' +
+										'\t\t\t  <div class="card-footer">\n' +
+										'\t\t\t\t  <a href="http://' + link +'"><small class="text-muted">Visit Site</small></a>\n' +
+										'\t\t\t\t  <button class="btn btn-small btn-white remove-bookmark float-right remove-rss" value="' + id + '"><small class="text-muted float-right"><i class="fa fa-trash" aria-hidden="true"></i></small></button>\n' +
+										'\t\t\t\t  <button class="btn btn-small btn-white remove-bookmark float-right add-rss" value="' + id + '"><small class="text-muted float-right"><i class="fa fa-plus" aria-hidden="true"></i></small></button>\n' +
+										'\t\t\t  </div>\n' +
+										'\t\t</div>\n' +
+										'\t</div>'
+								);
+							}
+	        			}
+	        		}
+	        	});
+	        });
+
+			$("#gaming").click(function(){
+	        	$.ajax({
+	        		url: "{% url 'gaming' %}",
+	        		data: {
+	        			"operation": "click"
+	        		},
+	        		dataType: "json",
+	        		success: function(data) {
+	        			if (data['Test'] == true){
+	        				console.log(data);
+							result_list = data['results'];
+	        				$(".temp-card-container").empty();
+	        				for (result in result_list) {
+	        					var id = result_list[result]['id'];
+	        					var name = result_list[result]['name'];
+	        					var link = result_list[result]['link'];
+	        					var description = result_list[result]['description'];
+	        					$(".card-container").children().hide();
+								$(".temp-card-container").append('<div class="col-sm-4">\n' +
+										'\t\t<div class="card mb-2 zoom">\n' +
+										'\t\t\t<div class="card-body">\n' +
+										'\t\t\t\t<img class="card-img-top feed-avatar d-inline" src="//logo.clearbit.com/'+ link +'" alt="...">\n' +
+										'\t\t\t  \t<h5 class="card-title d-inline">' + name + '</h5>\n' +
+										'\t\t\t  \t<p class="card-text mt-2">' + description + '</p>\n' +
+										'\t\t\t</div>\n' +
+										'\t\t\t  <div class="card-footer">\n' +
+										'\t\t\t\t  <a href="http://' + link +'"><small class="text-muted">Visit Site</small></a>\n' +
+										'\t\t\t\t  <button class="btn btn-small btn-white remove-bookmark float-right remove-rss" value="' + id + '"><small class="text-muted float-right"><i class="fa fa-trash" aria-hidden="true"></i></small></button>\n' +
+										'\t\t\t\t  <button class="btn btn-small btn-white remove-bookmark float-right add-rss" value="' + id + '"><small class="text-muted float-right"><i class="fa fa-plus" aria-hidden="true"></i></small></button>\n' +
+										'\t\t\t  </div>\n' +
+										'\t\t</div>\n' +
+										'\t</div>'
+								);
+							}
+	        			}
+	        		}
+	        	});
+	        });
+
 	        $(".search-rss").on("keyup", function(){
 	        	var search = $(this).val()
 	        	if (search.length == 0) {
@@ -101,14 +335,14 @@
 	        					var id = result_list[result]['id'];
 	        					var name = result_list[result]['name'];
 	        					var link = result_list[result]['link'];
+	        					var description = result_list[result]['description'];
 	        					$(".card-container").children().hide();
 								$(".temp-card-container").append('<div class="col-sm-4">\n' +
 										'\t\t<div class="card mb-2 zoom">\n' +
 										'\t\t\t<div class="card-body">\n' +
 										'\t\t\t\t<img class="card-img-top feed-avatar d-inline" src="//logo.clearbit.com/'+ link +'" alt="...">\n' +
 										'\t\t\t  \t<h5 class="card-title d-inline">' + name + '</h5>\n' +
-										'<!--\t\t\t  \t<p class="card-text">{{feed.description}}</p>-->\n' +
-										'\t\t\t\t<p class="mt-2">{% lorem 15 w%}</p>\n' +
+										'\t\t\t  \t<p class="card-text">' + description + '</p>\n' +
 										'\t\t\t</div>\n' +
 										'\t\t\t  <div class="card-footer">\n' +
 										'\t\t\t\t  <a href="http://' + link +'"><small class="text-muted">Visit Site</small></a>\n' +
@@ -153,22 +387,22 @@
 		<div class="btn-toolbar mt-3 ">
 			<div class="btn-group mr-2">
 
-				<button class="btn btn-secondary">News</button>
+				<button class="btn btn-secondary" id="news">News</button>
 			</div>
 			<div class="btn-group mr-2">
-				<button class="btn btn-secondary">Sport</button>
+				<button class="btn btn-secondary" id="sports">Sport</button>
 			</div>
 			<div class="btn-group mr-2">
-				<button class="btn btn-secondary">Technology</button>
+				<button class="btn btn-secondary" id="technology">Technology</button>
 			</div>
 			<div class="btn-group mr-2">
-				<button class="btn btn-secondary">Business</button>
+				<button class="btn btn-secondary" id="business">Business</button>
 			</div>
 			<div class="btn-group mr-2">
-				<button class="btn btn-secondary">Politics</button>
+				<button class="btn btn-secondary" id="politics">Politics</button>
 			</div>
 			<div class="btn-group mr-2">
-				<button class="btn btn-secondary">Gaming</button>
+				<button class="btn btn-secondary" id="gaming">Gaming</button>
 			</div>
 		</div>
 	</div>
@@ -182,8 +416,7 @@
 			<div class="card-body">
 				<img class="card-img-top feed-avatar d-inline" src="//logo.clearbit.com/{{feed.link}}"  alt="...">
 			  	<h5 class="card-title d-inline">{{feed.name}}</h5>
-<!--			  	<p class="card-text">{{feed.description}}</p>-->
-				<p class="mt-2">{% lorem 15 w%}</p>
+			  	<p class="card-text mt-2">{{feed.description}}</p>
 			</div>
 			  <div class="card-footer">
 				  <a href="http://{{feed.link}}"><small class="text-muted">Visit Site</small></a>
