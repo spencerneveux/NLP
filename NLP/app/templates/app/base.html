@@ -182,7 +182,7 @@
 
 
 
-<div class="container-fluid h-100 mt-2">
+<div class="container-fluid h-100 mt-2" id="main-content">
     <div class="row justify-content-center bg-light">
       <div class="col-2 border-right border-bottom ">
           <form class="form-inline ">
@@ -244,7 +244,9 @@
               <div class='article-container'>
                 <h4 class='d-inline'><span class='badge article-count'>{{forloop.counter}}</span></h4>
                 <p class='ml-2 d-inline article-title'><a href="{% url 'article-detail' article.id %}" style="text-decoration: none; color: #333333; " >{{article.title}}</a></p>
-                <p class='article-stats'>{{article.get_likes}} likes | {{article.get_total_comments}} comments | {{article.date|date:"M d, Y"}} by {{article.author}}</p>
+                {% if user.profile.article_details %}
+                  <p class='article-stats'>{{article.get_likes}} likes | {{article.get_total_comments}} comments | {{article.date|date:"M d, Y"}} by {{article.author}}</p>
+                {% endif %}
               </div>
           </li>
         {% endfor %}
@@ -300,7 +302,6 @@
               if (data['Test'] == true){
                 var article_list = data['article_list'];
                 var stats = data['article_stats'];
-                console.log(data);
 
                 var count = 0;
                 for (article in article_list) {
@@ -311,7 +312,6 @@
                   var date_obj = new Date(article_list[article]['date']);
                   var date = date_obj.toDateString()
 
-                  console.log(date);
                   var url = "/app/article/" + id;
                   var likes = stats[id][1];
                   var comment = stats[id][3];
@@ -321,7 +321,9 @@
                             "<div class='article-container'>" +
                               "<h4 class='d-inline'><span class='badge article-count'>" + count + "</span></h4>" +
                               "<p class='ml-2 d-inline article-title'><a class='article-title' href="+ url +" >" + title + "</a></p>" +
+                              "{% if user.profile.article_details %}\n" +
                               "<p class='article-stats'>" + likes + " likes | " + comment + " comments | " + date + " by " + author + "</p>" +
+                              "{% endif %}" +
                             "</div>" +
                           "</li>"
                   )
@@ -344,10 +346,7 @@
                 success: function(data) {
                     if (data['Test'] == true){
 
-
                     }
-
-                    console.log(data['Test']);
                 }
             });
         }
@@ -364,7 +363,6 @@
             },
             dataType: "json",
             success: function(data) {
-                console.log(data);
             }
           });
         }
@@ -385,7 +383,6 @@
                     $('.alert').text("Success! Added to favorites");
                     $('.alert').fadeOut(2000);
                 }
-                console.log(data);
             }
           });
         }
@@ -405,7 +402,6 @@
                     $('.alert').text("Success! Bookmarked");
                     $('.alert').fadeOut(2000);
                 }
-                console.log(data);
             }
           });
         }
@@ -428,7 +424,6 @@
                 if (data["Test"] == true) {
                   var article_list = data['article_list'];
                   var stats = data['article_stats'];
-                  console.log(data);
 
                   var count = 0;
                   for (article in article_list) {
@@ -439,7 +434,6 @@
                     var date_obj = new Date(article_list[article]['date']);
                     var date = date_obj.toDateString()
 
-                    console.log(date);
                     var url = "/app/article/" + id;
                     var likes = stats[id][1];
                     var comment = stats[id][3];
@@ -449,13 +443,14 @@
                               "<div class='article-container'>" +
                                 "<h4 class='d-inline'><span class='badge article-count'>" + count + "</span></h4>" +
                                 "<p class='ml-2 d-inline article-title'><a class='article-title' href="+ url +" >" + title + "</a></p>" +
+                                "{% if user.profile.article_details %}\n" +
                                 "<p class='article-stats'>" + likes + " likes | " + comment + " comments | " + date + " by " + author + "</p>" +
+                                "{% endif %}\n" +
                               "</div>" +
                             "</li>"
                     )
                   }
                 }
-                console.log(data);
             }
           });
        }
@@ -471,7 +466,6 @@
                 if (data["Test"] == true) {
                   var article_list = data['article_list'];
                   var stats = data['article_stats'];
-                  console.log(data);
 
                   var count = 0;
                   for (article in article_list) {
@@ -482,7 +476,6 @@
                     var date_obj = new Date(article_list[article]['date']);
                     var date = date_obj.toDateString()
 
-                    console.log(date);
                     var url = "/app/article/" + id;
                     var likes = stats[id][1];
                     var comment = stats[id][3];
@@ -492,13 +485,14 @@
                               "<div class='article-container'>" +
                                 "<h4 class='d-inline'><span class='badge article-count'>" + count + "</span></h4>" +
                                 "<p class='ml-2 d-inline article-title'><a class='article-title' href="+ url +" >" + title + "</a></p>" +
+                                "{% if user.profile.article_details %}\n" +
                                 "<p class='article-stats'>" + likes + " likes | " + comment + " comments | " + date + " by " + author + "</p>" +
+                                "{% endif %}\n" +
                               "</div>" +
                             "</li>"
                     )
                   }
                 }
-                console.log(data);
             }
           });
        }

@@ -14,7 +14,7 @@ news_feeds = {
     "Buzzfeed: News": 'https://www.buzzfeed.com/world.xml',
     "Aljazeera": 'https://www.aljazeera.com/xml/rss/all.xml',
     "Global Issues": 'https://www.globalissues.org/news/feed',
-    "The Cipher Breif": 'https://www.thecipherbrief.com/feed',
+    "The Cipher Brief": 'https://www.thecipherbrief.com/feed',
     "Yahoo: News": 'https://www.yahoo.com/news/rss/world',
     "CNN": 'http://rss.cnn.com/rss/edition_world.rss',
     "The Guardian: World News": 'https://www.theguardian.com/world/rss',

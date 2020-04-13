@@ -517,6 +517,8 @@ def get_latest_rss_articles(request):
 def search_rss(request):
     query = request.GET.get('search')
     results = RSSFeed.objects.filter(name__contains=query)
+
+    # TODO: Search for feed description
     print(results)
 
     if results:
@@ -528,4 +530,41 @@ def search_rss(request):
         data = {
             'Test': False,
         }
+    return JsonResponse(data)
+
+
+def article_details(request):
+    profile = Profile.objects.get(user=request.user)
+
+    if profile.article_details:
+        profile.article_details = False
+        profile.save()
+        data = {
+            'Test': False
+        }
+    else:
+        profile.article_details = True
+        profile.save()
+        data = {
+            'Test': True
+        }
+
+    return JsonResponse(data)
+
+def dark_mode(request):
+    profile = Profile.objects.get(user=request.user)
+
+    if profile.dark_mode:
+        profile.dark_mode = False
+        profile.save()
+        data = {
+            'Test': False
+        }
+    else:
+        profile.dark_mode = True
+        profile.save()
+        data = {
+            'Test': True
+        }
+
     return JsonResponse(data)

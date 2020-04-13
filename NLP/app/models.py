@@ -26,9 +26,8 @@ class Profile(models.Model):
     description = models.CharField(max_length=200, default="", null=True)
     is_online = models.BooleanField(default=False)
     signup_confirmation = models.BooleanField(default=False)
-
-    # TODO: Need settings fields (dark mode,etc)
-    # TODO: Need additional rss feeds specific to user
+    article_details = models.BooleanField(default=True)
+    dark_mode = models.BooleanField(default=False)
 
     def get_rss_list(self):
         feeds = self.user.rss_set.all()

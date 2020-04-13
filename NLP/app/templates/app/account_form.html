@@ -15,12 +15,28 @@
 {% endblock extra_css %}
 
 {% block extra_js %}
+{{block.super}}
 
 	<script type="text/javascript">
 		$(document).ready(function(){
 			$("#email-form").hide();
 			$("#profile").hide();
 			$("#settings").hide();
+
+			var user_article_details = "{{user.profile.article_details}}";
+			var user_dark_mode = "{{user.profile.dark_mode}}";
+
+			if (user_article_details === 'True') {
+				$("#set-article-details").prop('checked', true);
+			}else {
+				$("#set-article-details").prop('checked', false);
+			}
+
+			if (user_dark_mode === 'True') {
+				$("#set-dark-mode").prop('checked', true);
+			}else {
+				$("#set-dark-mode").prop('checked', false);
+			}
 
 	        $("#account1").click(function(){
 	        	$("#account2").addClass("active");
@@ -56,7 +72,43 @@
 	        	$("#email-show").hide();
 	        	$("#email-form").show();
 	        });
-	        
+
+	        $(document).on('click', '#set-article-details', function(){
+	        	$.ajax({
+					url: "{% url 'set-article-details' %}",
+					data: {
+						"operation": "click",
+					},
+					dataType: "json",
+					success: function(data) {
+						if (data['Test'] == false) {
+							$(".article-stats").hide();
+						}
+						if (data['Test'] == true) {
+							$(".article-stats").show();
+						}
+					}
+				  });
+			});
+
+	        // TODO: Figure out an easy way to do this...
+	        $("#set-dark-mode").on('click', function(){
+	        	$.ajax({
+					url: "{% url 'dark-mode' %}",
+					data: {
+						"operation": "click",
+					},
+					dataType: "json",
+					success: function(data) {
+						if (data['Test'] == false) {
+							$("#main-content").find("div").removeClass("bg-light").addClass("bg-dark");
+						}
+						if (data['Test'] == true) {
+							console.log("True");
+						}
+					}
+				  });
+			});
 	    });
 	</script>
 {% endblock extra_js %}
@@ -136,12 +188,12 @@
 					<h5>General Settings</h5>
 					<hr>
 					<div class="custom-control custom-checkbox">
-						<input type="checkbox" class="custom-control-input" id="defaultUnchecked">
-						<label class="custom-control-label" for="defaultUnchecked">Dark Mode</label>
+						<input type="checkbox" class="custom-control-input" id="set-dark-mode">
+						<label class="custom-control-label" for="set-dark-mode">Dark Mode</label>
 					</div>
 					<div class="custom-control custom-checkbox">
-					  <input type="checkbox" class="custom-control-input" id="defaultChecked2" checked>
-					  <label class="custom-control-label" for="defaultChecked2">Article Details</label>
+						<input type="checkbox" class="custom-control-input" id="set-article-details" checked="true">
+					  	<label class="custom-control-label" for="set-article-details">Article Details</label>
 					</div>
 
 				</div>
