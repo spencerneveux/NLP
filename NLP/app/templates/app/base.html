@@ -243,7 +243,8 @@
           <li class='list-group-item  '>
               <div class='article-container'>
                 <h4 class='d-inline'><span class='badge article-count'>{{forloop.counter}}</span></h4>
-                <p class='ml-2 d-inline article-title'><a href="{% url 'article-detail' article.id %}" style="text-decoration: none; color: #333333; " >{{article.title}}</a></p>
+<!--                <p class='ml-2 d-inline article-title'><a href="{% url 'article-detail' article.id %}" style="text-decoration: none; color: #333333; " >{{article.title}}</a></p>-->
+                <p class='ml-2 d-inline article-title'><a href="javascript:void(0);"  class="get-article-details" data-value="{{article.id}}" style="text-decoration: none; color: #333333; " >{{article.title}}</a></p>
                 {% if user.profile.article_details %}
                   <p class='article-stats'>{{article.get_likes}} likes | {{article.get_total_comments}} comments | {{article.date|date:"M d, Y"}} by {{article.author}}</p>
                 {% endif %}
@@ -257,8 +258,11 @@
       	<div class="alert alert-success alert-dismissable collapse mt-2">
           <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
         </div>
+      <div id="block-content">
         {% block content %}
         {% endblock %}
+      </div>
+
     </div>
   </div>
 </div>
@@ -286,6 +290,12 @@
         $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
     });
   });
+
+    $(document).on('click', '.get-article-details', function(){
+      var article_id = $(this).attr('data-value');
+      var url = "{% url 'article-detail' 12345 %} #block-content".replace(/12345/, article_id.toString());
+      $("#block-content").load(url);
+    });
 
     $(".feed").click(function(){
       $(".article-list").empty();
@@ -320,7 +330,7 @@
                           "<li class='list-group-item'>" +
                             "<div class='article-container'>" +
                               "<h4 class='d-inline'><span class='badge article-count'>" + count + "</span></h4>" +
-                              "<p class='ml-2 d-inline article-title'><a class='article-title' href="+ url +" >" + title + "</a></p>" +
+                              "<p class='ml-2 d-inline article-title'><a href='javascript:void(0);'  class='get-article-details' data-value="+'' + id + '' + " + style='text-decoration: none; color: #333333; '>" + title + "</a></p>" +
                               "{% if user.profile.article_details %}\n" +
                               "<p class='article-stats'>" + likes + " likes | " + comment + " comments | " + date + " by " + author + "</p>" +
                               "{% endif %}" +
@@ -434,7 +444,6 @@
                     var date_obj = new Date(article_list[article]['date']);
                     var date = date_obj.toDateString()
 
-                    var url = "/app/article/" + id;
                     var likes = stats[id][1];
                     var comment = stats[id][3];
                     console.log(likes);
@@ -442,7 +451,7 @@
                             "<li class='list-group-item'>" +
                               "<div class='article-container'>" +
                                 "<h4 class='d-inline'><span class='badge article-count'>" + count + "</span></h4>" +
-                                "<p class='ml-2 d-inline article-title'><a class='article-title' href="+ url +" >" + title + "</a></p>" +
+                                "<p class='ml-2 d-inline article-title'><a href='javascript:void(0);'  class='get-article-details' data-value="+'' + id + '' + " + style='text-decoration: none; color: #333333; '>" + title + "</a></p>" +
                                 "{% if user.profile.article_details %}\n" +
                                 "<p class='article-stats'>" + likes + " likes | " + comment + " comments | " + date + " by " + author + "</p>" +
                                 "{% endif %}\n" +
@@ -484,7 +493,7 @@
                             "<li class='list-group-item'>" +
                               "<div class='article-container'>" +
                                 "<h4 class='d-inline'><span class='badge article-count'>" + count + "</span></h4>" +
-                                "<p class='ml-2 d-inline article-title'><a class='article-title' href="+ url +" >" + title + "</a></p>" +
+                                "<p class='ml-2 d-inline article-title'><a href='javascript:void(0);'  class='get-article-details' data-value="+'' + id + '' + " + style='text-decoration: none; color: #333333; '>" + title + "</a></p>" +
                                 "{% if user.profile.article_details %}\n" +
                                 "<p class='article-stats'>" + likes + " likes | " + comment + " comments | " + date + " by " + author + "</p>" +
                                 "{% endif %}\n" +
@@ -497,8 +506,6 @@
           });
        }
      });
-
-    // TODO: Figure out how to load the first article everytime
   });
 
 </script>

@@ -2,11 +2,11 @@ import feedparser
 import datetime
 from urllib.parse import urlparse
 
-from .feed import Feed
-from .article import Article
+# from .feed import Feed
+# from .article import Article
 # #
-# from NLP.app.static.python.feed import Feed
-# from NLP.app.static.python.article import Article
+from NLP.app.static.python.feed import Feed
+from NLP.app.static.python.article import Article
 
 news_feeds = {
     "BBCI: News": 'http://feeds.bbci.co.uk/news/world/rss.xml',
@@ -172,6 +172,7 @@ class Crawler:
                 link = entry[2].feed.link
                 o = urlparse(link)
                 netloc = o.netloc
+                print(netloc)
                 f.set_link(netloc)
 
             if 'description' in feed_keys:
@@ -217,17 +218,17 @@ class Crawler:
                 tup = (feed, "Gaming", f)
                 self.entries.append(tup)
 
-        for feed in news_feeds:
-            f = feedparser.parse(news_feeds[feed])
-            if f.bozo == 0:
-                tup = (feed, "News", f)
-                self.entries.append(tup)
-
-        for feed in tech_feeds:
-            f = feedparser.parse(tech_feeds[feed])
-            if f.bozo == 0:
-                tup = (feed, "Tech", f)
-                self.entries.append(tup)
+        # for feed in news_feeds:
+        #     f = feedparser.parse(news_feeds[feed])
+        #     if f.bozo == 0:
+        #         tup = (feed, "News", f)
+        #         self.entries.append(tup)
+        #
+        # for feed in tech_feeds:
+        #     f = feedparser.parse(tech_feeds[feed])
+        #     if f.bozo == 0:
+        #         tup = (feed, "Tech", f)
+        #         self.entries.append(tup)
 
         # for feed in political_feeds:
         #     f = feedparser.parse(political_feeds[feed])

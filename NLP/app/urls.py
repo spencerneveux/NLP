@@ -168,6 +168,7 @@ urlpatterns = [
     url(r'^ajax/business/$', views.business, name='business'),
     url(r'^ajax/politics/$', views.politics, name='politics'),
     url(r'^ajax/gaming/$', views.gaming, name='gaming'),
+    url(r'^ajax/get_article_details/$', views.get_article_details, name='get-article-details'),
     url(r'^ajax/set_article_details/$', views.article_details, name='set-article-details'),
     url(r'^ajax/dark_mode/$', views.dark_mode, name='dark-mode'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

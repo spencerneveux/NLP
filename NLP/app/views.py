@@ -1,7 +1,6 @@
 import os
 import requests
 from django.utils import timezone
-from django.http import HttpResponse
 from django.urls import reverse_lazy, reverse
 from django.core import serializers
 from google.cloud.language_v1 import enums
@@ -622,6 +621,29 @@ def politics(request):
 
     return JsonResponse(data)
 
+def get_article_details(request):
+    article_id = request.GET.get('article-id')
+    article = Article.objects.get(pk=article_id)
+    article_data = {
+        'title': article.title,
+        'publisher': article.publisher,
+        'author': article.author,
+        'content': article.content,
+        'link': article.link,
+        'date': article.date,
+    }
+
+    if article:
+        data = {
+            'Test': True,
+            'article': article_data,
+        }
+    else:
+        data = {
+            'Test': False
+        }
+
+    return JsonResponse(data)
 
 def article_details(request):
     profile = Profile.objects.get(user=request.user)
