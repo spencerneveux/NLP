@@ -16,11 +16,11 @@
          cursor:pointer;
     }
 
-    #bookmark-image {
-        position: absolute;
-        left: 20%;
-        top: 20%;
-    }
+    /*#bookmark-image {*/
+    /*    position: absolute;*/
+    /*    left: 20%;*/
+    /*    top: 20%;*/
+    /*}*/
 
     #login {
         position: absolute;
@@ -61,14 +61,10 @@
 {% block content %}
 
 <br>
-
-<div class="row">
     {% if user.profile.is_online %}
         {% if not user.profile.get_bookmark_status %}
-            <div class="container">
-                <h2 class="text-center mb-3">You have no bookmarks</h2>
-                <img id="bookmark-image" src="{% static "images/bookmark.png" %}" alt="">
-            </div>
+            <h2 class="text-center mb-3">You have no bookmarks</h2>
+            <img class="ml-5" id="bookmark-image" src="{% static "images/bookmark.png" %}" alt="">
         {% endif %}
     {% endif %}
     {% if not user.profile.is_online %}
@@ -77,12 +73,12 @@
             <img id="login" src="{% static "images/login.png" %}" alt="">
         </div>
     {% endif %}
-
+<div class="row">
     {% for bookmark in user.profile.get_bookmarks %}
         {% if bookmark.get_is_bookmarked %}
             <div class="col-sm-3">
                 <div class="card" id="{{bookmark.article.id}}">
-                    <a href="{% url 'article-detail' bookmark.article.id %}">
+                    <a class="bookmark-item" href="javascript:void(0);" data-value="{{bookmark.article.id}}" style="text-decoration: none; color: #333333">
                         <img class="card-img-top" src="{% static "images/circuit.jpg" %}" alt="Card image cap">
                         <div class="card-body">
                             <h5>{{bookmark.article.title}}</h5>

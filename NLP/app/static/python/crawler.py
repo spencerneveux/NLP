@@ -189,6 +189,8 @@ class Crawler:
                 a = Article()
                 article_keys = article.keys()
 
+                a.set_publisher(entry[0])
+
                 if "title" in article_keys:
                     a.set_title(article.title)
 

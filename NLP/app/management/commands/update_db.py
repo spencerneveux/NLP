@@ -54,8 +54,7 @@ class Command(BaseCommand):
 
                         # Iterate over each article
                         for article in articles:
-                            # TODO: fix publisher
-                            a_db, created = Article.objects.get_or_create(rss_feed=f_db, title=article.title, publisher="test Publisher", author=article.author, content=article.content, link=article.link)
+                            a_db, created = Article.objects.get_or_create(rss_feed=f_db, title=article.title, publisher=article.publisher, author=article.author, content=article.content, link=article.link)
 
                             # Analyze article content
                             self.stdout.write(self.style.SUCCESS('Analyzing article'))

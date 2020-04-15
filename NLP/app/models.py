@@ -37,6 +37,12 @@ class Profile(models.Model):
                 results.append(feed.rss)
         return results
 
+    def get_first_rss(self):
+        feeds = self.user.rss_set.all()
+        for feed in feeds:
+            if feed.feed_added:
+                return feed
+
     def get_bookmarks(self):
         return self.user.bookmark_set.all()
 

@@ -21,13 +21,6 @@
 		display: none;
 	}
 
-	#login {
-        position: absolute;
-        left: 5%;
-        top: 10%;
-        z-index: -1;
-    }
-
 </style>
 {% endblock extra_css %}
 
@@ -374,10 +367,8 @@
 </div>
 
 {% if not user.profile.is_online %}
-	<div class="container">
-		<h2 class="text-center mb-3">You must sign in to customize feed</h2>
-		<img id="login" src="{% static "images/login.png" %}" alt="">
-	</div>
+	<h2 class="text-center mb-3">You must sign in to customize feed</h2>
+	<img id="login" src="{% static "images/login.png" %}" alt="">
 {% endif %}
 
 {% if user.profile.is_online %}
