@@ -36,10 +36,9 @@
 
 	<script type="text/javascript">
 		$(document).ready(function(){
-		    $(".remove-bookmark").click(function(){
+		    $(document).on('click', '#remove-bookmark', function(){
 		        var parents = $(this).parents();
 		        var article_id = $(this).val();
-                console.log(parents[1]);
                 $.ajax({
                     url: "{% url 'remove-bookmark' %}",
                     data: {

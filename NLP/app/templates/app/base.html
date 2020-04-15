@@ -277,6 +277,7 @@
   });
 
     $(document).on('click', '.get-article-details', function(){
+      $(this).addClass('active');
       var article_id = $(this).attr('data-value');
       var url = "{% url 'article-detail' 12345 %} #article-detail-content".replace(/12345/, article_id.toString());
       var header = "{% url 'article-detail' 12345 %} #article-interaction-container".replace(/12345/, article_id.toString());
@@ -304,9 +305,21 @@
         $("#block-content").load(url);
     });
 
-    $(document).on('click', '#bookmark-list', function(){
-       var url = "{% url 'bookmark-list' %} #block-content";
-       $("#block-content").load(url);
+    $(document).on('click', '.remove-bookmark', function(){
+        var parents = $(this).parents();
+        var article_id = $(this).val();
+        $.ajax({
+            url: "{% url 'remove-bookmark' %}",
+            data: {
+                "article-id": article_id
+            },
+            dataType: "json",
+            success: function(data) {
+                if (data["Test"] == true) {
+                    $(parents[1]).remove();
+                }
+            }
+          });
     });
 
     $(".feed").click(function(){
