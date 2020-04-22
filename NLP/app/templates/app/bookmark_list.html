@@ -16,6 +16,31 @@
          cursor:pointer;
     }
 
+    #bookmark-image {
+        position: absolute;
+        left: 20%;
+        top: 20%;
+    }
+
+    #login {
+        position: absolute;
+        left: 5%;
+        top: 35%;
+        z-index: -1;
+    }
+
+    img {
+        width: 100%;
+        height: auto;
+    }
+
+    .fa-trash:hover {
+        color: red;
+    }
+
+    .fa-trash {
+        font-size: 14px;
+    }
 
 </style>
 {% endblock extra_css %}
@@ -24,9 +49,10 @@
 
 	<script type="text/javascript">
 		$(document).ready(function(){
-		    $(document).on('click', '#remove-bookmark', function(){
+		    $(".remove-bookmark").click(function(){
 		        var parents = $(this).parents();
 		        var article_id = $(this).val();
+                console.log(parents[1]);
                 $.ajax({
                     url: "{% url 'remove-bookmark' %}",
                     data: {
@@ -48,25 +74,31 @@
 {% block content %}
 
 <br>
+
+<div class="row">
     {% if user.profile.is_online %}
         {% if not user.profile.get_bookmark_status %}
-            <h2 class="text-center mb-3">You have no bookmarks</h2>
-            <img class="ml-5" id="bookmark-image" src="{% static "images/bookmark.png" %}" alt="">
+            <div class="container">
+                <h2 class="text-center mb-3">You have no bookmarks</h2>
+                <img id="bookmark-image" src="{% static "images/bookmark.png" %}" alt="">
+            </div>
         {% endif %}
     {% endif %}
     {% if not user.profile.is_online %}
+        <div class="container">
             <h2 class="text-center mb-3">You must sign in to use bookmarks</h2>
             <img id="login" src="{% static "images/login.png" %}" alt="">
+        </div>
     {% endif %}
-<div class="row">
+
     {% for bookmark in user.profile.get_bookmarks %}
         {% if bookmark.get_is_bookmarked %}
             <div class="col-sm-3">
                 <div class="card" id="{{bookmark.article.id}}">
-                    <a class="bookmark-item" href="javascript:void(0);" data-value="{{bookmark.article.id}}" style="text-decoration: none; color: #333333">
-                        <img class="card-img-top" src="{% static "images/circuit.jpg" %}" alt="Card image cap">
+                    <a href="{% url 'article-detail' bookmark.article.id %}">
+                        <img class="card-img-top" src="{% static "images/articledefault1.png" %}" alt="Card image cap">
                         <div class="card-body">
-                            <h5>{{bookmark.article.title}}</h5>
+                            <h5>{{bookmark.article.title|truncatechars:50}}</h5>
                         </div>
                     </a>
                     <div class="card-footer">
