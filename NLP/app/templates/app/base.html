@@ -109,6 +109,7 @@
   </head>
   <body>
 
+  {% include "registration/loginModal.html" %}
 <!-- Modal -->
 <div class="modal left fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -128,7 +129,7 @@
             </li>
             {% if not user.profile.is_online %}
               <li class="list-group-item">
-                <a class="" href="{% url 'login' %}"><i class="fa fa-user-plus mr-1" aria-hidden="true"></i>Login/Register</a>
+                <a class=""  href="{% url 'login' %}"><i class="fa fa-user-plus mr-1" aria-hidden="true"></i>Login/Register</a>
               </li>
             {% endif %}
             {% if user.profile.is_online %}
@@ -172,7 +173,7 @@
           <a href="{% url 'account' user.id %}"><button class="btn btn-light mr-1">{{user}}</button></a>
       {% endif %}
       {% if not user.profile.is_online %}
-        <a href="{% url 'login' %}"><button class="btn btn-light mr-1">Log In</button></a>
+        <a href="{% url 'login' %}" id="loginButton"><button class="btn btn-light mr-1">Log In</button></a>
         <a href="{% url 'user-add' %}"><button class="btn btn-success">Sign Up</button></a>
       {% endif %}
     </div>
@@ -269,8 +270,8 @@
   $(document).ready(function(){
 
 
-    $('#share-button').hover(function(){
-
+    $("#loginButton").click(function(){
+      $("#loginModal").modal('show');
     });
 
     $("#feed-filter").on("keyup", function() {

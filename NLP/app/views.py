@@ -3,6 +3,7 @@ import requests
 from django.utils import timezone
 from django.urls import reverse_lazy, reverse
 from django.core import serializers
+from django.shortcuts import redirect
 from google.cloud.language_v1 import enums
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, DetailView, TemplateView
@@ -16,6 +17,7 @@ from django.views.generic.edit import (
     CreateView,
     DeleteView,
     UpdateView,
+    FormView
 )
 from .models import (
     Author,
@@ -35,8 +37,8 @@ from .models import (
     Favorite,
     Bookmark,
     RSS,
-    SignUpForm,
-    UpdateProfileForm,
+    UserForm,
+    ProfileForm,
 )
 
 
@@ -60,7 +62,7 @@ class HomeView(ListView):
 # User
 # =========================
 class UserCreate(CreateView):
-    form_class = SignUpForm
+    form_class = UserForm
     template_name = "registration/signup.html"
     success_url = reverse_lazy("login")
 
@@ -77,14 +79,25 @@ class AccountUpdate(UpdateView):
     def get_success_url(self):
         return reverse('account', kwargs={'pk': self.object.id})
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['profile_form'] = ProfileForm()
+        return context
+
 # =========================
 # Profile
 # =========================
-# TODO: fix all this nonsense
-class ProfileCreate(CreateView):
+class ProfileUpdate(UpdateView):
     model = Profile
-    fields = "__all__"
+    form_class = ProfileForm
+    template_name = "app/profile_form.html"
 
+    def get_success_url(self):
+        return reverse('account', kwargs={'pk': self.object.user.id})
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
 
 # =========================
 # RSS Feeds
@@ -656,3 +669,21 @@ def dark_mode(request):
         }
 
     return JsonResponse(data)
+
+
+
+def update_profile(request):
+    if request.method == 'POST':
+        user_form = UserForm(request.POST, instance=request.user)
+        profile_form = ProfileForm(request.POST, instance=request.user.profile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            return redirect('account/')
+    else:
+        user_form = UserForm(instance=request.user)
+        profile_form = ProfileForm(instance=request.user.profile)
+    return redirect(request, 'account_form.html', {
+        'user_form': user_form,
+        'profile_form': profile_form
+    })

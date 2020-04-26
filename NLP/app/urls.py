@@ -12,7 +12,7 @@ from .views import (
 
 from .views import (
     AccountUpdate,
-    ProfileCreate
+    ProfileUpdate
 )
 
 from .views import (
@@ -78,7 +78,7 @@ urlpatterns = [
     # ===================
     # Profile
     # ===================
-    path("profile/add", ProfileCreate.as_view(), name="profile-add"),
+    path("profile/<int:pk>/", ProfileUpdate.as_view(), name="profile-update"),
 
 
     # ===================
@@ -170,4 +170,8 @@ urlpatterns = [
     url(r'^ajax/gaming/$', views.gaming, name='gaming'),
     url(r'^ajax/set_article_details/$', views.article_details, name='set-article-details'),
     url(r'^ajax/dark_mode/$', views.dark_mode, name='dark-mode'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)

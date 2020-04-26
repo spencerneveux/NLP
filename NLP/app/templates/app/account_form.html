@@ -38,7 +38,7 @@
 				$("#set-dark-mode").prop('checked', false);
 			}
 
-	        $("#account1").click(function(){
+	        $(document).on("click", "#account1", function(){
 	        	$("#account2").addClass("active");
 	        	$("#profile2").removeClass("active");
 	        	$("#settings2").removeClass("active");
@@ -48,7 +48,7 @@
 	        	$("#settings").hide();
 	        });
 
-	        $("#profile1").click(function(){
+	        $(document).on("click", "#profile1", function(){
 	        	$("#profile2").addClass("active");
 	        	$("#settings2").removeClass("active");
 	        	$("#account2").removeClass("active");
@@ -58,7 +58,7 @@
 	        	$("#settings").hide();
 	        });
 
-	        $("#settings1").click(function(){
+	        $(document).on("click", "#settings1", function(){
 	        	$("#settings2").addClass("active");
 	        	$("#account2").removeClass("active");
 	        	$("#profile2").removeClass("active");
@@ -68,7 +68,7 @@
 	        	$("#profile").hide();
 	        });
 
-	        $("#email-change").click(function(){
+	        $(document).on("click", "#email-change", function(){
 	        	$("#email-show").hide();
 	        	$("#email-form").show();
 	        });
@@ -92,7 +92,7 @@
 			});
 
 	        // TODO: Figure out an easy way to do this...
-	        $("#set-dark-mode").on('click', function(){
+	        $(document).on('click', "#set-dark-mode", function(){
 	        	$.ajax({
 					url: "{% url 'dark-mode' %}",
 					data: {
@@ -108,6 +108,12 @@
 						}
 					}
 				  });
+			});
+
+	        $(document).on("click", "#editDescription", function(){
+	        	var user_id = "{{user.id}}";
+				var url = "{% url 'profile-update' 12345 %} #block-content".replace(/12345/, user_id.toString());
+				$(".main-card").load(url);
 			});
 	    });
 	</script>
@@ -146,11 +152,11 @@
 					
 					<div id="email-form">
 							<form method="POST"  action="{% url 'account' user.id %}" >
-							{% csrf_token %}
-							{{form.email|as_crispy_field}}
-							<button type="submit" class="btn btn-primary">Submit</button>
-							<a class="btn btn-secondary" href="{% url 'account' user.id %}">Cancel</a>
-						</form>
+								{% csrf_token %}
+								{{form.email|as_crispy_field}}
+								<button type="submit" class="btn btn-primary">Submit</button>
+								<a class="btn btn-secondary" href="{% url 'account' user.id %}">Cancel</a>
+							</form>
 					</div>
 
 				</div>
@@ -170,13 +176,17 @@
 
 		<div id="profile">
 			<div class="card">
-				<div class="card-body">
-					<img src="{% static 'images/default.png' %}" id="user-profile-pic">
+				<div class="card-body" id="profile-body">
+					{% if request.user.profile.avatar %}
+						<img src="{{request.user.profile.avatar.url}}" id="user-profile-pic">
+					{% endif %}
+					{% if not request.user.profile.avatar %}
+						<img src="{% static 'images/default.png' %}" id="user-profile-pic">
+					{% endif %}
 					<hr>
 					<h5>Description</h5>
 					<p>{{user.profile.description}}</p>
-					<button class="btn btn-primary">Edit Description</button>
-					<button class="btn btn-danger">Deactivate Account</button>
+					<button class="btn btn-primary" type="button" id="editDescription">Edit Profile</button>
 				</div>
 			</div>
 		</div>

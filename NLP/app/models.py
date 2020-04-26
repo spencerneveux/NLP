@@ -21,8 +21,7 @@ class ProfileManager(models.Manager):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    email = models.EmailField(max_length=200, default="")
-    avatar = models.ImageField(upload_to="app/static/images", default="app/static/images/default.png")
+    avatar = models.ImageField(upload_to="avatar_images/", null=True, blank=True)
     description = models.CharField(max_length=200, default="", null=True)
     is_online = models.BooleanField(default=False)
     signup_confirmation = models.BooleanField(default=False)
@@ -60,7 +59,7 @@ class Profile(models.Model):
         instance.profile.save()
 
 
-class SignUpForm(UserCreationForm):
+class UserForm(UserCreationForm):
     first_name = forms.CharField(max_length=200, help_text='First Name')
     last_name = forms.CharField(max_length=200, help_text='Last Name')
     email = forms.EmailField(max_length=200, help_text='Email', required=True)
@@ -77,12 +76,13 @@ class SignUpForm(UserCreationForm):
             'password2'
         )
 
-class UpdateProfileForm(ModelForm):
-    avatar = forms.ImageField()
-
+class ProfileForm(ModelForm):
     class Meta:
         model = Profile
-        fields = "__all__"
+        fields = (
+            'avatar',
+            'description'
+        )
 
 # =========================
 # RSS Feed
