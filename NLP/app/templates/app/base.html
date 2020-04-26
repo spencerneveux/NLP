@@ -49,7 +49,6 @@
       #feed-filter {
         margin-top:10px;
         margin-bottom: 5px;
-        width: 250px;
       }
 
       .feed-avatar {
@@ -460,8 +459,9 @@
             },
             dataType: "json",
             success: function(data) {
+              console.log(data);
                 if (data["Test"] == true) {
-                    $('.alert').removeClass("collapse");
+                    $('.alert').show;
                     $('.alert').text("Success! Bookmarked");
                     $('.alert').fadeOut(2000);
                 }
