@@ -21,7 +21,7 @@ class ProfileManager(models.Manager):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    avatar = models.ImageField(upload_to="avatar_images/", null=True, blank=True)
+    avatar = models.ImageField(upload_to="avatar_images/",  null=True, blank=True)
     description = models.CharField(max_length=200, default="", null=True)
     is_online = models.BooleanField(default=False)
     signup_confirmation = models.BooleanField(default=False)

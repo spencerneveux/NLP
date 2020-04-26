@@ -12,6 +12,7 @@
 {{block.super}}
 
   $(document).ready(function(){
+
 	$(".reply").click(function(){
 		var id = "#reply" + $(this).val();
 		$(id).show();
@@ -32,7 +33,7 @@
 {% block content %}
 
 <div id="article-interaction-container">
-	<a href="javascript:void(0);" id="article-analysis" data-value="{{article.id}}"><button class="btn btn-white text-dark bookmark mb-1"><i class="fa fa-bar-chart" aria-hidden="true"></i></button></a>
+	<a href="javascript:void(0);" id="article-analysis" data-value="{{article.id}}" data-toggle="popover" data-placement="bottom" data-content="Analysis"><button class="btn btn-white text-dark bookmark mb-1"><i class="fa fa-bar-chart" aria-hidden="true"></i></button></a>
 	<button class="btn btn-white text-dark bookmark mb-1" value="{{article.id}}"><i class="fa fa-bookmark" aria-hidden="true"></i></button>
 	<button class="btn btn-light float-right" type="button" id="share-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-share" aria-hidden="true"></i></button>
 	<div class="dropdown-menu" aria-labelledby="share-button">

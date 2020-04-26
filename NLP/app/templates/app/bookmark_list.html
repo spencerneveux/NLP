@@ -45,36 +45,11 @@
 </style>
 {% endblock extra_css %}
 
-{% block extra_js %}
-
-	<script type="text/javascript">
-		$(document).ready(function(){
-		    $(".remove-bookmark").click(function(){
-		        var parents = $(this).parents();
-		        var article_id = $(this).val();
-                console.log(parents[1]);
-                $.ajax({
-                    url: "{% url 'remove-bookmark' %}",
-                    data: {
-                        "article-id": article_id
-                    },
-                    dataType: "json",
-                    success: function(data) {
-                        if (data["Test"] == true) {
-                            $(parents[1]).remove();
-                        }
-                    }
-                  });
-            });
-	    });
-	</script>
-{% endblock extra_js %}
-
 {% block content %}
 
 <br>
 
-<div class="row" id="content">
+<div class="row">
     {% if user.profile.is_online %}
         {% if not user.profile.get_bookmark_status %}
             <div class="container">

@@ -25,12 +25,13 @@
 {% endblock extra_css %}
 
 {% block extra_js %}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>-->
 
 	<script type="text/javascript">
 		$(document).ready(function(){
 
 	        $(document).on('click', '.add-rss', function(){
+				console.log("adding");
 	        	var rss_id = $(this).val()
 	        	$.ajax({
 	        		url: "{% url 'add-rss' %}",
@@ -46,13 +47,21 @@
 	        					$(this).hide();
 							});
 	        			}
+	        			else {
+	        				$("#danger-alert").removeClass('hide-alert');
+	        				$("#danger-alert").show();
+	        				$("#danger-alert").text("You are already following this feed.")
+	        				$("#danger-alert").fadeOut(2000, function(){
+	        					$(this).hide();
+							});
+						}
 	        		}
 	        	});
 	        });
 
 	        $(document).on('click', '.remove-rss', function(){
 	        	var rss_id = $(this).val()
-	        	console.log(rss_id);
+	        	console.log("removing");
 	        	
 	        	$.ajax({
 	        		url: "{% url 'remove-rss' %}",
@@ -67,13 +76,22 @@
 	        				$("#remove-alert").fadeOut(2000, function(){
 	        					$(this).hide();
 							});
+
 	        			}
+	        			else {
+	        				$("#danger-alert").removeClass('hide-alert');
+	        				$("#danger-alert").show();
+	        				$("#danger-alert").text("You are not following this feed.")
+	        				$("#danger-alert").fadeOut(2000, function(){
+	        					$(this).hide();
+							});
+						}
 	        		}
 	        	});
 	
 	        });
 
-	        $("#news").click(function(){
+	        $("#news").on("click", function(){
 	        	$.ajax({
 	        		url: "{% url 'news' %}",
 	        		data: {
@@ -100,8 +118,8 @@
 										'\t\t\t</div>\n' +
 										'\t\t\t  <div class="card-footer">\n' +
 										'\t\t\t\t  <a href="http://' + link +'"><small class="text-muted">Visit Site</small></a>\n' +
-										'\t\t\t\t  <button class="btn btn-small btn-white remove-bookmark float-right remove-rss" value="' + id + '"><small class="text-muted float-right"><i class="fa fa-trash" aria-hidden="true"></i></small></button>\n' +
-										'\t\t\t\t  <button class="btn btn-small btn-white remove-bookmark float-right add-rss" value="' + id + '"><small class="text-muted float-right"><i class="fa fa-plus" aria-hidden="true"></i></small></button>\n' +
+										'\t\t\t\t  <button class="btn btn-small btn-white float-right remove-rss" value="' + id + '"><small class="text-muted float-right"><i class="fa fa-trash" aria-hidden="true"></i></small></button>\n' +
+										'\t\t\t\t  <button class="btn btn-small btn-white float-right add-rss" value="' + id + '"><small class="text-muted float-right"><i class="fa fa-plus" aria-hidden="true"></i></small></button>\n' +
 										'\t\t\t  </div>\n' +
 										'\t\t</div>\n' +
 										'\t</div>'
@@ -112,7 +130,7 @@
 	        	});
 	        });
 
-	        $("#sports").click(function(){
+	        $("#sports").on("click", function(){
 	        	$.ajax({
 	        		url: "{% url 'sports' %}",
 	        		data: {
@@ -139,8 +157,8 @@
 										'\t\t\t</div>\n' +
 										'\t\t\t  <div class="card-footer">\n' +
 										'\t\t\t\t  <a href="http://' + link +'"><small class="text-muted">Visit Site</small></a>\n' +
-										'\t\t\t\t  <button class="btn btn-small btn-white remove-bookmark float-right remove-rss" value="' + id + '"><small class="text-muted float-right"><i class="fa fa-trash" aria-hidden="true"></i></small></button>\n' +
-										'\t\t\t\t  <button class="btn btn-small btn-white remove-bookmark float-right add-rss" value="' + id + '"><small class="text-muted float-right"><i class="fa fa-plus" aria-hidden="true"></i></small></button>\n' +
+										'\t\t\t\t  <button class="btn btn-small btn-white  float-right remove-rss" value="' + id + '"><small class="text-muted float-right"><i class="fa fa-trash" aria-hidden="true"></i></small></button>\n' +
+										'\t\t\t\t  <button class="btn btn-small btn-white  float-right add-rss" value="' + id + '"><small class="text-muted float-right"><i class="fa fa-plus" aria-hidden="true"></i></small></button>\n' +
 										'\t\t\t  </div>\n' +
 										'\t\t</div>\n' +
 										'\t</div>'
@@ -151,7 +169,7 @@
 	        	});
 	        });
 
-			$("#technology").click(function(){
+			$("#technology").on("click", function(){
 	        	$.ajax({
 	        		url: "{% url 'tech' %}",
 	        		data: {
@@ -178,8 +196,8 @@
 										'\t\t\t</div>\n' +
 										'\t\t\t  <div class="card-footer">\n' +
 										'\t\t\t\t  <a href="http://' + link +'"><small class="text-muted">Visit Site</small></a>\n' +
-										'\t\t\t\t  <button class="btn btn-small btn-white remove-bookmark float-right remove-rss" value="' + id + '"><small class="text-muted float-right"><i class="fa fa-trash" aria-hidden="true"></i></small></button>\n' +
-										'\t\t\t\t  <button class="btn btn-small btn-white remove-bookmark float-right add-rss" value="' + id + '"><small class="text-muted float-right"><i class="fa fa-plus" aria-hidden="true"></i></small></button>\n' +
+										'\t\t\t\t  <button class="btn btn-small btn-white  float-right remove-rss" value="' + id + '"><small class="text-muted float-right"><i class="fa fa-trash" aria-hidden="true"></i></small></button>\n' +
+										'\t\t\t\t  <button class="btn btn-small btn-white  float-right add-rss" value="' + id + '"><small class="text-muted float-right"><i class="fa fa-plus" aria-hidden="true"></i></small></button>\n' +
 										'\t\t\t  </div>\n' +
 										'\t\t</div>\n' +
 										'\t</div>'
@@ -190,7 +208,7 @@
 	        	});
 	        });
 
-			$("#business").click(function(){
+			$("#business").on("click", function(){
 	        	$.ajax({
 	        		url: "{% url 'business' %}",
 	        		data: {
@@ -217,8 +235,8 @@
 										'\t\t\t</div>\n' +
 										'\t\t\t  <div class="card-footer">\n' +
 										'\t\t\t\t  <a href="http://' + link +'"><small class="text-muted">Visit Site</small></a>\n' +
-										'\t\t\t\t  <button class="btn btn-small btn-white remove-bookmark float-right remove-rss" value="' + id + '"><small class="text-muted float-right"><i class="fa fa-trash" aria-hidden="true"></i></small></button>\n' +
-										'\t\t\t\t  <button class="btn btn-small btn-white remove-bookmark float-right add-rss" value="' + id + '"><small class="text-muted float-right"><i class="fa fa-plus" aria-hidden="true"></i></small></button>\n' +
+										'\t\t\t\t  <button class="btn btn-small btn-white  float-right remove-rss" value="' + id + '"><small class="text-muted float-right"><i class="fa fa-trash" aria-hidden="true"></i></small></button>\n' +
+										'\t\t\t\t  <button class="btn btn-small btn-white  float-right add-rss" value="' + id + '"><small class="text-muted float-right"><i class="fa fa-plus" aria-hidden="true"></i></small></button>\n' +
 										'\t\t\t  </div>\n' +
 										'\t\t</div>\n' +
 										'\t</div>'
@@ -229,7 +247,7 @@
 	        	});
 	        });
 
-			$("#politics").click(function(){
+			$("#politics").on("click", function(){
 	        	$.ajax({
 	        		url: "{% url 'politics' %}",
 	        		data: {
@@ -256,8 +274,8 @@
 										'\t\t\t</div>\n' +
 										'\t\t\t  <div class="card-footer">\n' +
 										'\t\t\t\t  <a href="http://' + link +'"><small class="text-muted">Visit Site</small></a>\n' +
-										'\t\t\t\t  <button class="btn btn-small btn-white remove-bookmark float-right remove-rss" value="' + id + '"><small class="text-muted float-right"><i class="fa fa-trash" aria-hidden="true"></i></small></button>\n' +
-										'\t\t\t\t  <button class="btn btn-small btn-white remove-bookmark float-right add-rss" value="' + id + '"><small class="text-muted float-right"><i class="fa fa-plus" aria-hidden="true"></i></small></button>\n' +
+										'\t\t\t\t  <button class="btn btn-small btn-white  float-right remove-rss" value="' + id + '"><small class="text-muted float-right"><i class="fa fa-trash" aria-hidden="true"></i></small></button>\n' +
+										'\t\t\t\t  <button class="btn btn-small btn-white  float-right add-rss" value="' + id + '"><small class="text-muted float-right"><i class="fa fa-plus" aria-hidden="true"></i></small></button>\n' +
 										'\t\t\t  </div>\n' +
 										'\t\t</div>\n' +
 										'\t</div>'
@@ -268,7 +286,7 @@
 	        	});
 	        });
 
-			$("#gaming").click(function(){
+			$("#gaming").on("click", 'button', function(){
 	        	$.ajax({
 	        		url: "{% url 'gaming' %}",
 	        		data: {
@@ -285,7 +303,7 @@
 	        					var name = result_list[result]['name'];
 	        					var link = result_list[result]['link'];
 	        					var description = result_list[result]['description'];
-	        					$(".card-container").children().hide();
+	        					$(".card-container").children().empty();
 								$(".temp-card-container").append('<div class="col-sm-4">\n' +
 										'\t\t<div class="card mb-2 zoom">\n' +
 										'\t\t\t<div class="card-body">\n' +
@@ -295,8 +313,8 @@
 										'\t\t\t</div>\n' +
 										'\t\t\t  <div class="card-footer">\n' +
 										'\t\t\t\t  <a href="http://' + link +'"><small class="text-muted">Visit Site</small></a>\n' +
-										'\t\t\t\t  <button class="btn btn-small btn-white remove-bookmark float-right remove-rss" value="' + id + '"><small class="text-muted float-right"><i class="fa fa-trash" aria-hidden="true"></i></small></button>\n' +
-										'\t\t\t\t  <button class="btn btn-small btn-white remove-bookmark float-right add-rss" value="' + id + '"><small class="text-muted float-right"><i class="fa fa-plus" aria-hidden="true"></i></small></button>\n' +
+										'\t\t\t\t  <button class="btn btn-small btn-white  float-right remove-rss" value="' + id + '"><small class="text-muted float-right"><i class="fa fa-trash" aria-hidden="true"></i></small></button>\n' +
+										'\t\t\t\t  <button class="btn btn-small btn-white  float-right add-rss" value="' + id + '"><small class="text-muted float-right"><i class="fa fa-plus" aria-hidden="true"></i></small></button>\n' +
 										'\t\t\t  </div>\n' +
 										'\t\t</div>\n' +
 										'\t</div>'
@@ -315,42 +333,41 @@
 				}
 				if (search.length > 0) {
 					$.ajax({
-	        		url: "{% url 'search-rss' %}",
-	        		data: {
-	        			"search": search
-	        		},
-	        		dataType: "json",
-	        		success: function(data) {
-	        			if (data['Test'] == true){
-	        				result_list = data['results'];
-	        				$(".temp-card-container").empty();
-	        				for (result in result_list) {
-	        					var id = result_list[result]['id'];
-	        					var name = result_list[result]['name'];
-	        					var link = result_list[result]['link'];
-	        					var description = result_list[result]['description'];
-	        					$(".card-container").children().hide();
-								$(".temp-card-container").append('<div class="col-sm-4">\n' +
-										'\t\t<div class="card mb-2 zoom">\n' +
-										'\t\t\t<div class="card-body">\n' +
-										'\t\t\t\t<img class="card-img-top feed-avatar d-inline" src="//logo.clearbit.com/'+ link +'" alt="...">\n' +
-										'\t\t\t  \t<h5 class="card-title d-inline">' + name + '</h5>\n' +
-										'\t\t\t  \t<p class="card-text">' + description + '</p>\n' +
-										'\t\t\t</div>\n' +
-										'\t\t\t  <div class="card-footer">\n' +
-										'\t\t\t\t  <a href="http://' + link +'"><small class="text-muted">Visit Site</small></a>\n' +
-										'\t\t\t\t  <button class="btn btn-small btn-white remove-bookmark float-right remove-rss" value="' + id + '"><small class="text-muted float-right"><i class="fa fa-trash" aria-hidden="true"></i></small></button>\n' +
-										'\t\t\t\t  <button class="btn btn-small btn-white remove-bookmark float-right add-rss" value="' + id + '"><small class="text-muted float-right"><i class="fa fa-plus" aria-hidden="true"></i></small></button>\n' +
-										'\t\t\t  </div>\n' +
-										'\t\t</div>\n' +
-										'\t</div>'
-								);
+						url: "{% url 'search-rss' %}",
+						data: {
+							"search": search
+						},
+						dataType: "json",
+						success: function(data) {
+							if (data['Test'] == true){
+								result_list = data['results'];
+								$(".temp-card-container").empty();
+								for (result in result_list) {
+									var id = result_list[result]['id'];
+									var name = result_list[result]['name'];
+									var link = result_list[result]['link'];
+									var description = result_list[result]['description'];
+									$(".card-container").children().hide();
+									$(".temp-card-container").append('<div class="col-sm-4">\n' +
+											'\t\t<div class="card mb-2 zoom">\n' +
+											'\t\t\t<div class="card-body">\n' +
+											'\t\t\t\t<img class="card-img-top feed-avatar d-inline" src="//logo.clearbit.com/'+ link +'" alt="...">\n' +
+											'\t\t\t  \t<h5 class="card-title d-inline">' + name + '</h5>\n' +
+											'\t\t\t  \t<p class="card-text">' + description + '</p>\n' +
+											'\t\t\t</div>\n' +
+											'\t\t\t  <div class="card-footer">\n' +
+											'\t\t\t\t  <a href="http://' + link +'"><small class="text-muted">Visit Site</small></a>\n' +
+											'\t\t\t\t  <button class="btn btn-small btn-white  float-right remove-rss" value="' + id + '"><small class="text-muted float-right"><i class="fa fa-trash" aria-hidden="true"></i></small></button>\n' +
+											'\t\t\t\t  <button class="btn btn-small btn-white  float-right add-rss" value="' + id + '"><small class="text-muted float-right"><i class="fa fa-plus" aria-hidden="true"></i></small></button>\n' +
+											'\t\t\t  </div>\n' +
+											'\t\t</div>\n' +
+											'\t</div>'
+									);
+								}
 							}
-	        			}
-	        		}
-	        	});
+						}
+					});
 				}
-
 	        });
 	     });
 	</script>
@@ -359,11 +376,13 @@
 {% block content %}
 <br>
 
-<div class="alert alert-success hide-alert" id="add-alert" role="alert">
+<div class="alert alert-success" id="add-alert" role="alert" style="display: none;">
   Success! Added RSS Feed.
 </div>
-<div class="alert alert-success hide-alert" id="remove-alert" role="alert">
+<div class="alert alert-success" id="remove-alert" role="alert" style="display: none;">
   Success! Removed RSS Feed.
+</div>
+<div class="alert alert-danger" id="danger-alert" role="alert" style="display: none;">
 </div>
 
 {% if not user.profile.is_online %}
@@ -411,8 +430,8 @@
 			</div>
 			  <div class="card-footer">
 				  <a href="http://{{feed.link}}"><small class="text-muted">Visit Site</small></a>
-				  <button class="btn btn-small btn-white remove-bookmark float-right remove-rss" value="{{feed.id}}"><small class="text-muted float-right"><i class="fa fa-trash" aria-hidden="true"></i></small></button>
-				  <button class="btn btn-small btn-white remove-bookmark float-right add-rss" value="{{feed.id}}"><small class="text-muted float-right"><i class="fa fa-plus" aria-hidden="true"></i></small></button>
+				  <button class="btn btn-small btn-white  float-right remove-rss" value="{{feed.id}}"><small class="text-muted float-right"><i class="fa fa-trash" aria-hidden="true"></i></small></button>
+				  <button class="btn btn-small btn-white  float-right add-rss" value="{{feed.id}}"><small class="text-muted float-right"><i class="fa fa-plus" aria-hidden="true"></i></small></button>
 			  </div>
 		</div>
 	</div>

@@ -83,9 +83,19 @@
 					success: function(data) {
 						if (data['Test'] == false) {
 							$(".article-stats").hide();
+	        				$("#article-detail-success").show();
+	        				$("#article-detail-success").text("Successfully hiding article details");
+	        				$("#article-detail-success").fadeOut(2000, function(){
+	        					$(this).hide();
+							});
 						}
 						if (data['Test'] == true) {
 							$(".article-stats").show();
+	        				$("#article-detail-success").show();
+	        				$("#article-detail-success").text("Successfully showing article details");
+	        				$("#article-detail-success").fadeOut(2000, function(){
+	        					$(this).hide();
+							});
 						}
 					}
 				  });
@@ -137,7 +147,8 @@
 	  	</ul>
 	</div>
 	<div class="card-body main-card">
-
+		<div class="alert alert-success " style="display: none"  role="alert" id="article-detail-success">
+		</div>
 		<div id="account">
 			<div class="card">
 				<div class="card-header">

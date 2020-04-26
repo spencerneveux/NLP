@@ -164,12 +164,12 @@
       Validator</a>
 
     <div class="ml-auto mr-2">
-      <a href="{% url 'rss-list' %}"><button class="btn btn-white" data-toggle="tooltip" data-placement="bottom" title="Feeds"><i class="fa fa-plus" aria-hidden="true"></i></button></a>
-      <a href="{% url 'home' %}"><button class="btn btn-white" data-toggle="tooltip" data-placement="bottom" title="Home"><i class="fa fa-home mr-2" aria-hidden="true"></i></button></a>
-      <a href="javascript:void(0);" id="bookmark-list"><button class="btn btn-white" data-toggle="tooltip" data-placement="bottom" title="Bookmarks"><i class="fa fa-bookmark" aria-hidden="true"></i></button></a>
+      <a href="{% url 'rss-list' %}"><button class="btn btn-white" data-toggle="popover" data-placement="bottom" data-content="Feeds"><i class="fa fa-plus" aria-hidden="true"></i></button></a>
+      <a href="{% url 'home' %}"><button class="btn btn-white" data-toggle="popover" data-placement="bottom" data-content="Home" ><i class="fa fa-home mr-2" aria-hidden="true"></i></button></a>
+      <a href="javascript:void(0);" id="bookmark-list"><button class="btn btn-white" data-toggle="popover" data-placement="bottom" data-content="Bookmarks"><i class="fa fa-bookmark" aria-hidden="true"></i></button></a>
 
       {% if user.profile.is_online %}
-          <a href="{% url 'account' user.id %}"><button class="btn btn-light mr-1">{{user}}</button></a>
+          <a href="{% url 'account' user.id %}" ><button data-toggle="popover" data-placement="bottom" data-content="Account" class="btn btn-light mr-1">{{user}}</button></a>
       {% endif %}
       {% if not user.profile.is_online %}
         <a href="{% url 'login' %}" id="loginButton"><button class="btn btn-light mr-1">Log In</button></a>
@@ -196,7 +196,7 @@
           </form>
       </div>
       <div class="col-3 border-right border-bottom">
-        <button class="btn btn-small btn-primary float-right mt-2" id="article-filter" type="button" value="{% with user_rss_list|first as first_id%}{{first_id.id}}{% endwith %}">
+        <button class="btn btn-small btn-primary float-right mt-2" id="article-filter" data-toggle="popover" data-placement="top" data-content="" type="button" value="{% with user_rss_list|first as first_id%}{{first_id.id}}{% endwith %}">
 		    Popular
         </button>
       </div>
@@ -262,17 +262,19 @@
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 
 <script>
   $(document).ready(function(){
+    $('[data-toggle="popover"]').popover({trigger: 'hover'});
 
 
-    $("#loginButton").click(function(){
+
+    $("#loginButton").on('click', function(){
       $("#loginModal").modal('show');
     });
 
@@ -323,7 +325,9 @@
             dataType: "json",
             success: function(data) {
                 if (data["Test"] == true) {
-                    $(parents[1]).remove();
+                  $(parents[1]).hide(800, function(){
+                    $(parents[1].remove());
+                  });
                 }
             }
           });
@@ -394,9 +398,8 @@
                         $('#alert-success').fadeOut(2000);
                     }else if(data['Test'] == 'Liked') {
                       $('#alert-failure').show();
-                      $('#alert-failure').text("Nope! You've already liked this");
+                      $('#alert-failure').text("You've already liked this");
                       $('#alert-failure').fadeOut(2000);
-
                     }
                 }
             });
@@ -421,7 +424,7 @@
                 $('#alert-success').fadeOut(2000);
               } else if (data['Test'] == 'Disliked') {
                 $('#alert-failure').show();
-                $('#alert-failure').text("Nope! You've already disliked this");
+                $('#alert-failure').text("You've already disliked this");
                 $('#alert-failure').fadeOut(2000);
               }
             }
@@ -461,13 +464,26 @@
             success: function(data) {
               console.log(data);
                 if (data["Test"] == true) {
-                    $('.alert').show;
-                    $('.alert').text("Success! Bookmarked");
-                    $('.alert').fadeOut(2000);
+                    $('#alert-success').show();
+                    $('#alert-success').text("Success! Bookmarked");
+                    $('#alert-success').fadeOut(2000);
+                }else if (data['Test'] == false) {
+                  $('#alert-failure').show();
+                  $('#alert-failure').text("Already bookmarked");
+                  $('#alert-failure').fadeOut(2000);
                 }
             }
           });
         }
+    });
+
+    $("#article-filter").hover(function(){
+      var state = $(this).text().trim();
+      if (state == "Popular") {
+        $(this).attr("data-content", "Latest");
+      }else {
+        $(this).attr("data-content", "Popular");
+      }
     });
 
      $("#article-filter").click(function(){
@@ -559,6 +575,8 @@
           });
        }
      });
+
+
   });
 
 </script>
