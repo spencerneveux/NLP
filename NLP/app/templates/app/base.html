@@ -246,7 +246,10 @@
     </div>
     <br>
     <div class="col">
-      	<div class="alert alert-success alert-dismissable collapse mt-2">
+      	<div class="alert alert-success alert-dismissable collapse mt-2" id="alert-success">
+          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        </div>
+      <div class="alert alert-danger alert-dismissable collapse mt-2" id="alert-failure">
           <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
         </div>
       <div id="block-content">
@@ -282,7 +285,6 @@
   });
 
     $(document).on('click', '.get-article-details', function(){
-      $(this).addClass('active');
       var article_id = $(this).attr('data-value');
       var url = "{% url 'article-detail' 12345 %} #article-detail-content".replace(/12345/, article_id.toString());
       var header = "{% url 'article-detail' 12345 %} #article-interaction-container".replace(/12345/, article_id.toString());
@@ -303,9 +305,10 @@
     });
 
     $(document).on('click', '.bookmark-item', function(){
-        var bookmark_id = $(this).attr('data-value');
-        var header = "{% url 'article-detail' 12345 %} #article-interaction-container".replace(/12345/, bookmark_id.toString());
-        var url = "{% url 'article-detail' 12345 %} #article-detail-content".replace(/12345/, bookmark_id.toString());
+        var article_id = $(this).attr('data-value');
+        var url = "{% url 'article-detail' 12345 %} #article-detail-content".replace(/12345/, article_id.toString());
+        var header = "{% url 'article-detail' 12345 %} #article-interaction-container".replace(/12345/, article_id.toString());
+
         $("#article-detail-header").load(header);
         $("#block-content").load(url);
     });
@@ -384,7 +387,16 @@
                 },
                 dataType: "json",
                 success: function(data) {
-                    if (data['Test'] == true){
+                  console.log(data['Test']);
+                    if (data['Test'] == 'Like'){
+                      $(this).addClass('active');
+                        $('#alert-success').show();
+                        $('#alert-success').text("Success! Liked");
+                        $('#alert-success').fadeOut(2000);
+                    }else if(data['Test'] == 'Liked') {
+                      $('#alert-failure').show();
+                      $('#alert-failure').text("Nope! You've already liked this");
+                      $('#alert-failure').fadeOut(2000);
 
                     }
                 }
@@ -403,6 +415,16 @@
             },
             dataType: "json",
             success: function(data) {
+              if (data['Test'] == 'Dislike') {
+                $(this).addClass('active');
+                $('#alert-success').show();
+                $('#alert-success').text("Success! Disliked");
+                $('#alert-success').fadeOut(2000);
+              } else if (data['Test'] == 'Disliked') {
+                $('#alert-failure').show();
+                $('#alert-failure').text("Nope! You've already disliked this");
+                $('#alert-failure').fadeOut(2000);
+              }
             }
           });
         }

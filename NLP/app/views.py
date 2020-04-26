@@ -118,6 +118,10 @@ class CommentCreateView(CreateView):
         form.instance.article = article
         return super(CommentCreateView, self).form_valid(form)
 
+class CommentDeleteView(DeleteView):
+    model = Comment
+    success_url = reverse_lazy('home')
+
 
 # =========================
 # Articles
@@ -354,17 +358,27 @@ def like(request):
 
     like, created = Like.objects.get_or_create(user=request.user, article_id=article_id)
     if operation == "like":
-        like.is_liked = True
-        like.save()
-        data = {
-            'Test': 'Like'
-        }
+        if like.is_liked:
+            data = {
+                'Test': 'Liked'
+            }
+        else:
+            like.is_liked = True
+            like.save()
+            data = {
+                'Test': 'Like'
+            }
     elif operation == "dislike":
-        like.is_liked = False
-        like.save()
-        data = {
-            'Test': 'Dislike'
-        }
+        if like.is_liked == False:
+            data = {
+                'Test': 'Disliked'
+            }
+        else:
+            like.is_liked = False
+            like.save()
+            data = {
+                'Test': 'Dislike'
+            }
 
     return JsonResponse(data)
 

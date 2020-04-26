@@ -63,7 +63,6 @@
                         if (data["Test"] == true) {
                             $(parents[1]).remove();
                         }
-                        console.log(data);
                     }
                   });
             });
@@ -75,7 +74,7 @@
 
 <br>
 
-<div class="row">
+<div class="row" id="content">
     {% if user.profile.is_online %}
         {% if not user.profile.get_bookmark_status %}
             <div class="container">

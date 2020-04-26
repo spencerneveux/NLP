@@ -50,6 +50,7 @@ from .views import (
 
 from .views import (
     CommentCreateView,
+    CommentDeleteView
 )
 
 urlpatterns = [
@@ -89,7 +90,8 @@ urlpatterns = [
     # ===================
     # Comment
     # ===================
-    path("<int:article_id>/comment", CommentCreateView.as_view(), name="comment-add"),
+    path("comment/<int:article_id>", CommentCreateView.as_view(), name="comment-add"),
+    path('comment/<int:pk>/delete', CommentDeleteView.as_view(), name="comment-delete"),
 
     # ===================
     # Authors

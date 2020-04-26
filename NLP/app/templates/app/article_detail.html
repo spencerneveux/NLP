@@ -58,10 +58,9 @@
 				<p class="d-inline">{{comment.user}}</p>
 				<p class="d-inline">{{comment.date}}</p>
 				<p>{{comment.content}}</p>
-				<button class="btn btn-primary reply" value="{{comment.id}}">Reply</button>
+<!--				<button class="btn btn-primary reply" value="{{comment.id}}">Reply</button>-->
 				{% if comment.user == user %}
-					<!--TODO: Write delete logic-->
-					<button class="btn btn-danger">Delete</button>
+				<a href="{% url 'comment-delete' comment.id%}"><button class="btn btn-danger">Delete</button></a>
 				{% endif %}
 			</div>
 			<br>
