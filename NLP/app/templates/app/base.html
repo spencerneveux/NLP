@@ -290,7 +290,10 @@
       var url = "{% url 'article-detail' 12345 %} #article-detail-content".replace(/12345/, article_id.toString());
       var header = "{% url 'article-detail' 12345 %} #article-interaction-container".replace(/12345/, article_id.toString());
 
-      $("#article-detail-header").load(header);
+      $("#article-detail-header").load(header, function() {
+            $('[data-toggle="popover"]').popover({trigger: 'hover'});
+
+      });
       $("#block-content").load(url);
     });
 
