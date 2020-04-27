@@ -88,7 +88,18 @@
 					<div class="col">
 						<br>
 						<h5>Other work</h5>
-						<table class="table">
+						<table id="table1"
+						  data-toolbar="#toolbar"
+						  data-search="true"
+						  data-show-toggle="true"
+						  data-show-fullscreen="true"
+						  data-show-columns="true"
+						  data-show-columns-toggle-all="true"
+						  data-click-to-select="true"
+						  data-minimum-count-columns="2"
+						  data-pagination="true"
+						  data-id-field="id"
+						  data-page-list="[10, 25, 50, 100, all]">
 							  <thead>
 								<tr>
 								  <th scope="col">Article</th>
@@ -154,7 +165,6 @@
 					<table class="table">
 					  <thead class="thead-dark">
 					    <tr>
-					      <th scope="col">#</th>
 					      <th scope="col">Name</th>
 					      <th scope="col">Confidence</th>
 					    </tr>
@@ -162,7 +172,6 @@
 					  <tbody>
 				  		{% for category in article.get_categories %}
 							<tr>
-						      <th scope="row">{{category.id}}</th>
 						      <td>{{category.name}}</td>
 						      <td>{{category.confidence}}</td>
 						    </tr>
@@ -182,11 +191,22 @@
 					<button class="btn btn-light float-right" data-toggle="modal" data-target="#entityModal"><i class="fa fa-info-circle fa-2x" aria-hidden="true"></i></button>
 				</div>
 				<div class="card-body">
-					<table class="table table-striped">
+					<table id="table2"
+						  data-toolbar="#toolbar"
+						  data-search="true"
+						  data-show-toggle="true"
+						  data-show-fullscreen="true"
+						  data-show-columns="true"
+						  data-show-columns-toggle-all="true"
+						  data-click-to-select="true"
+						  data-minimum-count-columns="2"
+						  data-pagination="true"
+						  data-id-field="id"
+						  data-page-list="[10, 25, 50, 100, all]"
+					>
 					  <thead class="thead-dark">
 					    <tr>
 					      <th scope="col">Name</th>
-					      <th scope="col">Type</th>
 					      <th scope="col">Salience</th>
 					      <th scope="col">Wiki</th>
 					      <th scope="col">Mid</th>
@@ -196,7 +216,6 @@
 				  		{% for entity in article.get_entities %}
 							<tr>
 						      <td>{{entity.name}}</td>
-						      <td>{{entity.entity_type}}</td>
 						      <td>{{entity.salience}}</td>
 						      <td><a href="{{entity.metadata.key}}">{{entity.metadata.key}}</a></td>
 								{% if entity.knowledge.pk %}
