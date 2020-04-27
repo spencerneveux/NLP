@@ -88,10 +88,10 @@
 					<div class="col">
 						<br>
 						<h5>Other work</h5>
+						<hr>
 						<table id="table1"
 						  data-toolbar="#toolbar"
 						  data-search="true"
-						  data-show-toggle="true"
 						  data-show-fullscreen="true"
 						  data-show-columns="true"
 						  data-show-columns-toggle-all="true"
@@ -128,7 +128,7 @@
 		<div class="col">
 			<div class="card">
 				<div class="card-header">
-					<h1>Sentiment Analysis</h1>
+					<h1 class="d-inline">Sentiment Analysis</h1>
 					<button class="btn btn-light float-right" data-toggle="modal" data-target="#sentimentModal"><i class="fa fa-info-circle fa-2x" aria-hidden="true"></i></button>
 				</div>
 				<div class="card-body">
@@ -244,7 +244,7 @@
 			</div>
 			<div class="card-body">
 				<div class="card-deck">
-					{% for article in author_article_list %}
+					{% for article in article_list %}
 							<div class="card">
 								<img class="card-img-top" src="{% static 'images/smoke.png' %}" alt="smoke">
 								<div class="card-body">
