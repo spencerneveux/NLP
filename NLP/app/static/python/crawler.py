@@ -2,11 +2,11 @@ import feedparser
 import datetime
 from urllib.parse import urlparse
 
-# from .feed import Feed
-# from .article import Article
+from .feed import Feed
+from .article import Article
 # #
-from NLP.app.static.python.feed import Feed
-from NLP.app.static.python.article import Article
+# from NLP.app.static.python.feed import Feed
+# from NLP.app.static.python.article import Article
 
 news_feeds = {
     "BBCI: News": 'http://feeds.bbci.co.uk/news/world/rss.xml',
@@ -220,35 +220,35 @@ class Crawler:
                 tup = (feed, "Gaming", f)
                 self.entries.append(tup)
 
-        # for feed in news_feeds:
-        #     f = feedparser.parse(news_feeds[feed])
-        #     if f.bozo == 0:
-        #         tup = (feed, "News", f)
-        #         self.entries.append(tup)
-        #
-        # for feed in tech_feeds:
-        #     f = feedparser.parse(tech_feeds[feed])
-        #     if f.bozo == 0:
-        #         tup = (feed, "Tech", f)
-        #         self.entries.append(tup)
+        for feed in news_feeds:
+            f = feedparser.parse(news_feeds[feed])
+            if f.bozo == 0:
+                tup = (feed, "News", f)
+                self.entries.append(tup)
 
-        # for feed in political_feeds:
-        #     f = feedparser.parse(political_feeds[feed])
-        #     if f.bozo == 0:
-        #         tup = (feed, "Politics", f)
-        #         self.entries.append(tup)
-        #
-        # for feed in business_feeds:
-        #     f = feedparser.parse(business_feeds[feed])
-        #     if f.bozo == 0:
-        #         tup = (feed, "Business", f)
-        #         self.entries.append(tup)
-        #
-        # for feed in sport_feeds:
-        #     f = feedparser.parse(sport_feeds[feed])
-        #     if f.bozo == 0:
-        #         tup = (feed, "Sports", f)
-        #         self.entries.append(tup)
+        for feed in tech_feeds:
+            f = feedparser.parse(tech_feeds[feed])
+            if f.bozo == 0:
+                tup = (feed, "Tech", f)
+                self.entries.append(tup)
+
+        for feed in political_feeds:
+            f = feedparser.parse(political_feeds[feed])
+            if f.bozo == 0:
+                tup = (feed, "Politics", f)
+                self.entries.append(tup)
+
+        for feed in business_feeds:
+            f = feedparser.parse(business_feeds[feed])
+            if f.bozo == 0:
+                tup = (feed, "Business", f)
+                self.entries.append(tup)
+
+        for feed in sport_feeds:
+            f = feedparser.parse(sport_feeds[feed])
+            if f.bozo == 0:
+                tup = (feed, "Sports", f)
+                self.entries.append(tup)
 
     def update(self):
         self.process_feeds()

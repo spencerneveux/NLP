@@ -107,6 +107,25 @@ class RSSFeed(models.Model):
 
 
 # =========================
+# Categories
+# =========================
+class CategoryManager(models.Manager):
+    def create_category(self, name, confidence):
+        category = self.create(name=name, confidence=confidence)
+        return category
+
+class Category(models.Model):
+    objects = CategoryManager()
+    name = models.CharField(max_length=200, default="")
+    confidence = models.FloatField(default=0)
+
+    def get_articles(self):
+        return self.articles
+
+    def __str__(self):
+        return self.name
+
+# =========================
 # Articles
 # =========================
 class ArticleManager(models.Manager):
@@ -120,7 +139,7 @@ class ArticleManager(models.Manager):
 class Article(models.Model):
     objects = ArticleManager()
     rss_feed = models.ForeignKey(RSSFeed, on_delete=models.CASCADE, null=True)
-
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
     title = models.CharField(max_length=200, default="")
     publisher = models.CharField(max_length=200, default="")
     author = models.CharField(max_length=200, default="")
@@ -132,10 +151,10 @@ class Article(models.Model):
         return self.entity_set.all()
 
     def get_categories(self):
-        return self.category_set.all()
+        return self.category
 
-    def get_category(self):
-        return self.category_set.all()[:1]
+    def get_similar_articles(self):
+        return self.category
 
     def get_likes(self):
         count = 0
@@ -307,28 +326,6 @@ class Knowledge(models.Model):
 
     def __str__(self):
         return self.name
-
-
-# =========================
-# Categories
-# =========================
-class CategoryManager(models.Manager):
-    def create_category(self, name, confidence):
-        category = self.create(name=name, confidence=confidence)
-        return category
-
-class Category(models.Model):
-    objects = CategoryManager()
-    article = models.ForeignKey(Article, on_delete=models.CASCADE)
-    name = models.CharField(max_length=200, default="")
-    confidence = models.FloatField(default=0)
-
-    def get_articles(self):
-        return Article.objects.all()
-
-    def __str__(self):
-        return self.name
-
 
 # =========================
 # Interactions

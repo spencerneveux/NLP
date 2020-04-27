@@ -54,7 +54,6 @@ class Command(BaseCommand):
 
                         # Iterate over each article
                         for article in articles:
-                            a_db, created = Article.objects.get_or_create(rss_feed=f_db, title=article.title, publisher=article.publisher, author=article.author, content=article.content, link=article.link)
 
                             # Analyze article content
                             self.stdout.write(self.style.SUCCESS('Analyzing article'))
@@ -71,7 +70,6 @@ class Command(BaseCommand):
                             # Retrieve results
                             entities = nlp.get_entities()
                             categories = nlp.get_categories()
-                            metadata = nlp.get_metadata()
                             nlp.calculate_avg()
                             avg_score = nlp.get_avg_score()
                             avg_magnitude = nlp.get_avg_magnitude()
@@ -79,72 +77,23 @@ class Command(BaseCommand):
                             # Create categories for article
                             if categories:
                                 for category in categories.categories:
-                                    c_db = Category.objects.create(article=a_db, name=category.name, confidence=category.confidence)
+                                    c_db = Category.objects.create(name=category.name, confidence=category.confidence)
+
+                                if c_db:
+                                    a_db, created = Article.objects.get_or_create(
+                                                category=c_db,
+                                                rss_feed=f_db, title=article.title,
+                                                publisher=article.publisher,
+                                                author=article.author,
+                                                content=article.content,
+                                                link=article.link)
 
                             if entities:
                                 for entity in entities.entities:
                                     e_db = Entity.objects.create(article=a_db, name=entity.name, salience=entity.salience, entity_type=entity.type)
 
-                                    if entity.metadata:
-                                        if entity.metadata.get(
-                                                "wikipedia_url") and entity.metadata.get(
-                                                "mid"):
-
-                                            # Knowledge base api call/handling
-                                            self.stdout.write(
-                                                self.style.SUCCESS('Calling Knowledge API'))
-
-                                            # TODO: Separate api key from file
-                                            knowledge_results = requests.get(
-                                                "https://kgsearch.googleapis.com/v1/entities:search?ids=" + entity.metadata.get(
-                                                    "mid") + "&key=AIzaSyBVWNLOTmBPy63hgF2ZgSLuOsFqFVRWSoQ&limit=1&indent=True")
-                                            json_results = knowledge_results.json().get(
-                                                'itemListElement')
-
-                                            try:
-                                                results = json_results[0]['result']
-
-                                                # Get values from request
-                                                name = results.get('name')
-                                                desc = results.get('description')
-                                                image_details = results.get('image')
-                                                desc_details = results.get(
-                                                    'detailedDescription')
-                                                url_details = results.get('url')
-
-                                                key = entity.metadata.get(
-                                                    "wikipedia_url")
-                                                value = entity.metadata.get("mid")
-
-                                                if (image_details):
-                                                    image_content_url = \
-                                                    image_details['contentUrl']
-                                                    image_url = image_details['url']
-
-                                                # Get Detailed Description
-                                                if (desc_details):
-                                                    article_body = desc_details[
-                                                        'articleBody']
-                                                    article_url = desc_details[
-                                                        'url']
-
-                                                # Create knowledge object
-                                                k_db = Knowledge.objects.create(
-                                                    entity=e_db, name=name,
-                                                    description=desc,
-                                                    url=article_url,
-                                                    article_body=article_body)
-
-                                                # Create Metadata Object
-                                                m_db = MetaData.objects.create(
-                                                    entity=e_db, key=key,
-                                                    value=value)
-
-                                            except:
-                                                print("No Results from Knowledge Call")
-
-                                    # Create score object
-                                    # s_db, created = Score.objects.get_or_create(article=a_db, magnitude=avg_magnitude, score=avg_score)
+                            # Create score object
+                            # s_db, created = Score.objects.get_or_create(article=a_db, magnitude=avg_magnitude, score=avg_score)
 
                 except RSSFeed.DoesNotExist:
                     raise CommandError('Command "%s" experienced an error' % arg)

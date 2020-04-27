@@ -170,12 +170,10 @@
 					    </tr>
 					  </thead>
 					  <tbody>
-				  		{% for category in article.get_categories %}
-							<tr>
-						      <td>{{category.name}}</td>
-						      <td>{{category.confidence}}</td>
-						    </tr>
-						{% endfor %}
+						<tr>
+						  <td>{{category.name}}</td>
+						  <td>{{category.confidence}}</td>
+						</tr>
 					  </tbody>
 					</table>
 				</div>
@@ -209,19 +207,18 @@
 					      <th scope="col">Name</th>
 					      <th scope="col">Salience</th>
 					      <th scope="col">Wiki</th>
-					      <th scope="col">Mid</th>
-					    </tr>
+						    </tr>
 					  </thead>
 					  <tbody>
 				  		{% for entity in article.get_entities %}
 							<tr>
 						      <td>{{entity.name}}</td>
 						      <td>{{entity.salience}}</td>
-						      <td><a href="{{entity.metadata.key}}">{{entity.metadata.key}}</a></td>
-								{% if entity.knowledge.pk %}
-								<td><a href="{% url 'knowledge-detail' entity.pk %}">Details</a></td>
-								{% else %}
-								<td>No Details</td>
+								{% if entity.metadata.key %}
+						      		<td><a href="{{entity.metadata.key}}">{{entity.metadata.key}}</a></td>
+								{% endif %}
+								{% if not entity.metadata.key %}
+									<td>No Wiki</td>
 								{% endif %}
 
 						    </tr>
@@ -246,7 +243,7 @@
 				<div class="card-deck">
 					{% for article in article_list %}
 							<div class="card">
-								<img class="card-img-top" src="{% static 'images/smoke.png' %}" alt="smoke">
+								<img class="card-img-top" src="//logo.clearbit.com/{{article.rss_feed.link}}" alt="smoke">
 								<div class="card-body">
 									<h5>{{article.title}}</h5>
 									<p>{{article.content|safe|slice:":255"}}...</p>
