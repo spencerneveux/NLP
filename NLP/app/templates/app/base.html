@@ -289,7 +289,6 @@
   });
 
     $(document).on('click', '.get-article-details', function(){
-    $(document).on('click', '.get-article-details', function(){
       var article_id = $(this).attr('data-value');
       var url = "{% url 'article-detail' 12345 %} #article-detail-content".replace(/12345/, article_id.toString());
       var header = "{% url 'article-detail' 12345 %} #article-interaction-container".replace(/12345/, article_id.toString());
