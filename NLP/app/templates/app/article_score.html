@@ -1,10 +1,116 @@
 {% extends 'app/base.html' %}
+{% load static %}
 
 {% block content %}
 <br>
-
+<div class="modal fade" id="sentimentModal" tabindex="-1" role="dialog" aria-labelledby="sentimentModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="sentimentModalTitle">Sentiment Info</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Understand the overall opinion, feeling, or attitude sentiment expressed in a block of text.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="categoryModal" tabindex="-1" role="dialog" aria-labelledby="categoryModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="categoryModalTitle">Category Info</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        A category provides information regarding what topic(s) this article falls under.
+		  Capable of classifying up to 700+ predefined categories.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="entityModal" tabindex="-1" role="dialog" aria-labelledby="entityModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="entityModalTitle">Entity Info</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Identify entities within documents — including receipts, invoices,
+		  and contracts — and label them by types such as date, person, contact information,
+		  organization, location, events, products, and media.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="container container-fluid">
+	<div class="row">
+		<div class="col">
+			<div class="card">
+				<div class="card-header">
+					<h2>{{article.title}}</h2>
+				</div>
+				<div class="card-body">
+						<p>{{article.content|safe|slice:":255"}}...</p>
+						<a href="{{article.link}}"><button class="btn btn-primary">Visit Website</button></a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<br>
+	<div class="row">
+		<div class="col">
+			<div class="card-header">
+				<h2>Author - {{article.author}}</h2>
+			</div>
+			<div class="card-body">
+				<div class="row">
+					<div class="col">
+						<img src="{% static 'images/writer.png' %}" alt="">
+					</div>
+					<div class="col">
+						<br>
+						<h5>Other work</h5>
+						<table class="table">
+							  <thead>
+								<tr>
+								  <th scope="col">Article</th>
+								  <th scope="col">Original Article</th>
+								</tr>
+							  </thead>
+							  <tbody>
+							  {% for article in author_article_list %}
+								<tr>
+								  <td>{{article.title}}</td>
+								  <td><a href="{{article.link}}">Visit</a></td>
+								</tr>
+							  {%endfor%}
+							  </tbody>
+						</table>
 
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<br>
 	<div class="row">
 		{% if article.score.score and article.score.magnitude %}
 
@@ -12,6 +118,7 @@
 			<div class="card">
 				<div class="card-header">
 					<h1>Sentiment Analysis</h1>
+					<button class="btn btn-light float-right" data-toggle="modal" data-target="#sentimentModal"><i class="fa fa-info-circle fa-2x" aria-hidden="true"></i></button>
 				</div>
 				<div class="card-body">
 					<div class="row">
@@ -40,7 +147,8 @@
 		<div class="col">
 			<div class="card">
 				<div class="card-header">
-					<h2>Categories</h2>
+					<h2 class="d-inline">Categories</h2>
+					<button class="btn btn-light float-right" data-toggle="modal" data-target="#categoryModal"><i class="fa fa-info-circle fa-2x" aria-hidden="true"></i></button>
 				</div>
 				<div class="card-body">
 					<table class="table">
@@ -64,15 +172,14 @@
 				</div>
 			</div>
 		</div>
-
 	</div>
 <br>
 	<div class="row">
-
 		<div class="col">
 			<div class="card">
 				<div class="card-header">
-					<h2>Entities</h2>
+					<h2 class="d-inline">Entities</h2>
+					<button class="btn btn-light float-right" data-toggle="modal" data-target="#entityModal"><i class="fa fa-info-circle fa-2x" aria-hidden="true"></i></button>
 				</div>
 				<div class="card-body">
 					<table class="table table-striped">
@@ -105,10 +212,36 @@
 				</div>
 			</div>
 		</div>
-
 	</div>
 </div>
 
+<br>
+
+<div class="row">
+	<div class="col">
+		<div class="card">
+			<div class="card-header">
+				<h5>Related Articles</h5>
+			</div>
+			<div class="card-body">
+				<div class="card-deck">
+					{% for article in author_article_list %}
+							<div class="card">
+								<img class="card-img-top" src="{% static 'images/smoke.png' %}" alt="smoke">
+								<div class="card-body">
+									<h5>{{article.title}}</h5>
+									<p>{{article.content|safe|slice:":255"}}...</p>
+								</div>
+								<div class="card-footer">
+									<a href="{{article.link}}">Visit Site</a>
+								</div>
+							</div>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 <br>
 <br>
 

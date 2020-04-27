@@ -134,6 +134,9 @@ class Article(models.Model):
     def get_categories(self):
         return self.category_set.all()
 
+    def get_category(self):
+        return self.category_set.all()[:1]
+
     def get_likes(self):
         count = 0
         for like in self.like_set.all():
@@ -313,7 +316,6 @@ class CategoryManager(models.Manager):
     def create_category(self, name, confidence):
         category = self.create(name=name, confidence=confidence)
         return category
-
 
 class Category(models.Model):
     objects = CategoryManager()

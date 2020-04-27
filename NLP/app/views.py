@@ -145,7 +145,12 @@ class ArticleScoreView(DetailView):
         context = super().get_context_data(**kwargs)
         context["score_list"] = Score.objects.order_by("score")
         context["entity_list"] = Entity.objects.order_by("name")
-        context["category_list"] = Category.objects.order_by("name")
+        categories = Article.objects.filter(category=self.object.get_category())
+        author_article_list = Article.objects.filter(author=self.object.author)
+        context['author_article_list'] = author_article_list
+        print(self.object.get_category())
+        print(author_article_list)
+        print(categories)
         return context
 
 
