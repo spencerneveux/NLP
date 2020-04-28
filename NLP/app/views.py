@@ -118,6 +118,11 @@ class CommentCreateView(CreateView):
         form.instance.article = article
         return super(CommentCreateView, self).form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['article'] = Article.objects.get(pk=self.kwargs['article_id'])
+        return context
+
 class CommentDeleteView(DeleteView):
     model = Comment
     success_url = reverse_lazy('home')

@@ -412,64 +412,68 @@
     });
 
      $(document).on('click', '.like', function(){
-       var user_logged_in = "{{request.user.is_anonymous}}";
-        if (user_logged_in) {
+       var user_not_logged_in = "{{request.user.is_anonymous}}";
+        if (user_not_logged_in) {
           $("#errorModal").modal('show');
+        }else {
+          var article_id = $(this).val()
+          if (article_id) {
+              $.ajax({
+                  url: "{% url 'like' %}",
+                  data: {
+                      "article-id": article_id,
+                      "operation": "like",
+                  },
+                  dataType: "json",
+                  success: function(data) {
+                    console.log(data['Test']);
+                      if (data['Test'] == 'Like'){
+                        $(this).addClass('active');
+                          $('#alert-success').show();
+                          $('#alert-success').text("Success! Liked");
+                          $('#alert-success').fadeOut(2000);
+                      }else if(data['Test'] == 'Liked') {
+                        $('#alert-failure').show();
+                        $('#alert-failure').text("You've already liked this");
+                        $('#alert-failure').fadeOut(2000);
+                      }
+                  }
+              });
+          }
         }
-        var article_id = $(this).val()
-        if (article_id) {
-            $.ajax({
-                url: "{% url 'like' %}",
-                data: {
-                    "article-id": article_id,
-                    "operation": "like",
-                },
-                dataType: "json",
-                success: function(data) {
-                  console.log(data['Test']);
-                    if (data['Test'] == 'Like'){
-                      $(this).addClass('active');
-                        $('#alert-success').show();
-                        $('#alert-success').text("Success! Liked");
-                        $('#alert-success').fadeOut(2000);
-                    }else if(data['Test'] == 'Liked') {
-                      $('#alert-failure').show();
-                      $('#alert-failure').text("You've already liked this");
-                      $('#alert-failure').fadeOut(2000);
-                    }
-                }
-            });
-        }
+
      });
 
     $(document).on('click', '.dislike', function(){
-      var user_logged_in = "{{request.user.is_anonymous}}";
-        if (user_logged_in) {
+      var user_not_logged_in = "{{request.user.is_anonymous}}";
+        if (user_not_logged_in) {
           $("#errorModal").modal('show');
-        }
-        var article_id = $(this).val()
-        if(article_id) {
-          $.ajax({
-            url: "{% url 'like' %}",
-            data: {
-                "article-id": article_id,
-                "operation": "dislike",
-            },
-            dataType: "json",
-            success: function(data) {
-              if (data['Test'] == 'Dislike') {
-                $(this).addClass('active');
-                $('#alert-success').show();
-                $('#alert-success').text("Success! Disliked");
-                $('#alert-success').fadeOut(2000);
-              } else if (data['Test'] == 'Disliked') {
-                $('#alert-failure').show();
-                $('#alert-failure').text("You've already disliked this");
-                $('#alert-failure').fadeOut(2000);
+        }else {
+          var article_id = $(this).val()
+          if(article_id) {
+            $.ajax({
+              url: "{% url 'like' %}",
+              data: {
+                  "article-id": article_id,
+                  "operation": "dislike",
+              },
+              dataType: "json",
+              success: function(data) {
+                if (data['Test'] == 'Dislike') {
+                  $(this).addClass('active');
+                  $('#alert-success').show();
+                  $('#alert-success').text("Success! Disliked");
+                  $('#alert-success').fadeOut(2000);
+                } else if (data['Test'] == 'Disliked') {
+                  $('#alert-failure').show();
+                  $('#alert-failure').text("You've already disliked this");
+                  $('#alert-failure').fadeOut(2000);
+                }
               }
-            }
-          });
+            });
+          }
         }
+
     });
 
     $(".add").click(function(){
@@ -493,31 +497,32 @@
     });
 
     $(document).on('click', '.bookmark', function(){
-        var user_logged_in = "{{request.user.is_anonymous}}";
-        if (user_logged_in) {
+        var user_not_logged_in = "{{request.user.is_anonymous}}";
+        if (user_not_logged_in) {
           $("#errorModal").modal('show');
-        }
-        var article_id = $(this).val();
-        if (article_id) {
-          $.ajax({
-            url: "{% url 'bookmark' %}",
-            data: {
-                "article-id": article_id
-            },
-            dataType: "json",
-            success: function(data) {
-              console.log(data);
-                if (data["Test"] == true) {
-                    $('#alert-success').show();
-                    $('#alert-success').text("Success! Bookmarked");
-                    $('#alert-success').fadeOut(2000);
-                }else if (data['Test'] == false) {
-                  $('#alert-failure').show();
-                  $('#alert-failure').text("Already bookmarked");
-                  $('#alert-failure').fadeOut(2000);
-                }
-            }
-          });
+        }else {
+          var article_id = $(this).val();
+          if (article_id) {
+            $.ajax({
+              url: "{% url 'bookmark' %}",
+              data: {
+                  "article-id": article_id
+              },
+              dataType: "json",
+              success: function(data) {
+                console.log(data);
+                  if (data["Test"] == true) {
+                      $('#alert-success').show();
+                      $('#alert-success').text("Success! Bookmarked");
+                      $('#alert-success').fadeOut(2000);
+                  }else if (data['Test'] == false) {
+                    $('#alert-failure').show();
+                    $('#alert-failure').text("Already bookmarked");
+                    $('#alert-failure').fadeOut(2000);
+                  }
+              }
+            });
+          }
         }
     });
 
