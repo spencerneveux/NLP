@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'cycmue7=g^b#4($$weyc5d2v_*5x*n2d+s+szzx=1)ubf#u*(*'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["thevalidator.herokuapp.com", "127.0.0.1"]
 
 # Application definition
 
